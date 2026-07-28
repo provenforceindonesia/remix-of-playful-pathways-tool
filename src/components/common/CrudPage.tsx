@@ -52,6 +52,7 @@ export type CrudField = {
   step?: string;
   readOnlyOnEdit?: boolean;
   createOnly?: boolean;
+  editOnly?: boolean;
 };
 
 export type CrudRow = Record<string, unknown>;
@@ -136,6 +137,7 @@ export function CrudPage<T extends CrudRow>({
     for (const [k, v] of Object.entries(src)) {
       const field = fields.find((f) => f.name === k);
       if (field?.createOnly && isEdit) continue;
+      if (field?.editOnly && !isEdit) continue;
       if (v === "" || v === undefined) {
         out[k] = null;
         continue;
@@ -292,7 +294,7 @@ export function CrudPage<T extends CrudRow>({
             id="crud-form"
           >
             {fields
-              .filter((f) => !(f.createOnly && editing))
+              .filter((f) => !(f.createOnly && editing) && !(f.editOnly && !editing))
               .map((f) => (
                 <div key={f.name} className={cn("space-y-2", f.full && "sm:col-span-2")}>
                   <Label htmlFor={f.name}>

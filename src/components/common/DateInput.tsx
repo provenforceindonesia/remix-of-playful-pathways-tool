@@ -76,7 +76,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
         readOnly={readOnly}
         disabled={disabled}
         className={cn(
-          "hide-date-picker-indicator flex h-10 w-full rounded-lg border border-input bg-field px-3 py-1 pr-11 text-sm shadow-sm transition-[color,box-shadow,border-color] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "hide-date-picker-indicator flex h-10 w-full rounded-[0.5rem] border border-input bg-field px-3 py-1 pr-11 text-sm shadow-sm transition-[color,box-shadow,border-color] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/25 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         ref={setRefs}
