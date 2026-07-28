@@ -192,7 +192,7 @@
 
   /* Hide the native picker indicator when a custom icon is rendered instead */
   .hide-date-picker-indicator::-webkit-calendar-picker-indicator {
-    opacity: 0;
+    opacity: 0 !important;
     cursor: pointer;
   }
 }
