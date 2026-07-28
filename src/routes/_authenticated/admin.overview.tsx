@@ -78,13 +78,13 @@ function OverviewPage() {
       />
 
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="User Aktif" value={formatNumber(activeUsers)} icon={Users} tone="primary" />
-        <KpiCard label="Mesin Terdaftar" value={formatNumber(machineRows.length)} icon={Activity} tone="info" />
-        <KpiCard label="Work Order" value={formatNumber(woRows.length)} icon={ShieldCheck} tone="purple" />
+        <KpiCard label="User Aktif" value={formatNumber(activeUsers)} icon={<Users className="size-4" />} tone="primary" />
+        <KpiCard label="Mesin Terdaftar" value={formatNumber(machineRows.length)} icon={<Activity className="size-4" />} tone="info" />
+        <KpiCard label="Work Order" value={formatNumber(woRows.length)} icon={<ShieldCheck className="size-4" />} tone="purple" />
         <KpiCard
           label="Menunggu Validasi"
           value={formatNumber(pending)}
-          icon={ShieldCheck}
+          icon={<ShieldCheck className="size-4" />}
           tone={pending > 0 ? "warning" : "success"}
         />
       </div>
