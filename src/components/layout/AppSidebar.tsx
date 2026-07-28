@@ -19,22 +19,23 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
   const groups = navForRole(role);
 
   return (
-    <div className="flex h-full flex-col bg-sidebar">
-      <div className="flex h-14 shrink-0 items-center gap-2 border-b border-sidebar-border px-3">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
-          <Icons.Factory className="size-4" />
+    <div className="flex h-full flex-col bg-sidebar/70 backdrop-blur-xl">
+      <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-sidebar-border/60 px-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(140deg,var(--color-primary),var(--color-secondary))] text-primary-foreground shadow-[0_10px_24px_-12px_var(--color-primary)]">
+          <Icons.Activity className="size-4.5" />
         </span>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold tracking-tight text-sidebar-foreground">
+            <p className="truncate text-sm font-extrabold tracking-tight text-sidebar-foreground">
               MANUFACTURE<span className="text-primary">IQ</span>
             </p>
-            <p className="truncate text-[10px] text-muted-foreground">
-              Manufacturing Performance Control
+            <p className="truncate text-[10px] tracking-[0.14em] text-muted-foreground uppercase">
+              Performance Control
             </p>
           </div>
         )}
       </div>
+
 
       <ScrollArea className="flex-1">
         <nav className="space-y-4 p-2">
