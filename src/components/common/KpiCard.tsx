@@ -60,7 +60,7 @@ export function KpiCard({
     <Card
       onClick={onClick}
       className={cn(
-        "group relative gap-0 overflow-hidden rounded-2xl p-5",
+        "group relative gap-0 overflow-hidden rounded-xl p-5",
         onClick && "cursor-pointer",
         className,
       )}
@@ -76,7 +76,7 @@ export function KpiCard({
         {icon ? (
           <span
             className={cn(
-              "flex size-10 items-center justify-center rounded-xl shadow-[0_8px_20px_-10px_rgba(0,0,0,0.6)] [&_svg]:size-5",
+              "flex size-10 items-center justify-center rounded-lg shadow-[0_8px_20px_-10px_rgba(0,0,0,0.6)] [&_svg]:size-5",
               t.tile,
             )}
           >
