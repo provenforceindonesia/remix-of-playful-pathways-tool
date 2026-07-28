@@ -1,3 +1,4 @@
+import { Wallet } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -145,14 +146,14 @@ function CostingPage() {
         description={`Versi HPP aktif: ${String(activeVersion?.version_code ?? "-")}`}
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="HPP Standar / Unit" value={formatCurrency(avgStandard)} tone="primary" />
-        <KpiCard label="Biaya Aktual / Unit" value={formatCurrency(actualPerUnit)} tone="info" />
-        <KpiCard
+        <KpiCard icon={<Wallet className="size-4" />} label="HPP Standar / Unit" value={formatCurrency(avgStandard)} tone="primary" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Biaya Aktual / Unit" value={formatCurrency(actualPerUnit)} tone="info" />
+        <KpiCard icon={<Wallet className="size-4" />}
           label="Varian Biaya"
           value={formatCurrency(actualPerUnit - avgStandard)}
           tone={actualPerUnit > avgStandard ? "danger" : "success"}
         />
-        <KpiCard label="Total Kerugian" value={formatCurrency(totalLoss)} tone="warning" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Total Kerugian" value={formatCurrency(totalLoss)} tone="warning" />
       </div>
 
       <Card className="mb-5">

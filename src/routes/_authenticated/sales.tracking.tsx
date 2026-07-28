@@ -1,3 +1,4 @@
+import { Activity, AlertTriangle, ClipboardList } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -99,10 +100,10 @@ function TrackingPage() {
         description="Progres pemenuhan order dihitung dari output produksi yang telah tervalidasi."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Order" value={rows.length} tone="primary" />
-        <KpiCard label="Sedang Berjalan" value={running} tone="info" />
-        <KpiCard label="Terlambat" value={late} tone={late ? "danger" : "success"} />
-        <KpiCard label="Selesai" value={done} tone="success" />
+        <KpiCard icon={<ClipboardList className="size-4" />} label="Total Order" value={rows.length} tone="primary" />
+        <KpiCard icon={<Activity className="size-4" />} label="Sedang Berjalan" value={running} tone="info" />
+        <KpiCard icon={<AlertTriangle className="size-4" />} label="Terlambat" value={late} tone={late ? "danger" : "success"} />
+        <KpiCard icon={<Activity className="size-4" />} label="Selesai" value={done} tone="success" />
       </div>
       <DataTable<Row> columns={columns} rows={rows} loading={isLoading} exportName="order-tracking" />
     </>

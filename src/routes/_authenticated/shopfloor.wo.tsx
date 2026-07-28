@@ -1,3 +1,4 @@
+import { Activity, Boxes, Factory } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -65,13 +66,13 @@ function MyWoPage() {
         description="Work order yang perlu dikerjakan pada shift berjalan."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="WO Aktif" value={rows.length} tone="primary" />
-        <KpiCard
+        <KpiCard icon={<Factory className="size-4" />} label="WO Aktif" value={rows.length} tone="primary" />
+        <KpiCard icon={<Activity className="size-4" />}
           label="Sedang Berjalan"
           value={rows.filter((r) => r.status === "In Progress").length}
           tone="info"
         />
-        <KpiCard
+        <KpiCard icon={<Boxes className="size-4" />}
           label="Menunggu Material/Maintenance"
           value={
             rows.filter((r) =>

@@ -1,3 +1,4 @@
+import { Activity, PackageCheck, TimerOff } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -111,9 +112,9 @@ function BottleneckPage() {
         description="Mesin dengan lost output terbesar adalah kandidat bottleneck utama."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Bottleneck Utama" value={worst?.machine ?? "-"} tone="danger" />
-        <KpiCard label="Lost Output" value={formatNumber(worst?.lost ?? 0)} tone="warning" />
-        <KpiCard label="Downtime" value={durationLabel(worst?.downtime ?? 0)} tone="purple" />
+        <KpiCard icon={<Activity className="size-4" />} label="Bottleneck Utama" value={worst?.machine ?? "-"} tone="danger" />
+        <KpiCard icon={<PackageCheck className="size-4" />} label="Lost Output" value={formatNumber(worst?.lost ?? 0)} tone="warning" />
+        <KpiCard icon={<TimerOff className="size-4" />} label="Downtime" value={durationLabel(worst?.downtime ?? 0)} tone="purple" />
       </div>
 
       <Card className="mb-5">

@@ -1,3 +1,4 @@
+import { TrendingUp } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -107,9 +108,9 @@ function MarginPage() {
         description="Kontribusi margin per produk berdasarkan versi HPP standar aktif."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Rata-rata Margin" value={formatPercent(avgMargin)} tone={avgMargin < 0 ? "danger" : "success"} />
-        <KpiCard label="Produk Margin Negatif" value={negative} tone={negative ? "danger" : "success"} />
-        <KpiCard
+        <KpiCard icon={<TrendingUp className="size-4" />} label="Rata-rata Margin" value={formatPercent(avgMargin)} tone={avgMargin < 0 ? "danger" : "success"} />
+        <KpiCard icon={<TrendingUp className="size-4" />} label="Produk Margin Negatif" value={negative} tone={negative ? "danger" : "success"} />
+        <KpiCard icon={<TrendingUp className="size-4" />}
           label="Margin Tertinggi"
           value={bestProduct ? String(bestProduct.product) : "-"}
           tone="primary"

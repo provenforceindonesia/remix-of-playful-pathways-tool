@@ -1,3 +1,4 @@
+import { AlertTriangle, Boxes, Factory, PackageCheck } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -86,14 +87,14 @@ function QualityPage() {
         description="Identifikasi produk dan mesin dengan tingkat reject tertinggi."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Output" value={formatNumber(totalOutput)} tone="info" />
-        <KpiCard
+        <KpiCard icon={<PackageCheck className="size-4" />} label="Total Output" value={formatNumber(totalOutput)} tone="info" />
+        <KpiCard icon={<AlertTriangle className="size-4" />}
           label="Reject Rate"
           value={formatPercent(totalOutput ? (totalReject / totalOutput) * 100 : 0, 2)}
           tone="danger"
         />
-        <KpiCard label="Total Rework" value={formatNumber(totalRework)} tone="warning" />
-        <KpiCard label="Waste Material" value={formatNumber(totalWaste)} tone="purple" />
+        <KpiCard icon={<Factory className="size-4" />} label="Total Rework" value={formatNumber(totalRework)} tone="warning" />
+        <KpiCard icon={<Boxes className="size-4" />} label="Waste Material" value={formatNumber(totalWaste)} tone="purple" />
       </div>
 
       <Card className="mb-5">

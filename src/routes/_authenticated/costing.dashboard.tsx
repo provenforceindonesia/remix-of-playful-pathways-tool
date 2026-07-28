@@ -1,3 +1,4 @@
+import { PackageCheck, Wallet } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -143,10 +144,10 @@ function CostDashboard() {
         description="Pantau biaya produksi aktual, struktur biaya, dan dampak kerugian terhadap HPP."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Biaya Produksi" value={formatCurrency(totalCost)} tone="primary" />
-        <KpiCard label="Biaya per Unit Aktual" value={formatCurrency(costPerUnit)} tone="info" />
-        <KpiCard label="HPP Standar Rata-rata" value={formatCurrency(stdAvg)} tone="purple" />
-        <KpiCard label="Rasio Loss" value={formatPercent(lossRatio)} tone={lossRatio > 5 ? "danger" : "success"} />
+        <KpiCard icon={<PackageCheck className="size-4" />} label="Total Biaya Produksi" value={formatCurrency(totalCost)} tone="primary" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Biaya per Unit Aktual" value={formatCurrency(costPerUnit)} tone="info" />
+        <KpiCard icon={<Wallet className="size-4" />} label="HPP Standar Rata-rata" value={formatCurrency(stdAvg)} tone="purple" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Rasio Loss" value={formatPercent(lossRatio)} tone={lossRatio > 5 ? "danger" : "success"} />
       </div>
       <div className="mb-5 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">

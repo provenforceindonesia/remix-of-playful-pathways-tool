@@ -1,3 +1,4 @@
+import { Gauge, PackageCheck, Target } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -93,10 +94,10 @@ function SpeedPage() {
         description="Speed index membandingkan kecepatan aktual terhadap kecepatan standar mesin."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Rata-rata Speed Index" value={formatPercent(avgSpeed)} tone={cls.tone} sub={cls.label} />
-        <KpiCard label="Total Good Output" value={formatNumber(totalGood)} tone="success" />
-        <KpiCard label="Total Target" value={formatNumber(totalTarget)} tone="info" />
-        <KpiCard
+        <KpiCard icon={<Gauge className="size-4" />} label="Rata-rata Speed Index" value={formatPercent(avgSpeed)} tone={cls.tone} sub={cls.label} />
+        <KpiCard icon={<PackageCheck className="size-4" />} label="Total Good Output" value={formatNumber(totalGood)} tone="success" />
+        <KpiCard icon={<Target className="size-4" />} label="Total Target" value={formatNumber(totalTarget)} tone="info" />
+        <KpiCard icon={<Target className="size-4" />}
           label="Pencapaian Target"
           value={formatPercent(totalTarget ? (totalGood / totalTarget) * 100 : 0)}
           tone="primary"
