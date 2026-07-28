@@ -48,6 +48,7 @@
   --color-purple-foreground: var(--purple-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
+  --color-field: var(--field);
   --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -98,6 +99,7 @@
 
   --border: oklch(0.9000 0.0140 250);
   --input: oklch(0.9000 0.0140 250);
+  --field: oklch(1 0 0);
   --ring: oklch(0.6400 0.1180 211.53);
 
   --chart-1: oklch(0.6400 0.1180 211.53);
@@ -158,6 +160,7 @@
 
   --border: oklch(0.3064 0.0513 256.77);
   --input: oklch(0.3064 0.0513 256.77);
+  --field: color-mix(in oklab, oklch(0.2650 0.0400 256) 80%, transparent);
   --ring: oklch(0.7971 0.1339 211.53);
 
   --chart-1: oklch(0.7971 0.1339 211.53);
