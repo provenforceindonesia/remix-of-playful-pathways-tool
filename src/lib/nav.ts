@@ -144,6 +144,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Roles & Permissions", to: "/admin/roles", icon: "KeyRound", roles: ["SYSADMIN"] },
       { label: "Master Configuration", to: "/admin/configuration", icon: "Settings2", roles: ["SYSADMIN"] },
       { label: "Audit Trail", to: "/admin/audit", icon: "ScrollText", roles: ["SYSADMIN", "OWNER"] },
+      { label: "Status Koneksi", to: "/admin/connection-status", icon: "Radio", roles: ["SYSADMIN"] },
     ],
   },
 ];
