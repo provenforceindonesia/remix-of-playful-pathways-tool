@@ -22,6 +22,7 @@ import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authe
 import { Route as AuthenticatedProductionWorkOrdersRouteImport } from './routes/_authenticated/production.work-orders'
 import { Route as AuthenticatedProductionValidasiRouteImport } from './routes/_authenticated/production.validasi'
 import { Route as AuthenticatedProductionPlansRouteImport } from './routes/_authenticated/production.plans'
+import { Route as AuthenticatedProductionHandoverRouteImport } from './routes/_authenticated/production.handover'
 import { Route as AuthenticatedProductionBacklogRouteImport } from './routes/_authenticated/production.backlog'
 import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
@@ -106,6 +107,12 @@ const AuthenticatedProductionPlansRoute =
     path: '/production/plans',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProductionHandoverRoute =
+  AuthenticatedProductionHandoverRouteImport.update({
+    id: '/production/handover',
+    path: '/production/handover',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProductionBacklogRoute =
   AuthenticatedProductionBacklogRouteImport.update({
     id: '/production/backlog',
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/production/handover': typeof AuthenticatedProductionHandoverRoute
   '/production/plans': typeof AuthenticatedProductionPlansRoute
   '/production/validasi': typeof AuthenticatedProductionValidasiRoute
   '/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
@@ -193,6 +201,7 @@ export interface FileRoutesByTo {
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/production/handover': typeof AuthenticatedProductionHandoverRoute
   '/production/plans': typeof AuthenticatedProductionPlansRoute
   '/production/validasi': typeof AuthenticatedProductionValidasiRoute
   '/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
@@ -218,6 +227,7 @@ export interface FileRoutesById {
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/_authenticated/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/_authenticated/production/handover': typeof AuthenticatedProductionHandoverRoute
   '/_authenticated/production/plans': typeof AuthenticatedProductionPlansRoute
   '/_authenticated/production/validasi': typeof AuthenticatedProductionValidasiRoute
   '/_authenticated/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/master/products'
     | '/procurement/suppliers'
     | '/production/backlog'
+    | '/production/handover'
     | '/production/plans'
     | '/production/validasi'
     | '/production/work-orders'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/master/products'
     | '/procurement/suppliers'
     | '/production/backlog'
+    | '/production/handover'
     | '/production/plans'
     | '/production/validasi'
     | '/production/work-orders'
@@ -290,6 +302,7 @@ export interface FileRouteTypes {
     | '/_authenticated/master/products'
     | '/_authenticated/procurement/suppliers'
     | '/_authenticated/production/backlog'
+    | '/_authenticated/production/handover'
     | '/_authenticated/production/plans'
     | '/_authenticated/production/validasi'
     | '/_authenticated/production/work-orders'
@@ -401,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductionPlansRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/production/handover': {
+      id: '/_authenticated/production/handover'
+      path: '/production/handover'
+      fullPath: '/production/handover'
+      preLoaderRoute: typeof AuthenticatedProductionHandoverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/production/backlog': {
       id: '/_authenticated/production/backlog'
       path: '/production/backlog'
@@ -477,6 +497,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
   AuthenticatedProductionBacklogRoute: typeof AuthenticatedProductionBacklogRoute
+  AuthenticatedProductionHandoverRoute: typeof AuthenticatedProductionHandoverRoute
   AuthenticatedProductionPlansRoute: typeof AuthenticatedProductionPlansRoute
   AuthenticatedProductionValidasiRoute: typeof AuthenticatedProductionValidasiRoute
   AuthenticatedProductionWorkOrdersRoute: typeof AuthenticatedProductionWorkOrdersRoute
@@ -500,6 +521,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProcurementSuppliersRoute:
     AuthenticatedProcurementSuppliersRoute,
   AuthenticatedProductionBacklogRoute: AuthenticatedProductionBacklogRoute,
+  AuthenticatedProductionHandoverRoute: AuthenticatedProductionHandoverRoute,
   AuthenticatedProductionPlansRoute: AuthenticatedProductionPlansRoute,
   AuthenticatedProductionValidasiRoute: AuthenticatedProductionValidasiRoute,
   AuthenticatedProductionWorkOrdersRoute:
