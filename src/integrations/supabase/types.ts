@@ -4519,6 +4519,7 @@ export type Database = {
       can_access_work_order: { Args: { wo_id: string }; Returns: boolean }
       current_user_plant: { Args: never; Returns: string }
       current_user_role: { Args: never; Returns: string }
+      get_backend_status: { Args: never; Returns: Json }
       has_permission: { Args: { permission_code: string }; Returns: boolean }
       in_user_plant: { Args: { target: string }; Returns: boolean }
       is_role: { Args: { codes: string[] }; Returns: boolean }
