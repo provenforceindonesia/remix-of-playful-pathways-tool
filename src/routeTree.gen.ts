@@ -32,6 +32,8 @@ import { Route as AuthenticatedInventoryLedgerRouteImport } from './routes/_auth
 import { Route as AuthenticatedInventoryIssueRouteImport } from './routes/_authenticated/inventory.issue'
 import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
 import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authenticated/engineering.bom'
+import { Route as AuthenticatedDashboardOrderRouteImport } from './routes/_authenticated/dashboard.order'
+import { Route as AuthenticatedDashboardOperasionalRouteImport } from './routes/_authenticated/dashboard.operasional'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 import { Route as AuthenticatedCostingHppRouteImport } from './routes/_authenticated/costing.hpp'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
@@ -180,6 +182,18 @@ const AuthenticatedEngineeringBomRoute =
     path: '/engineering/bom',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardOrderRoute =
+  AuthenticatedDashboardOrderRouteImport.update({
+    id: '/dashboard/order',
+    path: '/dashboard/order',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardOperasionalRoute =
+  AuthenticatedDashboardOperasionalRouteImport.update({
+    id: '/dashboard/operasional',
+    path: '/dashboard/operasional',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardManajemenRoute =
   AuthenticatedDashboardManajemenRouteImport.update({
     id: '/dashboard/manajemen',
@@ -271,6 +285,8 @@ export interface FileRoutesByFullPath {
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
@@ -308,6 +324,8 @@ export interface FileRoutesByTo {
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
@@ -347,6 +365,8 @@ export interface FileRoutesById {
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/_authenticated/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/_authenticated/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/_authenticated/dashboard/order': typeof AuthenticatedDashboardOrderRoute
   '/_authenticated/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/_authenticated/inventory/issue': typeof AuthenticatedInventoryIssueRoute
@@ -386,6 +406,8 @@ export interface FileRouteTypes {
     | '/analytics/speed'
     | '/costing/hpp'
     | '/dashboard/manajemen'
+    | '/dashboard/operasional'
+    | '/dashboard/order'
     | '/engineering/bom'
     | '/engineering/routing'
     | '/inventory/issue'
@@ -423,6 +445,8 @@ export interface FileRouteTypes {
     | '/analytics/speed'
     | '/costing/hpp'
     | '/dashboard/manajemen'
+    | '/dashboard/operasional'
+    | '/dashboard/order'
     | '/engineering/bom'
     | '/engineering/routing'
     | '/inventory/issue'
@@ -461,6 +485,8 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/speed'
     | '/_authenticated/costing/hpp'
     | '/_authenticated/dashboard/manajemen'
+    | '/_authenticated/dashboard/operasional'
+    | '/_authenticated/dashboard/order'
     | '/_authenticated/engineering/bom'
     | '/_authenticated/engineering/routing'
     | '/_authenticated/inventory/issue'
@@ -652,6 +678,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEngineeringBomRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/order': {
+      id: '/_authenticated/dashboard/order'
+      path: '/dashboard/order'
+      fullPath: '/dashboard/order'
+      preLoaderRoute: typeof AuthenticatedDashboardOrderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/operasional': {
+      id: '/_authenticated/dashboard/operasional'
+      path: '/dashboard/operasional'
+      fullPath: '/dashboard/operasional'
+      preLoaderRoute: typeof AuthenticatedDashboardOperasionalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/manajemen': {
       id: '/_authenticated/dashboard/manajemen'
       path: '/dashboard/manajemen'
@@ -760,6 +800,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
   AuthenticatedCostingHppRoute: typeof AuthenticatedCostingHppRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
+  AuthenticatedDashboardOperasionalRoute: typeof AuthenticatedDashboardOperasionalRoute
+  AuthenticatedDashboardOrderRoute: typeof AuthenticatedDashboardOrderRoute
   AuthenticatedEngineeringBomRoute: typeof AuthenticatedEngineeringBomRoute
   AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
   AuthenticatedInventoryIssueRoute: typeof AuthenticatedInventoryIssueRoute
@@ -796,6 +838,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
   AuthenticatedCostingHppRoute: AuthenticatedCostingHppRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
+  AuthenticatedDashboardOperasionalRoute:
+    AuthenticatedDashboardOperasionalRoute,
+  AuthenticatedDashboardOrderRoute: AuthenticatedDashboardOrderRoute,
   AuthenticatedEngineeringBomRoute: AuthenticatedEngineeringBomRoute,
   AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
   AuthenticatedInventoryIssueRoute: AuthenticatedInventoryIssueRoute,
