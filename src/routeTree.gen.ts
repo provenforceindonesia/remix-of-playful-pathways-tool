@@ -27,6 +27,7 @@ import { Route as AuthenticatedProductionBacklogRouteImport } from './routes/_au
 import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
+import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
 import { Route as AuthenticatedAdminOverviewRouteImport } from './routes/_authenticated/admin.overview'
@@ -137,6 +138,12 @@ const AuthenticatedDashboardManajemenRoute =
     path: '/dashboard/manajemen',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsDowntimeRoute =
+  AuthenticatedAnalyticsDowntimeRouteImport.update({
+    id: '/analytics/downtime',
+    path: '/analytics/downtime',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -173,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -197,6 +205,7 @@ export interface FileRoutesByTo {
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -223,6 +232,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
+    | '/analytics/downtime'
     | '/dashboard/manajemen'
     | '/master/products'
     | '/procurement/suppliers'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
+    | '/analytics/downtime'
     | '/dashboard/manajemen'
     | '/master/products'
     | '/procurement/suppliers'
@@ -298,6 +310,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/overview'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
+    | '/_authenticated/analytics/downtime'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/master/products'
     | '/_authenticated/procurement/suppliers'
@@ -449,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardManajemenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/downtime': {
+      id: '/_authenticated/analytics/downtime'
+      path: '/analytics/downtime'
+      fullPath: '/analytics/downtime'
+      preLoaderRoute: typeof AuthenticatedAnalyticsDowntimeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/admin/users'
@@ -493,6 +513,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminOverviewRoute: typeof AuthenticatedAdminOverviewRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
@@ -516,6 +537,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminOverviewRoute: AuthenticatedAdminOverviewRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
   AuthenticatedProcurementSuppliersRoute:

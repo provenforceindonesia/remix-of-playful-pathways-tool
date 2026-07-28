@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Line,
@@ -131,5 +130,3 @@ function DowntimeAnalyticsPage() {
     </>
   );
 }
-
-export const _unusedBarChart = BarChart;
