@@ -5,7 +5,9 @@ export type NavItem = {
   to: string;
   icon: string;
   roles: RoleCode[];
+  search?: Record<string, string>;
 };
+
 
 export type NavGroup = {
   label: string;
