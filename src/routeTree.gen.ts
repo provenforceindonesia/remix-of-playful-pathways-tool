@@ -27,6 +27,9 @@ import { Route as AuthenticatedProductionBacklogRouteImport } from './routes/_au
 import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedInventoryStockRouteImport } from './routes/_authenticated/inventory.stock'
+import { Route as AuthenticatedInventoryReceiptRouteImport } from './routes/_authenticated/inventory.receipt'
+import { Route as AuthenticatedInventoryLedgerRouteImport } from './routes/_authenticated/inventory.ledger'
+import { Route as AuthenticatedInventoryIssueRouteImport } from './routes/_authenticated/inventory.issue'
 import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
 import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authenticated/engineering.bom'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
@@ -146,6 +149,24 @@ const AuthenticatedInventoryStockRoute =
     path: '/inventory/stock',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedInventoryReceiptRoute =
+  AuthenticatedInventoryReceiptRouteImport.update({
+    id: '/inventory/receipt',
+    path: '/inventory/receipt',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryLedgerRoute =
+  AuthenticatedInventoryLedgerRouteImport.update({
+    id: '/inventory/ledger',
+    path: '/inventory/ledger',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryIssueRoute =
+  AuthenticatedInventoryIssueRouteImport.update({
+    id: '/inventory/issue',
+    path: '/inventory/issue',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEngineeringRoutingRoute =
   AuthenticatedEngineeringRoutingRouteImport.update({
     id: '/engineering/routing',
@@ -245,6 +266,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
   '/inventory/stock': typeof AuthenticatedInventoryStockRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -278,6 +302,9 @@ export interface FileRoutesByTo {
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
   '/inventory/stock': typeof AuthenticatedInventoryStockRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -313,6 +340,9 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/_authenticated/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/_authenticated/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/_authenticated/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
   '/_authenticated/inventory/stock': typeof AuthenticatedInventoryStockRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -348,6 +378,9 @@ export interface FileRouteTypes {
     | '/dashboard/manajemen'
     | '/engineering/bom'
     | '/engineering/routing'
+    | '/inventory/issue'
+    | '/inventory/ledger'
+    | '/inventory/receipt'
     | '/inventory/stock'
     | '/master/products'
     | '/procurement/suppliers'
@@ -381,6 +414,9 @@ export interface FileRouteTypes {
     | '/dashboard/manajemen'
     | '/engineering/bom'
     | '/engineering/routing'
+    | '/inventory/issue'
+    | '/inventory/ledger'
+    | '/inventory/receipt'
     | '/inventory/stock'
     | '/master/products'
     | '/procurement/suppliers'
@@ -415,6 +451,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/engineering/bom'
     | '/_authenticated/engineering/routing'
+    | '/_authenticated/inventory/issue'
+    | '/_authenticated/inventory/ledger'
+    | '/_authenticated/inventory/receipt'
     | '/_authenticated/inventory/stock'
     | '/_authenticated/master/products'
     | '/_authenticated/procurement/suppliers'
@@ -566,6 +605,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInventoryStockRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inventory/receipt': {
+      id: '/_authenticated/inventory/receipt'
+      path: '/inventory/receipt'
+      fullPath: '/inventory/receipt'
+      preLoaderRoute: typeof AuthenticatedInventoryReceiptRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/ledger': {
+      id: '/_authenticated/inventory/ledger'
+      path: '/inventory/ledger'
+      fullPath: '/inventory/ledger'
+      preLoaderRoute: typeof AuthenticatedInventoryLedgerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/issue': {
+      id: '/_authenticated/inventory/issue'
+      path: '/inventory/issue'
+      fullPath: '/inventory/issue'
+      preLoaderRoute: typeof AuthenticatedInventoryIssueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/engineering/routing': {
       id: '/_authenticated/engineering/routing'
       path: '/engineering/routing'
@@ -682,6 +742,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedEngineeringBomRoute: typeof AuthenticatedEngineeringBomRoute
   AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
+  AuthenticatedInventoryIssueRoute: typeof AuthenticatedInventoryIssueRoute
+  AuthenticatedInventoryLedgerRoute: typeof AuthenticatedInventoryLedgerRoute
+  AuthenticatedInventoryReceiptRoute: typeof AuthenticatedInventoryReceiptRoute
   AuthenticatedInventoryStockRoute: typeof AuthenticatedInventoryStockRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
@@ -714,6 +777,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedEngineeringBomRoute: AuthenticatedEngineeringBomRoute,
   AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
+  AuthenticatedInventoryIssueRoute: AuthenticatedInventoryIssueRoute,
+  AuthenticatedInventoryLedgerRoute: AuthenticatedInventoryLedgerRoute,
+  AuthenticatedInventoryReceiptRoute: AuthenticatedInventoryReceiptRoute,
   AuthenticatedInventoryStockRoute: AuthenticatedInventoryStockRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
   AuthenticatedProcurementSuppliersRoute:
