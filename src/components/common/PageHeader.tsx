@@ -30,7 +30,10 @@ export function PageHeader({
             </span>
           ))}
         </nav>
-        <h1 className="truncate text-2xl font-bold tracking-tight text-foreground">{title}</h1>
+        <h1 className="truncate text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
+          {title}
+        </h1>
+
         {description ? (
           <p className="mt-1 text-sm text-muted-foreground">{description}</p>
         ) : null}
