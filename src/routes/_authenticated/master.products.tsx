@@ -72,8 +72,8 @@ function ProductsPage() {
     {
       key: "variants",
       header: "Varian",
-      align: "right",
-      value: (r) => ((r.product_variants as unknown[]) ?? []).length,
+      value: (r) =>
+        ((r.product_variants as { name?: string }[]) ?? []).map((v) => v.name).join(", ") || "-",
     },
     {
       key: "standard_selling_value",
@@ -92,40 +92,32 @@ function ProductsPage() {
   const fields: CrudField[] = [
     {
       name: "code",
-      label: "Kode Produk (otomatis)",
-      editOnly: true,
+      label: "Kode",
       readOnly: true,
-      placeholder: "Dibuat otomatis oleh sistem",
+      placeholder: "Otomatis dari sistem",
     },
-    { name: "name", label: "Nama Produk", required: true },
-    { name: "category", label: "Kategori" },
+    { name: "name", label: "Nama", required: true, placeholder: "Nama Produk" },
+    { name: "category", label: "Kategori", placeholder: "Kategori" },
+    {
+      name: "__variant",
+      label: "Varian",
+      virtual: true,
+      placeholder: "Varian",
+      defaultValue: "",
+    },
     {
       name: "base_uom_id",
-      label: "Satuan Dasar",
+      label: "UoM",
       type: "select",
       options: toOptions(uoms as Row[], ["code", "name"]),
     },
     { name: "standard_selling_value", label: "Nilai Jual Standar", type: "number", defaultValue: 0 },
     { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
-    {
-      name: "__variants",
-      label: "Varian Produk",
-      type: "custom",
-      full: true,
-      virtual: true,
-      defaultValue: [] as DraftVariant[],
-      render: ({ value, setValue }) => (
-        <VariantEditor
-          items={(value as DraftVariant[]) ?? []}
-          onChange={(next) => setValue(next)}
-        />
-      ),
-    },
   ];
 
   return (
     <CrudPage<Row>
-      title="Product Catalog"
+      title="Produk & Varian"
       description="Master produk beserta varian, satuan dasar, dan nilai jual standar. Kode produk dibuat otomatis mengikuti format di Master Configuration."
       table="products"
       invalidateKeys={[["products"]]}
@@ -138,19 +130,15 @@ function ProductsPage() {
       exportName="product-catalog"
       toRowValues={(row) => ({
         ...row,
-        __variants: (((row.product_variants as Row[]) ?? []) as Row[]).map((v) => ({
-          key: String(v.id),
-          id: String(v.id),
-          code: String(v.code ?? ""),
-          name: String(v.name ?? ""),
-        })),
+        __variant: String((((row.product_variants as Row[]) ?? [])[0]?.name as string) ?? ""),
       })}
       afterCreate={async (created: CrudRow, values) =>
-        syncVariants(String(created.id), (values.__variants as DraftVariant[]) ?? [])
+        syncVariant(String(created.id), String(values.__variant ?? ""))
       }
       afterUpdate={async (updated: CrudRow, values) =>
-        syncVariants(String(updated.id), (values.__variants as DraftVariant[]) ?? [])
+        syncVariant(String(updated.id), String(values.__variant ?? ""))
       }
     />
   );
 }
+
