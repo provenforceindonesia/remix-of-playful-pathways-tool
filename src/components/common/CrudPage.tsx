@@ -51,8 +51,11 @@ export type CrudField = {
   full?: boolean;
   step?: string;
   readOnlyOnEdit?: boolean;
+  readOnly?: boolean;
   createOnly?: boolean;
   editOnly?: boolean;
+  /** Not sent to the table payload (used for side-effect inserts). */
+  virtual?: boolean;
 };
 
 export type CrudRow = Record<string, unknown>;
