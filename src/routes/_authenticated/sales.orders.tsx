@@ -317,6 +317,13 @@ function SalesOrdersPage() {
     },
     { name: "customer_po_ref", label: "Referensi PO Customer" },
     {
+      name: "priority",
+      label: "Prioritas",
+      type: "select",
+      defaultValue: "Normal",
+      options: ["Urgent", "Tinggi", "Normal", "Rendah"].map((v) => ({ value: v, label: v })),
+    },
+    {
       name: "__items",
       label: "Item Produk",
       type: "custom",
@@ -337,13 +344,6 @@ function SalesOrdersPage() {
     { name: "plant_id", label: "Plant", type: "select", editOnly: true, options: toOptions(plants as Row[], ["name"]) },
     { name: "order_date", label: "Tanggal Order", type: "date", required: true, defaultValue: toISODate(new Date()) },
     { name: "required_date", label: "Tanggal Dibutuhkan", type: "date", required: true },
-    {
-      name: "priority",
-      label: "Prioritas",
-      type: "select",
-      defaultValue: "Normal",
-      options: ["Urgent", "Tinggi", "Normal", "Rendah"].map((v) => ({ value: v, label: v })),
-    },
     {
       name: "status",
       label: "Status",
