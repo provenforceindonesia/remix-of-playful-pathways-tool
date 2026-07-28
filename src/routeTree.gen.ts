@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authenticated/sales.customers'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 
 const AuthRoute = AuthRouteImport.update({
@@ -28,6 +29,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSalesCustomersRoute =
+  AuthenticatedSalesCustomersRouteImport.update({
+    id: '/sales/customers',
+    path: '/sales/customers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardManajemenRoute =
   AuthenticatedDashboardManajemenRouteImport.update({
     id: '/dashboard/manajemen',
@@ -39,11 +46,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -51,18 +60,20 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/_authenticated/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard/manajemen'
+  fullPaths: '/' | '/auth' | '/dashboard/manajemen' | '/sales/customers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard/manajemen'
+  to: '/' | '/auth' | '/dashboard/manajemen' | '/sales/customers'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard/manajemen'
+    | '/_authenticated/sales/customers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +105,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/sales/customers': {
+      id: '/_authenticated/sales/customers'
+      path: '/sales/customers'
+      fullPath: '/sales/customers'
+      preLoaderRoute: typeof AuthenticatedSalesCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/manajemen': {
       id: '/_authenticated/dashboard/manajemen'
       path: '/dashboard/manajemen'
@@ -106,10 +124,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
+  AuthenticatedSalesCustomersRoute: typeof AuthenticatedSalesCustomersRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
+  AuthenticatedSalesCustomersRoute: AuthenticatedSalesCustomersRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
