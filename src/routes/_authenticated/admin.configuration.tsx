@@ -194,6 +194,39 @@ function ConfigurationPage() {
         },
       ],
     },
+    reasons: {
+      title: "Reason Code Downtime",
+      table: "downtime_reason_codes",
+      key: "downtime_reason_codes",
+      rows: (reasons.data ?? []) as Row[],
+      loading: reasons.isLoading,
+      columns: [
+        { key: "code", header: "Kode" },
+        { key: "name", header: "Nama" },
+        { key: "category", header: "Kategori" },
+        {
+          key: "requires_maintenance",
+          header: "Perlu Maintenance",
+          value: (r) => (r.requires_maintenance ? "Ya" : "Tidak"),
+        },
+        { key: "is_active", header: "Status", render: activeStatus },
+      ],
+      fields: [
+        { name: "code", label: "Kode", required: true },
+        { name: "name", label: "Nama", required: true },
+        {
+          name: "category",
+          label: "Kategori",
+          type: "select",
+          required: true,
+          defaultValue: "Mesin",
+          options: selectOptions(["Mesin", "Material", "Metode", "Manusia", "Eksternal", "Planned"]),
+        },
+        { name: "requires_maintenance", label: "Perlu Maintenance", type: "switch", defaultValue: false },
+        { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
+      ],
+    },
+
     warehouses: {
       title: "Gudang",
       table: "warehouses",
