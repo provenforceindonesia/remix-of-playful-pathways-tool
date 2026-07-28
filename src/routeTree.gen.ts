@@ -32,6 +32,7 @@ import { Route as AuthenticatedInventoryReservationRouteImport } from './routes/
 import { Route as AuthenticatedInventoryReceiptRouteImport } from './routes/_authenticated/inventory.receipt'
 import { Route as AuthenticatedInventoryLedgerRouteImport } from './routes/_authenticated/inventory.ledger'
 import { Route as AuthenticatedInventoryIssueRouteImport } from './routes/_authenticated/inventory.issue'
+import { Route as AuthenticatedInventoryDashboardRouteImport } from './routes/_authenticated/inventory.dashboard'
 import { Route as AuthenticatedEngineeringTimeStudyRouteImport } from './routes/_authenticated/engineering.time-study'
 import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
 import { Route as AuthenticatedEngineeringCapacityRouteImport } from './routes/_authenticated/engineering.capacity'
@@ -43,6 +44,7 @@ import { Route as AuthenticatedCostingMasterRouteImport } from './routes/_authen
 import { Route as AuthenticatedCostingMarginRouteImport } from './routes/_authenticated/costing.margin'
 import { Route as AuthenticatedCostingLossRouteImport } from './routes/_authenticated/costing.loss'
 import { Route as AuthenticatedCostingHppRouteImport } from './routes/_authenticated/costing.hpp'
+import { Route as AuthenticatedCostingDashboardRouteImport } from './routes/_authenticated/costing.dashboard'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
 import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
@@ -189,6 +191,12 @@ const AuthenticatedInventoryIssueRoute =
     path: '/inventory/issue',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedInventoryDashboardRoute =
+  AuthenticatedInventoryDashboardRouteImport.update({
+    id: '/inventory/dashboard',
+    path: '/inventory/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEngineeringTimeStudyRoute =
   AuthenticatedEngineeringTimeStudyRouteImport.update({
     id: '/engineering/time-study',
@@ -254,6 +262,12 @@ const AuthenticatedCostingHppRoute = AuthenticatedCostingHppRouteImport.update({
   path: '/costing/hpp',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCostingDashboardRoute =
+  AuthenticatedCostingDashboardRouteImport.update({
+    id: '/costing/dashboard',
+    path: '/costing/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalyticsSpeedRoute =
   AuthenticatedAnalyticsSpeedRouteImport.update({
     id: '/analytics/speed',
@@ -332,6 +346,7 @@ export interface FileRoutesByFullPath {
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/dashboard': typeof AuthenticatedCostingDashboardRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/costing/loss': typeof AuthenticatedCostingLossRoute
   '/costing/margin': typeof AuthenticatedCostingMarginRoute
@@ -343,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/engineering/capacity': typeof AuthenticatedEngineeringCapacityRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/engineering/time-study': typeof AuthenticatedEngineeringTimeStudyRoute
+  '/inventory/dashboard': typeof AuthenticatedInventoryDashboardRoute
   '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
   '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
   '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
@@ -378,6 +394,7 @@ export interface FileRoutesByTo {
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/dashboard': typeof AuthenticatedCostingDashboardRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/costing/loss': typeof AuthenticatedCostingLossRoute
   '/costing/margin': typeof AuthenticatedCostingMarginRoute
@@ -389,6 +406,7 @@ export interface FileRoutesByTo {
   '/engineering/capacity': typeof AuthenticatedEngineeringCapacityRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/engineering/time-study': typeof AuthenticatedEngineeringTimeStudyRoute
+  '/inventory/dashboard': typeof AuthenticatedInventoryDashboardRoute
   '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
   '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
   '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
@@ -426,6 +444,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/_authenticated/costing/dashboard': typeof AuthenticatedCostingDashboardRoute
   '/_authenticated/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/_authenticated/costing/loss': typeof AuthenticatedCostingLossRoute
   '/_authenticated/costing/margin': typeof AuthenticatedCostingMarginRoute
@@ -437,6 +456,7 @@ export interface FileRoutesById {
   '/_authenticated/engineering/capacity': typeof AuthenticatedEngineeringCapacityRoute
   '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/_authenticated/engineering/time-study': typeof AuthenticatedEngineeringTimeStudyRoute
+  '/_authenticated/inventory/dashboard': typeof AuthenticatedInventoryDashboardRoute
   '/_authenticated/inventory/issue': typeof AuthenticatedInventoryIssueRoute
   '/_authenticated/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
   '/_authenticated/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
@@ -474,6 +494,7 @@ export interface FileRouteTypes {
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
+    | '/costing/dashboard'
     | '/costing/hpp'
     | '/costing/loss'
     | '/costing/margin'
@@ -485,6 +506,7 @@ export interface FileRouteTypes {
     | '/engineering/capacity'
     | '/engineering/routing'
     | '/engineering/time-study'
+    | '/inventory/dashboard'
     | '/inventory/issue'
     | '/inventory/ledger'
     | '/inventory/receipt'
@@ -520,6 +542,7 @@ export interface FileRouteTypes {
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
+    | '/costing/dashboard'
     | '/costing/hpp'
     | '/costing/loss'
     | '/costing/margin'
@@ -531,6 +554,7 @@ export interface FileRouteTypes {
     | '/engineering/capacity'
     | '/engineering/routing'
     | '/engineering/time-study'
+    | '/inventory/dashboard'
     | '/inventory/issue'
     | '/inventory/ledger'
     | '/inventory/receipt'
@@ -567,6 +591,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/oee'
     | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
+    | '/_authenticated/costing/dashboard'
     | '/_authenticated/costing/hpp'
     | '/_authenticated/costing/loss'
     | '/_authenticated/costing/margin'
@@ -578,6 +603,7 @@ export interface FileRouteTypes {
     | '/_authenticated/engineering/capacity'
     | '/_authenticated/engineering/routing'
     | '/_authenticated/engineering/time-study'
+    | '/_authenticated/inventory/dashboard'
     | '/_authenticated/inventory/issue'
     | '/_authenticated/inventory/ledger'
     | '/_authenticated/inventory/receipt'
@@ -769,6 +795,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInventoryIssueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inventory/dashboard': {
+      id: '/_authenticated/inventory/dashboard'
+      path: '/inventory/dashboard'
+      fullPath: '/inventory/dashboard'
+      preLoaderRoute: typeof AuthenticatedInventoryDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/engineering/time-study': {
       id: '/_authenticated/engineering/time-study'
       path: '/engineering/time-study'
@@ -844,6 +877,13 @@ declare module '@tanstack/react-router' {
       path: '/costing/hpp'
       fullPath: '/costing/hpp'
       preLoaderRoute: typeof AuthenticatedCostingHppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/costing/dashboard': {
+      id: '/_authenticated/costing/dashboard'
+      path: '/costing/dashboard'
+      fullPath: '/costing/dashboard'
+      preLoaderRoute: typeof AuthenticatedCostingDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/analytics/speed': {
@@ -938,6 +978,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
+  AuthenticatedCostingDashboardRoute: typeof AuthenticatedCostingDashboardRoute
   AuthenticatedCostingHppRoute: typeof AuthenticatedCostingHppRoute
   AuthenticatedCostingLossRoute: typeof AuthenticatedCostingLossRoute
   AuthenticatedCostingMarginRoute: typeof AuthenticatedCostingMarginRoute
@@ -949,6 +990,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEngineeringCapacityRoute: typeof AuthenticatedEngineeringCapacityRoute
   AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
   AuthenticatedEngineeringTimeStudyRoute: typeof AuthenticatedEngineeringTimeStudyRoute
+  AuthenticatedInventoryDashboardRoute: typeof AuthenticatedInventoryDashboardRoute
   AuthenticatedInventoryIssueRoute: typeof AuthenticatedInventoryIssueRoute
   AuthenticatedInventoryLedgerRoute: typeof AuthenticatedInventoryLedgerRoute
   AuthenticatedInventoryReceiptRoute: typeof AuthenticatedInventoryReceiptRoute
@@ -983,6 +1025,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
+  AuthenticatedCostingDashboardRoute: AuthenticatedCostingDashboardRoute,
   AuthenticatedCostingHppRoute: AuthenticatedCostingHppRoute,
   AuthenticatedCostingLossRoute: AuthenticatedCostingLossRoute,
   AuthenticatedCostingMarginRoute: AuthenticatedCostingMarginRoute,
@@ -996,6 +1039,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
   AuthenticatedEngineeringTimeStudyRoute:
     AuthenticatedEngineeringTimeStudyRoute,
+  AuthenticatedInventoryDashboardRoute: AuthenticatedInventoryDashboardRoute,
   AuthenticatedInventoryIssueRoute: AuthenticatedInventoryIssueRoute,
   AuthenticatedInventoryLedgerRoute: AuthenticatedInventoryLedgerRoute,
   AuthenticatedInventoryReceiptRoute: AuthenticatedInventoryReceiptRoute,
