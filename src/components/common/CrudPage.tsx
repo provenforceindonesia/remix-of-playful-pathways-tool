@@ -121,6 +121,7 @@ export function CrudPage<T extends CrudRow>({
   pageSize,
   rowActions,
   afterCreate,
+  afterUpdate,
   onFieldChange,
 }: {
   title: string;
@@ -192,6 +193,7 @@ export function CrudPage<T extends CrudRow>({
           .update(payload)
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
+        if (afterUpdate) await afterUpdate(editing as CrudRow, values);
       } else {
         const { data, error } = await db.from(table).insert(payload).select().single();
         if (error) throw new Error(error.message);
