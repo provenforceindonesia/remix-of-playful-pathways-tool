@@ -149,13 +149,13 @@ export function CrudPage<T extends CrudRow>({
       const isEdit = Boolean(editing);
       const payload = clean(values, isEdit);
       if (isEdit) {
-        const { error } = await supabase
+        const { error } = await db
           .from(table)
           .update(payload)
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
       } else {
-        const { error } = await supabase.from(table).insert(payload);
+        const { error } = await db.from(table).insert(payload);
         if (error) throw new Error(error.message);
       }
     },
@@ -170,12 +170,13 @@ export function CrudPage<T extends CrudRow>({
 
   const remove = useMutation({
     mutationFn: async (row: T) => {
-      const q = supabase.from(table);
+      const q = db.from(table);
       const { error } = softDelete
         ? await q.update({ deleted_at: new Date().toISOString() }).eq("id", String(row.id))
         : await q.delete().eq("id", String(row.id));
       if (error) throw new Error(error.message);
     },
+
     onSuccess: () => {
       toast.success("Data dihapus");
       setDeleting(null);
