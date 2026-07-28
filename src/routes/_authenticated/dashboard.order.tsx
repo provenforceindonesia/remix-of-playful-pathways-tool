@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { PageHeader } from "@/components/common/PageHeader";
+import { AlarmClock, Gauge, ShoppingCart, Wallet } from "lucide-react";
 import { KpiCard } from "@/components/common/KpiCard";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";

@@ -13,6 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Activity, CheckCircle2, ClipboardList, TimerReset } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { KpiCard } from "@/components/common/KpiCard";
 import { DataTable, type Column } from "@/components/common/DataTable";
