@@ -43,7 +43,7 @@ export type Option = { value: string; label: string };
 export type CrudField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "time" | "select" | "switch";
+  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "time" | "select" | "switch";
   options?: Option[];
   required?: boolean;
   placeholder?: string;
