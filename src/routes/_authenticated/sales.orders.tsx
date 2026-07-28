@@ -248,6 +248,40 @@ function SalesOrdersPage() {
       header: "Customer",
       value: (r) => (r.customers as { name?: string } | null)?.name ?? "-",
     },
+    {
+      key: "product",
+      header: "Produk",
+      value: (r) =>
+        ((r.sales_order_items as Item[]) ?? [])
+          .map((i) => i.products?.name ?? "-")
+          .filter(Boolean)
+          .join(", "),
+      render: (r) => (
+        <span className="truncate">
+          {((r.sales_order_items as Item[]) ?? [])
+            .map((i) => i.products?.name ?? "-")
+            .filter(Boolean)
+            .join(", ") || "-"}
+        </span>
+      ),
+    },
+    {
+      key: "quantity",
+      header: "Qty",
+      align: "right",
+      value: (r) =>
+        ((r.sales_order_items as Item[]) ?? []).reduce(
+          (s, i) => s + Number(i.quantity ?? 0),
+          0,
+        ),
+      render: (r) =>
+        formatNumber(
+          ((r.sales_order_items as Item[]) ?? []).reduce(
+            (s, i) => s + Number(i.quantity ?? 0),
+            0,
+          ),
+        ),
+    },
     { key: "order_date", header: "Tgl Order", render: (r) => formatDate(r.order_date as string) },
     { key: "required_date", header: "Dibutuhkan", render: (r) => formatDate(r.required_date as string) },
     {
