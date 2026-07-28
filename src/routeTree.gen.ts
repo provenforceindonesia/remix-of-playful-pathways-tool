@@ -33,6 +33,7 @@ import { Route as AuthenticatedInventoryIssueRouteImport } from './routes/_authe
 import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
 import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authenticated/engineering.bom'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
+import { Route as AuthenticatedCostingHppRouteImport } from './routes/_authenticated/costing.hpp'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
 import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
@@ -185,6 +186,11 @@ const AuthenticatedDashboardManajemenRoute =
     path: '/dashboard/manajemen',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCostingHppRoute = AuthenticatedCostingHppRouteImport.update({
+  id: '/costing/hpp',
+  path: '/costing/hpp',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAnalyticsSpeedRoute =
   AuthenticatedAnalyticsSpeedRouteImport.update({
     id: '/analytics/speed',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
@@ -337,6 +345,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/_authenticated/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
@@ -375,6 +384,7 @@ export interface FileRouteTypes {
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
+    | '/costing/hpp'
     | '/dashboard/manajemen'
     | '/engineering/bom'
     | '/engineering/routing'
@@ -411,6 +421,7 @@ export interface FileRouteTypes {
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
+    | '/costing/hpp'
     | '/dashboard/manajemen'
     | '/engineering/bom'
     | '/engineering/routing'
@@ -448,6 +459,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/oee'
     | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
+    | '/_authenticated/costing/hpp'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/engineering/bom'
     | '/_authenticated/engineering/routing'
@@ -647,6 +659,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardManajemenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/costing/hpp': {
+      id: '/_authenticated/costing/hpp'
+      path: '/costing/hpp'
+      fullPath: '/costing/hpp'
+      preLoaderRoute: typeof AuthenticatedCostingHppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analytics/speed': {
       id: '/_authenticated/analytics/speed'
       path: '/analytics/speed'
@@ -739,6 +758,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
+  AuthenticatedCostingHppRoute: typeof AuthenticatedCostingHppRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedEngineeringBomRoute: typeof AuthenticatedEngineeringBomRoute
   AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
@@ -774,6 +794,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
+  AuthenticatedCostingHppRoute: AuthenticatedCostingHppRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedEngineeringBomRoute: AuthenticatedEngineeringBomRoute,
   AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
