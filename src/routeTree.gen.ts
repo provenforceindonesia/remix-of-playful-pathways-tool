@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedShopfloorWoRouteImport } from './routes/_authenticated/shopfloor.wo'
 import { Route as AuthenticatedShopfloorInputProduksiRouteImport } from './routes/_authenticated/shopfloor.input-produksi'
+import { Route as AuthenticatedShopfloorDowntimeRouteImport } from './routes/_authenticated/shopfloor.downtime'
 import { Route as AuthenticatedSalesTrackingRouteImport } from './routes/_authenticated/sales.tracking'
 import { Route as AuthenticatedSalesReviewRouteImport } from './routes/_authenticated/sales.review'
 import { Route as AuthenticatedSalesOrdersRouteImport } from './routes/_authenticated/sales.orders'
@@ -53,6 +54,12 @@ const AuthenticatedShopfloorInputProduksiRoute =
   AuthenticatedShopfloorInputProduksiRouteImport.update({
     id: '/shopfloor/input-produksi',
     path: '/shopfloor/input-produksi',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedShopfloorDowntimeRoute =
+  AuthenticatedShopfloorDowntimeRouteImport.update({
+    id: '/shopfloor/downtime',
+    path: '/shopfloor/downtime',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSalesTrackingRoute =
@@ -154,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
   '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
   '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
@@ -174,6 +182,7 @@ export interface FileRoutesByTo {
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
   '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
   '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
@@ -196,6 +205,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/_authenticated/sales/review': typeof AuthenticatedSalesReviewRoute
   '/_authenticated/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/_authenticated/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
   '/_authenticated/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/_authenticated/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/sales/orders'
     | '/sales/review'
     | '/sales/tracking'
+    | '/shopfloor/downtime'
     | '/shopfloor/input-produksi'
     | '/shopfloor/wo'
   fileRoutesByTo: FileRoutesByTo
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/sales/orders'
     | '/sales/review'
     | '/sales/tracking'
+    | '/shopfloor/downtime'
     | '/shopfloor/input-produksi'
     | '/shopfloor/wo'
   id:
@@ -259,6 +271,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/orders'
     | '/_authenticated/sales/review'
     | '/_authenticated/sales/tracking'
+    | '/_authenticated/shopfloor/downtime'
     | '/_authenticated/shopfloor/input-produksi'
     | '/_authenticated/shopfloor/wo'
   fileRoutesById: FileRoutesById
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       path: '/shopfloor/input-produksi'
       fullPath: '/shopfloor/input-produksi'
       preLoaderRoute: typeof AuthenticatedShopfloorInputProduksiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shopfloor/downtime': {
+      id: '/_authenticated/shopfloor/downtime'
+      path: '/shopfloor/downtime'
+      fullPath: '/shopfloor/downtime'
+      preLoaderRoute: typeof AuthenticatedShopfloorDowntimeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/tracking': {
@@ -422,6 +442,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalesOrdersRoute: typeof AuthenticatedSalesOrdersRoute
   AuthenticatedSalesReviewRoute: typeof AuthenticatedSalesReviewRoute
   AuthenticatedSalesTrackingRoute: typeof AuthenticatedSalesTrackingRoute
+  AuthenticatedShopfloorDowntimeRoute: typeof AuthenticatedShopfloorDowntimeRoute
   AuthenticatedShopfloorInputProduksiRoute: typeof AuthenticatedShopfloorInputProduksiRoute
   AuthenticatedShopfloorWoRoute: typeof AuthenticatedShopfloorWoRoute
 }
@@ -443,6 +464,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalesOrdersRoute: AuthenticatedSalesOrdersRoute,
   AuthenticatedSalesReviewRoute: AuthenticatedSalesReviewRoute,
   AuthenticatedSalesTrackingRoute: AuthenticatedSalesTrackingRoute,
+  AuthenticatedShopfloorDowntimeRoute: AuthenticatedShopfloorDowntimeRoute,
   AuthenticatedShopfloorInputProduksiRoute:
     AuthenticatedShopfloorInputProduksiRoute,
   AuthenticatedShopfloorWoRoute: AuthenticatedShopfloorWoRoute,
