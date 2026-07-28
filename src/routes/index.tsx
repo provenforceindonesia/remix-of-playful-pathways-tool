@@ -1,24 +1,42 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { defaultRouteForRole } from "@/lib/nav";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "MANUFACTUREIQ — Manufacturing Performance Control" },
+      {
+        name: "description",
+        content:
+          "Sistem kontrol performa manufaktur: order, produksi, downtime, inventory, dan costing real-time.",
+      },
+      { property: "og:title", content: "MANUFACTUREIQ — Manufacturing Performance Control" },
+      {
+        property: "og:description",
+        content: "Pantau OEE, backlog, inventory, dan HPP dalam satu platform terintegrasi.",
+      },
+    ],
+  }),
+  component: IndexRedirect,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function IndexRedirect() {
+  const { loading, session, role } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!session) void navigate({ to: "/auth", replace: true });
+    else if (role) void navigate({ to: defaultRouteForRole(role), replace: true });
+  }, [loading, session, role, navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <Loader2 className="size-6 animate-spin text-primary" />
     </div>
   );
 }
