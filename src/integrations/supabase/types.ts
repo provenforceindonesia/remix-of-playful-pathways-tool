@@ -4523,6 +4523,7 @@ export type Database = {
       in_user_plant: { Args: { target: string }; Returns: boolean }
       is_role: { Args: { codes: string[] }; Returns: boolean }
       next_doc_no: { Args: { prefix: string; seq: unknown }; Returns: string }
+      next_so_number: { Args: never; Returns: string }
       recalc_sales_order_progress: {
         Args: { p_so_id: string }
         Returns: undefined

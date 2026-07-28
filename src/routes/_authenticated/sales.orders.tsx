@@ -129,7 +129,13 @@ function SalesOrdersPage() {
   ];
 
   const fields: CrudField[] = [
-    { name: "so_number", label: "Nomor SO", required: true, placeholder: "SO-2601-0001" },
+    {
+      name: "so_number",
+      label: "Nomor SO (otomatis)",
+      editOnly: true,
+      readOnlyOnEdit: true,
+      placeholder: "Digenerate sistem",
+    },
     {
       name: "customer_id",
       label: "Customer",
