@@ -343,3 +343,80 @@ export const costMasterQuery = {
       must(supabase.from("overhead_rates").select("*").order("effective_date", { ascending: false })),
   }),
 };
+
+export const warehousesQuery = queryOptions({
+  queryKey: ["warehouses"],
+  queryFn: () => must(supabase.from("warehouses").select("*, plants:plant_id(name)").order("code")),
+});
+
+export const materialReceiptsQuery = queryOptions({
+  queryKey: ["material_receipts"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("material_receipts")
+        .select("*, materials:material_id(code,name), suppliers:supplier_id(code,name), warehouses:warehouse_id(code,name)")
+        .order("receipt_date", { ascending: false }),
+    ),
+});
+
+export const materialIssuesQuery = queryOptions({
+  queryKey: ["material_issues"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("material_issues")
+        .select("*, materials:material_id(code,name), work_orders:work_order_id(wo_number), warehouses:warehouse_id(code,name)")
+        .order("issue_date", { ascending: false }),
+    ),
+});
+
+export const capacityPlansQuery = queryOptions({
+  queryKey: ["capacity_plans"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("capacity_plans")
+        .select("*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name)")
+        .order("plan_date", { ascending: false }),
+    ),
+});
+
+export const manpowerQuery = queryOptions({
+  queryKey: ["manpower_recommendations"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("manpower_recommendations")
+        .select("*, lines:line_id(name)")
+        .order("period_date", { ascending: false }),
+    ),
+});
+
+export const productionDailyQuery = queryOptions({
+  queryKey: ["v_production_daily"],
+  queryFn: () =>
+    must(supabase.from("v_production_daily").select("*").order("production_date", { ascending: false })),
+});
+
+export const maintenanceLogsQuery = queryOptions({
+  queryKey: ["maintenance_logs"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("maintenance_logs")
+        .select("*, machines:machine_id(code,name)")
+        .order("log_date", { ascending: false }),
+    ),
+});
+
+export const actualCostsQuery = queryOptions({
+  queryKey: ["actual_production_costs"],
+  queryFn: () =>
+    must(
+      supabase
+        .from("actual_production_costs")
+        .select("*, work_orders:work_order_id(wo_number, products:product_id(code,name))")
+        .order("period_date", { ascending: false }),
+    ),
+});
