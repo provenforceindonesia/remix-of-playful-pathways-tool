@@ -27,6 +27,7 @@ import { Route as AuthenticatedProductionBacklogRouteImport } from './routes/_au
 import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
+import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authenticated/engineering.bom'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
@@ -144,6 +145,12 @@ const AuthenticatedEngineeringRoutingRoute =
     path: '/engineering/routing',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEngineeringBomRoute =
+  AuthenticatedEngineeringBomRouteImport.update({
+    id: '/engineering/bom',
+    path: '/engineering/bom',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardManajemenRoute =
   AuthenticatedDashboardManajemenRouteImport.update({
     id: '/dashboard/manajemen',
@@ -229,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -260,6 +268,7 @@ export interface FileRoutesByTo {
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -293,6 +302,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/_authenticated/engineering/bom': typeof AuthenticatedEngineeringBomRoute
   '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/analytics/quality'
     | '/analytics/speed'
     | '/dashboard/manajemen'
+    | '/engineering/bom'
     | '/engineering/routing'
     | '/master/products'
     | '/procurement/suppliers'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/analytics/quality'
     | '/analytics/speed'
     | '/dashboard/manajemen'
+    | '/engineering/bom'
     | '/engineering/routing'
     | '/master/products'
     | '/procurement/suppliers'
@@ -389,6 +401,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
     | '/_authenticated/dashboard/manajemen'
+    | '/_authenticated/engineering/bom'
     | '/_authenticated/engineering/routing'
     | '/_authenticated/master/products'
     | '/_authenticated/procurement/suppliers'
@@ -540,6 +553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEngineeringRoutingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/engineering/bom': {
+      id: '/_authenticated/engineering/bom'
+      path: '/engineering/bom'
+      fullPath: '/engineering/bom'
+      preLoaderRoute: typeof AuthenticatedEngineeringBomRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/manajemen': {
       id: '/_authenticated/dashboard/manajemen'
       path: '/dashboard/manajemen'
@@ -640,6 +660,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
+  AuthenticatedEngineeringBomRoute: typeof AuthenticatedEngineeringBomRoute
   AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
@@ -670,6 +691,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
+  AuthenticatedEngineeringBomRoute: AuthenticatedEngineeringBomRoute,
   AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
   AuthenticatedProcurementSuppliersRoute:
