@@ -386,6 +386,10 @@ export function CrudPage<T extends CrudRow>({
                       required={f.required}
                       placeholder={f.placeholder}
                       readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      className={cn(
+                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) &&
+                          "bg-muted/40 text-muted-foreground",
+                      )}
                       onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : (
@@ -397,6 +401,10 @@ export function CrudPage<T extends CrudRow>({
                       required={f.required}
                       placeholder={f.placeholder}
                       readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      className={cn(
+                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) &&
+                          "bg-muted/40 text-muted-foreground",
+                      )}
                       onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   )}

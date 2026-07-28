@@ -334,7 +334,7 @@ function SalesOrdersPage() {
       ),
     },
 
-    { name: "plant_id", label: "Plant", type: "select", options: toOptions(plants as Row[], ["name"]) },
+    { name: "plant_id", label: "Plant", type: "select", editOnly: true, options: toOptions(plants as Row[], ["name"]) },
     { name: "order_date", label: "Tanggal Order", type: "date", required: true, defaultValue: toISODate(new Date()) },
     { name: "required_date", label: "Tanggal Dibutuhkan", type: "date", required: true },
     {
@@ -348,6 +348,7 @@ function SalesOrdersPage() {
       name: "status",
       label: "Status",
       type: "select",
+      editOnly: true,
       defaultValue: "Draft",
       options: [
         "Draft",
@@ -381,7 +382,7 @@ function SalesOrdersPage() {
         canDelete={canWrite}
         softDelete
         exportName="customer-order"
-        beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
+        beforePayload={(v) => ({ ...v, status: v.status || "Draft", created_by: profile?.id ?? null })}
         afterCreate={async (created, values) => {
           const items = ((values.__items as DraftItem[]) ?? []).filter(
             (i) => i.product_id && Number(i.quantity) > 0,
