@@ -16,6 +16,7 @@ import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authe
 import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -55,10 +56,16 @@ const AuthenticatedDashboardManajemenRoute =
     path: '/dashboard/manajemen',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
   '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin/users'
     | '/dashboard/manajemen'
     | '/master/products'
     | '/procurement/suppliers'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/admin/users'
     | '/dashboard/manajemen'
     | '/master/products'
     | '/procurement/suppliers'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/admin/users'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/master/products'
     | '/_authenticated/procurement/suppliers'
@@ -167,10 +179,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardManajemenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
@@ -178,6 +198,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
   AuthenticatedProcurementSuppliersRoute:
