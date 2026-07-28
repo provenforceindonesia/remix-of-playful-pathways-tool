@@ -51,10 +51,12 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
                   const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
                   return (
                     <Link
-                      key={item.to}
+                      key={`${item.to}-${item.label}`}
                       to={item.to}
+                      search={item.search ?? {}}
                       onClick={onNavigate}
                       title={collapsed ? item.label : undefined}
+
                       className={cn(
                         "relative flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm transition-all duration-200",
                         active
