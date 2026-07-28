@@ -134,21 +134,15 @@ function OrderItemsEditor({
             </div>
             <div className="sm:col-span-3">
               {idx === 0 ? <Label className="mb-1 block text-xs">Varian</Label> : null}
-              <Select
-                value={item.variant_id}
-                onValueChange={(val) => patch(item.key, { variant_id: val })}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={variants.length ? "Pilih varian" : "Tidak ada varian"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {variants.map((v) => (
-                    <SelectItem key={String(v.id)} value={String(v.id)}>
-                      {[v.code, v.name].filter(Boolean).join(" — ")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                readOnly
+                tabIndex={-1}
+                placeholder={item.product_id ? "Tidak ada varian" : "Otomatis dari produk"}
+                value={(() => {
+                  const v = variants.find((r) => String(r.id) === item.variant_id);
+                  return v ? [v.code, v.name].filter(Boolean).join(" — ") : "";
+                })()}
+              />
             </div>
             <div className="sm:col-span-2">
               {idx === 0 ? <Label className="mb-1 block text-xs">Qty</Label> : null}
