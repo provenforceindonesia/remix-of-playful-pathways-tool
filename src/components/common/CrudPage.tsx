@@ -331,6 +331,16 @@ export function CrudPage<T extends CrudRow>({
                         onCheckedChange={(c) => setValues((v) => ({ ...v, [f.name]: c }))}
                       />
                     </div>
+                  ) : f.type === "date" || f.type === "time" || f.type === "datetime-local" ? (
+                    <DateInput
+                      id={f.name}
+                      type={f.type}
+                      value={String(values[f.name] ?? "")}
+                      required={f.required}
+                      placeholder={f.placeholder}
+                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
+                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                    />
                   ) : (
                     <Input
                       id={f.name}
