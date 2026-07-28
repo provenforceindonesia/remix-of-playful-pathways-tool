@@ -114,7 +114,7 @@ function OrderItemsEditor({
                   const vs = (p?.product_variants as Row[]) ?? [];
                   patch(item.key, {
                     product_id: val,
-                    variant_id: vs.length === 1 ? String(vs[0].id) : "",
+                    variant_id: vs.length ? String(vs[0].id) : "",
                     uom_id: p?.base_uom_id ? String(p.base_uom_id) : "",
                     unit_price: String(p?.standard_selling_value ?? ""),
                   });

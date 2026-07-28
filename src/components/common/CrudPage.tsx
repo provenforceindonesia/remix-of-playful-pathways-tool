@@ -121,6 +121,7 @@ export function CrudPage<T extends CrudRow>({
   pageSize,
   rowActions,
   afterCreate,
+  afterUpdate,
   onFieldChange,
 }: {
   title: string;
@@ -144,6 +145,8 @@ export function CrudPage<T extends CrudRow>({
   rowActions?: (row: T) => ReactNode;
   /** Runs after a successful insert, with the created row and raw form values. */
   afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
+  /** Runs after a successful update, with the edited row and raw form values. */
+  afterUpdate?: (updated: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
   /** Returns extra values to patch when a field changes (e.g. dependent fields). */
   onFieldChange?: (
     name: string,
@@ -190,6 +193,7 @@ export function CrudPage<T extends CrudRow>({
           .update(payload)
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
+        if (afterUpdate) await afterUpdate(editing as CrudRow, values);
       } else {
         const { data, error } = await db.from(table).insert(payload).select().single();
         if (error) throw new Error(error.message);
