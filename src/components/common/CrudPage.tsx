@@ -34,6 +34,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DataTable, type Column } from "./DataTable";
+import { DateInput } from "./DateInput";
 import { PageHeader } from "./PageHeader";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +43,7 @@ export type Option = { value: string; label: string };
 export type CrudField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "time" | "select" | "switch";
+  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "time" | "select" | "switch";
   options?: Option[];
   required?: boolean;
   placeholder?: string;
@@ -330,6 +331,16 @@ export function CrudPage<T extends CrudRow>({
                         onCheckedChange={(c) => setValues((v) => ({ ...v, [f.name]: c }))}
                       />
                     </div>
+                  ) : f.type === "date" || f.type === "time" || f.type === "datetime-local" ? (
+                    <DateInput
+                      id={f.name}
+                      type={f.type}
+                      value={String(values[f.name] ?? "")}
+                      required={f.required}
+                      placeholder={f.placeholder}
+                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
+                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                    />
                   ) : (
                     <Input
                       id={f.name}
