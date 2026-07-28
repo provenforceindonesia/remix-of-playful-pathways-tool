@@ -277,9 +277,9 @@ function ManagementDashboard() {
           tone="warning"
         />
         <KpiCard
-          label="Nilai Inventory"
-          value={formatCompactCurrency(stockValue)}
-          sub="Berdasarkan average cost"
+          label="Qty Stok Material"
+          value={formatNumber(stockQty)}
+          sub="Total kuantitas on-hand seluruh gudang"
           icon={<Boxes className="size-4" />}
           tone="purple"
         />
@@ -416,10 +416,11 @@ function ManagementDashboard() {
                     </p>
                     <p className="text-xs text-muted-foreground">
                       MTBF {formatNumber(m.mtbf_hours ?? 0, 1)} jam · MTTR{" "}
-                      {formatNumber(m.mttr_minutes ?? 0, 1)} menit · {m.failure_count ?? 0} kejadian
+                      {formatNumber(m.mttr_minutes ?? 0, 1)} menit ·{" "}
+                      {m.downtime_frequency ?? 0} kejadian
                     </p>
                   </div>
-                  <StatusBadge status={m.condition_label ?? "Normal"} />
+                  <StatusBadge status={m.machine_condition ?? "Normal"} />
                 </div>
               ))
             )}
