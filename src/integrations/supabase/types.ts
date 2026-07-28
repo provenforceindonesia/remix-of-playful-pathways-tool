@@ -72,6 +72,20 @@ export type Database = {
             foreignKeyName: "actual_production_costs_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "actual_production_costs_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "actual_production_costs_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
             referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
@@ -242,11 +256,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "backlog_ledger_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "backlog_ledger_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
             foreignKeyName: "backlog_ledger_sales_order_id_fkey"
             columns: ["sales_order_id"]
             isOneToOne: false
             referencedRelation: "sales_orders"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "backlog_ledger_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "backlog_ledger_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "backlog_ledger_work_order_id_fkey"
@@ -311,6 +353,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bom_headers_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "bom_headers_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
           },
           {
             foreignKeyName: "bom_headers_variant_id_fkey"
@@ -429,6 +485,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "capacity_plans_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
+          {
             foreignKeyName: "capacity_plans_plant_id_fkey"
             columns: ["plant_id"]
             isOneToOne: false
@@ -441,6 +518,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
         ]
       }
@@ -663,6 +754,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "downtime_records_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "downtime_records_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "downtime_records_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
+          {
             foreignKeyName: "downtime_records_operator_id_fkey"
             columns: ["operator_id"]
             isOneToOne: false
@@ -684,6 +796,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "downtime_records_production_entry_id_fkey"
+            columns: ["production_entry_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downtime_records_production_entry_id_fkey"
+            columns: ["production_entry_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "downtime_records_reason_code_id_fkey"
             columns: ["reason_code_id"]
             isOneToOne: false
@@ -696,6 +822,34 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downtime_records_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "downtime_records_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "downtime_records_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "downtime_records_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "downtime_records_work_order_id_fkey"
@@ -767,6 +921,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "handovers_from_shift_id_fkey"
+            columns: ["from_shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "handovers_from_shift_id_fkey"
+            columns: ["from_shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
+          },
+          {
             foreignKeyName: "handovers_line_id_fkey"
             columns: ["line_id"]
             isOneToOne: false
@@ -786,6 +954,34 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "handovers_to_shift_id_fkey"
+            columns: ["to_shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "handovers_to_shift_id_fkey"
+            columns: ["to_shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "handovers_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "handovers_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "handovers_work_order_id_fkey"
@@ -933,6 +1129,20 @@ export type Database = {
             foreignKeyName: "loss_valuations_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "loss_valuations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "loss_valuations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
             referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
@@ -970,6 +1180,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "machines"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "machine_rates_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "machine_rates_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "machine_rates_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
           },
         ]
       }
@@ -1120,6 +1351,27 @@ export type Database = {
             referencedRelation: "machines"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "maintenance_logs_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "maintenance_logs_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "maintenance_logs_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
         ]
       }
       manpower_recommendations: {
@@ -1226,6 +1478,34 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "material_consumptions_production_entry_id_fkey"
+            columns: ["production_entry_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_consumptions_production_entry_id_fkey"
+            columns: ["production_entry_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_consumptions_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "material_consumptions_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
             foreignKeyName: "material_consumptions_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
@@ -1320,6 +1600,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "warehouses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_issues_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "material_issues_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "material_issues_work_order_id_fkey"
@@ -1445,6 +1739,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "warehouses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_returns_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "material_returns_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "material_returns_work_order_id_fkey"
@@ -1692,6 +2000,20 @@ export type Database = {
             referencedRelation: "products"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
         ]
       }
       production_entries: {
@@ -1798,6 +2120,34 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "production_entries_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "production_entries_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "production_entries_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "production_entries_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
             foreignKeyName: "production_entries_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
@@ -1851,6 +2201,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_plan_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "production_plan_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
           },
           {
             foreignKeyName: "production_plan_items_uom_id_fkey"
@@ -1951,6 +2315,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_plans_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "production_plans_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
         ]
       }
@@ -2075,6 +2453,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "profiles_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
         ]
       }
@@ -2322,6 +2714,20 @@ export type Database = {
             foreignKeyName: "recovery_links_recovery_wo_id_fkey"
             columns: ["recovery_wo_id"]
             isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "recovery_links_recovery_wo_id_fkey"
+            columns: ["recovery_wo_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "recovery_links_recovery_wo_id_fkey"
+            columns: ["recovery_wo_id"]
+            isOneToOne: false
             referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
@@ -2445,6 +2851,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "routing_operations_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "routing_operations_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "routing_operations_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
+          {
             foreignKeyName: "routing_operations_routing_id_fkey"
             columns: ["routing_id"]
             isOneToOne: false
@@ -2509,6 +2936,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "routings_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "routings_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
             foreignKeyName: "routings_variant_id_fkey"
             columns: ["variant_id"]
             isOneToOne: false
@@ -2564,6 +3005,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "sales_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
           },
           {
             foreignKeyName: "sales_order_items_sales_order_id_fkey"
@@ -2772,6 +3227,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "products"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "standard_hpp_details_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "standard_hpp_details_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
           },
           {
             foreignKeyName: "standard_hpp_details_variant_id_fkey"
@@ -3097,6 +3566,20 @@ export type Database = {
             foreignKeyName: "stock_reservations_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
             referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
@@ -3304,6 +3787,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "time_studies_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "time_studies_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "time_studies_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
+          {
             foreignKeyName: "time_studies_observer_id_fkey"
             columns: ["observer_id"]
             isOneToOne: false
@@ -3318,11 +3822,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "time_studies_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "time_studies_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
             foreignKeyName: "time_studies_shift_id_fkey"
             columns: ["shift_id"]
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_studies_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "time_studies_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
           {
             foreignKeyName: "time_studies_variant_id_fkey"
@@ -3479,6 +4011,20 @@ export type Database = {
             foreignKeyName: "wip_valuations_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "wip_valuations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "wip_valuations_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
             referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
@@ -3548,6 +4094,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_assignments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "work_order_assignments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
           },
           {
             foreignKeyName: "work_order_assignments_work_order_id_fkey"
@@ -3668,6 +4228,41 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "work_orders_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "work_orders_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "work_orders_machine_id_fkey"
+            columns: ["machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "work_orders_parent_wo_id_fkey"
+            columns: ["parent_wo_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "work_orders_parent_wo_id_fkey"
+            columns: ["parent_wo_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
             foreignKeyName: "work_orders_parent_wo_id_fkey"
             columns: ["parent_wo_id"]
             isOneToOne: false
@@ -3696,6 +4291,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "work_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "work_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
             foreignKeyName: "work_orders_routing_id_fkey"
             columns: ["routing_id"]
             isOneToOne: false
@@ -3715,6 +4324,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shifts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_orders_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "work_orders_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
           {
             foreignKeyName: "work_orders_uom_id_fkey"
@@ -3741,7 +4364,156 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_machine_health: {
+        Row: {
+          avg_oee: number | null
+          avg_speed_index: number | null
+          downtime_frequency: number | null
+          downtime_minutes: number | null
+          good_output: number | null
+          line_id: string | null
+          machine_code: string | null
+          machine_condition: string | null
+          machine_id: string | null
+          machine_name: string | null
+          master_status: string | null
+          mtbf_hours: number | null
+          mttr_minutes: number | null
+          performance_status: string | null
+          plant_id: string | null
+          reject_qty: number | null
+          total_output: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "machines_line_id_fkey"
+            columns: ["line_id"]
+            isOneToOne: false
+            referencedRelation: "lines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "machines_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_production_daily: {
+        Row: {
+          actual_speed: number | null
+          created_by: string | null
+          downtime_frequency: number | null
+          downtime_minutes: number | null
+          good_output: number | null
+          id: string | null
+          line_id: string | null
+          machine_code: string | null
+          machine_id: string | null
+          machine_master_status: string | null
+          machine_name: string | null
+          operating_minutes: number | null
+          planned_minutes: number | null
+          plant_id: string | null
+          product_code: string | null
+          product_id: string | null
+          product_name: string | null
+          production_date: string | null
+          reject_qty: number | null
+          rework_qty: number | null
+          shift_id: string | null
+          shift_name: string | null
+          standard_cycle_time_sec: number | null
+          standard_speed: number | null
+          status: string | null
+          target_qty: number | null
+          total_output: number | null
+          validated_by: string | null
+          variant_name: string | null
+          waste_material: number | null
+          wo_number: string | null
+          wo_type: string | null
+          work_order_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_entries_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_orders_line_id_fkey"
+            columns: ["line_id"]
+            isOneToOne: false
+            referencedRelation: "lines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_production_kpi: {
+        Row: {
+          actual_speed: number | null
+          availability: number | null
+          created_by: string | null
+          downtime_frequency: number | null
+          downtime_minutes: number | null
+          good_output: number | null
+          id: string | null
+          line_id: string | null
+          lost_output: number | null
+          machine_code: string | null
+          machine_id: string | null
+          machine_master_status: string | null
+          machine_name: string | null
+          oee: number | null
+          operating_minutes: number | null
+          performance: number | null
+          planned_minutes: number | null
+          plant_id: string | null
+          product_code: string | null
+          product_id: string | null
+          product_name: string | null
+          production_date: string | null
+          quality: number | null
+          reject_qty: number | null
+          reject_rate: number | null
+          rework_qty: number | null
+          shift_id: string | null
+          shift_name: string | null
+          speed_index: number | null
+          standard_cycle_time_sec: number | null
+          standard_speed: number | null
+          status: string | null
+          target_qty: number | null
+          total_output: number | null
+          validated_by: string | null
+          variant_name: string | null
+          waste_material: number | null
+          wo_number: string | null
+          wo_type: string | null
+          work_order_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_entries_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_orders_line_id_fkey"
+            columns: ["line_id"]
+            isOneToOne: false
+            referencedRelation: "lines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       can_access_work_order: { Args: { wo_id: string }; Returns: boolean }
@@ -3751,6 +4523,11 @@ export type Database = {
       in_user_plant: { Args: { target: string }; Returns: boolean }
       is_role: { Args: { codes: string[] }; Returns: boolean }
       next_doc_no: { Args: { prefix: string; seq: unknown }; Returns: string }
+      recalc_sales_order_progress: {
+        Args: { p_so_id: string }
+        Returns: undefined
+      }
+      sync_backlog: { Args: { p_wo_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
