@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authenticated/sales.customers'
+import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 
@@ -36,6 +37,12 @@ const AuthenticatedSalesCustomersRoute =
     path: '/sales/customers',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProcurementSuppliersRoute =
+  AuthenticatedProcurementSuppliersRouteImport.update({
+    id: '/procurement/suppliers',
+    path: '/procurement/suppliers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMasterProductsRoute =
   AuthenticatedMasterProductsRouteImport.update({
     id: '/master/products',
@@ -54,6 +61,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
+  '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +69,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
+  '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesById {
@@ -70,6 +79,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
+  '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
   '/_authenticated/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRouteTypes {
@@ -79,6 +89,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard/manajemen'
     | '/master/products'
+    | '/procurement/suppliers'
     | '/sales/customers'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -86,6 +97,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard/manajemen'
     | '/master/products'
+    | '/procurement/suppliers'
     | '/sales/customers'
   id:
     | '__root__'
@@ -94,6 +106,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/master/products'
+    | '/_authenticated/procurement/suppliers'
     | '/_authenticated/sales/customers'
   fileRoutesById: FileRoutesById
 }
@@ -133,6 +146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesCustomersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/procurement/suppliers': {
+      id: '/_authenticated/procurement/suppliers'
+      path: '/procurement/suppliers'
+      fullPath: '/procurement/suppliers'
+      preLoaderRoute: typeof AuthenticatedProcurementSuppliersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/master/products': {
       id: '/_authenticated/master/products'
       path: '/master/products'
@@ -153,12 +173,15 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
+  AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
   AuthenticatedSalesCustomersRoute: typeof AuthenticatedSalesCustomersRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
+  AuthenticatedProcurementSuppliersRoute:
+    AuthenticatedProcurementSuppliersRoute,
   AuthenticatedSalesCustomersRoute: AuthenticatedSalesCustomersRoute,
 }
 
