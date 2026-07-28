@@ -20,7 +20,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
           ref={ref}
           {...props}
         />
-        <Icon className="pointer-events-none absolute bottom-2 right-3 size-4 text-muted-foreground" />
+        <Icon className="pointer-events-none absolute bottom-2 right-3 z-10 size-4 text-muted-foreground" />
       </div>
     );
   },
