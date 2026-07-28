@@ -201,7 +201,7 @@ function SalesOrdersPage() {
     <>
       <CrudPage<Row>
         title="Customer Order"
-        description="Order pelanggan menjadi sumber perencanaan produksi. Produk, varian, qty, dan satuan dibuat sebagai item pertama order."
+        description="Order pelanggan menjadi sumber perencanaan produksi. Tambahkan satu atau beberapa item produk pada order."
         table="sales_orders"
         invalidateKeys={[["sales_orders"]]}
         columns={columns}
@@ -213,31 +213,31 @@ function SalesOrdersPage() {
         softDelete
         exportName="customer-order"
         beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
-        onFieldChange={(name, value) => {
-          if (name !== "product_id") return;
-          const pid = String(value ?? "");
-          setOrderProductId(pid);
-          const p = productRows.find((r) => String(r.id) === pid);
-          const variants = (p?.product_variants as Row[]) ?? [];
-          return {
-            variant_id: variants.length === 1 ? String(variants[0].id) : "",
-            uom_id: p?.base_uom_id ? String(p.base_uom_id) : "",
-          };
-        }}
         afterCreate={async (created, values) => {
-          const productId = String(values.product_id ?? "");
-          if (!productId || !created.id) return;
-          const product = productRows.find((r) => String(r.id) === productId);
-          const { error } = await supabase.from("sales_order_items").insert({
-            sales_order_id: String(created.id),
-            product_id: productId,
-            variant_id: values.variant_id ? String(values.variant_id) : null,
-            uom_id: values.uom_id ? String(values.uom_id) : null,
-            quantity: Number(values.quantity ?? 0),
-            unit_price: Number(product?.standard_selling_value ?? 0),
+          const items = ((values.__items as DraftItem[]) ?? []).filter(
+            (i) => i.product_id && Number(i.quantity) > 0,
+          );
+          if (!created.id) return;
+          if (!items.length) throw new Error("Tambahkan minimal satu item produk");
+          const payload = items.map((i) => {
+            const product = productRows.find((r) => String(r.id) === i.product_id);
+            return {
+              sales_order_id: String(created.id),
+              product_id: i.product_id,
+              variant_id: i.variant_id || null,
+              uom_id: i.uom_id || null,
+              quantity: Number(i.quantity),
+              unit_price: Number(
+                i.unit_price !== "" && i.unit_price !== undefined
+                  ? i.unit_price
+                  : (product?.standard_selling_value ?? 0),
+              ),
+            };
           });
+          const { error } = await supabase.from("sales_order_items").insert(payload);
           if (error) throw new Error(error.message);
         }}
+
         rowActions={(row) => (
           <>
             <Button
