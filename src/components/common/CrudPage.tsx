@@ -144,6 +144,8 @@ export function CrudPage<T extends CrudRow>({
   rowActions?: (row: T) => ReactNode;
   /** Runs after a successful insert, with the created row and raw form values. */
   afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
+  /** Runs after a successful update, with the edited row and raw form values. */
+  afterUpdate?: (updated: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
   /** Returns extra values to patch when a field changes (e.g. dependent fields). */
   onFieldChange?: (
     name: string,
