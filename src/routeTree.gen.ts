@@ -30,6 +30,7 @@ import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_a
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
 import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
+import { Route as AuthenticatedAnalyticsMesinRouteImport } from './routes/_authenticated/analytics.mesin'
 import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
 import { Route as AuthenticatedAnalyticsBottleneckRouteImport } from './routes/_authenticated/analytics.bottleneck'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
@@ -160,6 +161,12 @@ const AuthenticatedAnalyticsOeeRoute =
     path: '/analytics/oee',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsMesinRoute =
+  AuthenticatedAnalyticsMesinRouteImport.update({
+    id: '/analytics/mesin',
+    path: '/analytics/mesin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalyticsDowntimeRoute =
   AuthenticatedAnalyticsDowntimeRouteImport.update({
     id: '/analytics/downtime',
@@ -210,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
@@ -239,6 +247,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
@@ -270,6 +279,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/_authenticated/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
   '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/analytics/bottleneck'
     | '/analytics/downtime'
+    | '/analytics/mesin'
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/analytics/bottleneck'
     | '/analytics/downtime'
+    | '/analytics/mesin'
     | '/analytics/oee'
     | '/analytics/quality'
     | '/analytics/speed'
@@ -360,6 +372,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users'
     | '/_authenticated/analytics/bottleneck'
     | '/_authenticated/analytics/downtime'
+    | '/_authenticated/analytics/mesin'
     | '/_authenticated/analytics/oee'
     | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
@@ -535,6 +548,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsOeeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/mesin': {
+      id: '/_authenticated/analytics/mesin'
+      path: '/analytics/mesin'
+      fullPath: '/analytics/mesin'
+      preLoaderRoute: typeof AuthenticatedAnalyticsMesinRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analytics/downtime': {
       id: '/_authenticated/analytics/downtime'
       path: '/analytics/downtime'
@@ -595,6 +615,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAnalyticsBottleneckRoute: typeof AuthenticatedAnalyticsBottleneckRoute
   AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
+  AuthenticatedAnalyticsMesinRoute: typeof AuthenticatedAnalyticsMesinRoute
   AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
@@ -623,6 +644,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAnalyticsBottleneckRoute: AuthenticatedAnalyticsBottleneckRoute,
   AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
+  AuthenticatedAnalyticsMesinRoute: AuthenticatedAnalyticsMesinRoute,
   AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
