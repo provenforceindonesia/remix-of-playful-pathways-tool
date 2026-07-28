@@ -18,20 +18,16 @@ export const getConnectionStatus = createServerFn({ method: "GET" })
       .limit(1);
     const databaseActive = !pingError && pingData !== null;
 
-    // Count public tables
-    const { data: tablesData, error: tablesError } = await supabase.rpc(
-      "count_public_tables",
-    );
-    const tableCount = tablesError || !tablesData ? 0 : Number(tablesData);
-
-    // Realtime status: check whether the realtime publication is active
-    const { data: realtimeData, error: realtimeError } = await supabase
-      .schema("pg_catalog")
-      .from("pg_publication")
-      .select("pubname")
-      .eq("pubname", "supabase_realtime")
-      .limit(1);
-    const realtimeActive = !realtimeError && (realtimeData?.length ?? 0) > 0;
+    // Backend status via SECURITY DEFINER function (table count + realtime)
+    const { data: backendStatus, error: backendError } = await supabase
+      .rpc("get_backend_status")
+      .single();
+    const tableCount =
+      backendError || !backendStatus ? 0 : (backendStatus.table_count as number);
+    const realtimeActive =
+      backendError || !backendStatus
+        ? false
+        : (backendStatus.realtime_active as boolean);
 
     return {
       auth: {
@@ -48,8 +44,9 @@ export const getConnectionStatus = createServerFn({ method: "GET" })
       },
       tables: {
         count: tableCount,
-        error: tablesError?.message ?? null,
+        error: backendError?.message ?? null,
       },
       checkedAt: new Date().toISOString(),
     };
   });
+
