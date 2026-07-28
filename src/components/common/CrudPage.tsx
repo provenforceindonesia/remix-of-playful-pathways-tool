@@ -43,7 +43,23 @@ export type Option = { value: string; label: string };
 export type CrudField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "time" | "select" | "switch";
+  type?:
+    | "text"
+    | "textarea"
+    | "number"
+    | "date"
+    | "datetime-local"
+    | "time"
+    | "select"
+    | "switch"
+    | "custom";
+  /** Renderer for type: "custom" fields. */
+  render?: (ctx: {
+    value: unknown;
+    setValue: (v: unknown) => void;
+    values: Record<string, unknown>;
+    editing: boolean;
+  }) => ReactNode;
   options?: Option[];
   required?: boolean;
   placeholder?: string;
