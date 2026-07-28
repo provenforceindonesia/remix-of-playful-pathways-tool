@@ -39,6 +39,9 @@ import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardOrderRouteImport } from './routes/_authenticated/dashboard.order'
 import { Route as AuthenticatedDashboardOperasionalRouteImport } from './routes/_authenticated/dashboard.operasional'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
+import { Route as AuthenticatedCostingMasterRouteImport } from './routes/_authenticated/costing.master'
+import { Route as AuthenticatedCostingMarginRouteImport } from './routes/_authenticated/costing.margin'
+import { Route as AuthenticatedCostingLossRouteImport } from './routes/_authenticated/costing.loss'
 import { Route as AuthenticatedCostingHppRouteImport } from './routes/_authenticated/costing.hpp'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
@@ -228,6 +231,24 @@ const AuthenticatedDashboardManajemenRoute =
     path: '/dashboard/manajemen',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCostingMasterRoute =
+  AuthenticatedCostingMasterRouteImport.update({
+    id: '/costing/master',
+    path: '/costing/master',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCostingMarginRoute =
+  AuthenticatedCostingMarginRouteImport.update({
+    id: '/costing/margin',
+    path: '/costing/margin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCostingLossRoute =
+  AuthenticatedCostingLossRouteImport.update({
+    id: '/costing/loss',
+    path: '/costing/loss',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCostingHppRoute = AuthenticatedCostingHppRouteImport.update({
   id: '/costing/hpp',
   path: '/costing/hpp',
@@ -312,6 +333,9 @@ export interface FileRoutesByFullPath {
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
+  '/costing/loss': typeof AuthenticatedCostingLossRoute
+  '/costing/margin': typeof AuthenticatedCostingMarginRoute
+  '/costing/master': typeof AuthenticatedCostingMasterRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
   '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
@@ -355,6 +379,9 @@ export interface FileRoutesByTo {
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/costing/hpp': typeof AuthenticatedCostingHppRoute
+  '/costing/loss': typeof AuthenticatedCostingLossRoute
+  '/costing/margin': typeof AuthenticatedCostingMarginRoute
+  '/costing/master': typeof AuthenticatedCostingMasterRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
   '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
@@ -400,6 +427,9 @@ export interface FileRoutesById {
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/_authenticated/costing/hpp': typeof AuthenticatedCostingHppRoute
+  '/_authenticated/costing/loss': typeof AuthenticatedCostingLossRoute
+  '/_authenticated/costing/margin': typeof AuthenticatedCostingMarginRoute
+  '/_authenticated/costing/master': typeof AuthenticatedCostingMasterRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
   '/_authenticated/dashboard/order': typeof AuthenticatedDashboardOrderRoute
@@ -445,6 +475,9 @@ export interface FileRouteTypes {
     | '/analytics/quality'
     | '/analytics/speed'
     | '/costing/hpp'
+    | '/costing/loss'
+    | '/costing/margin'
+    | '/costing/master'
     | '/dashboard/manajemen'
     | '/dashboard/operasional'
     | '/dashboard/order'
@@ -488,6 +521,9 @@ export interface FileRouteTypes {
     | '/analytics/quality'
     | '/analytics/speed'
     | '/costing/hpp'
+    | '/costing/loss'
+    | '/costing/margin'
+    | '/costing/master'
     | '/dashboard/manajemen'
     | '/dashboard/operasional'
     | '/dashboard/order'
@@ -532,6 +568,9 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
     | '/_authenticated/costing/hpp'
+    | '/_authenticated/costing/loss'
+    | '/_authenticated/costing/margin'
+    | '/_authenticated/costing/master'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/dashboard/operasional'
     | '/_authenticated/dashboard/order'
@@ -779,6 +818,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardManajemenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/costing/master': {
+      id: '/_authenticated/costing/master'
+      path: '/costing/master'
+      fullPath: '/costing/master'
+      preLoaderRoute: typeof AuthenticatedCostingMasterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/costing/margin': {
+      id: '/_authenticated/costing/margin'
+      path: '/costing/margin'
+      fullPath: '/costing/margin'
+      preLoaderRoute: typeof AuthenticatedCostingMarginRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/costing/loss': {
+      id: '/_authenticated/costing/loss'
+      path: '/costing/loss'
+      fullPath: '/costing/loss'
+      preLoaderRoute: typeof AuthenticatedCostingLossRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/costing/hpp': {
       id: '/_authenticated/costing/hpp'
       path: '/costing/hpp'
@@ -879,6 +939,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
   AuthenticatedCostingHppRoute: typeof AuthenticatedCostingHppRoute
+  AuthenticatedCostingLossRoute: typeof AuthenticatedCostingLossRoute
+  AuthenticatedCostingMarginRoute: typeof AuthenticatedCostingMarginRoute
+  AuthenticatedCostingMasterRoute: typeof AuthenticatedCostingMasterRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedDashboardOperasionalRoute: typeof AuthenticatedDashboardOperasionalRoute
   AuthenticatedDashboardOrderRoute: typeof AuthenticatedDashboardOrderRoute
@@ -921,6 +984,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
   AuthenticatedCostingHppRoute: AuthenticatedCostingHppRoute,
+  AuthenticatedCostingLossRoute: AuthenticatedCostingLossRoute,
+  AuthenticatedCostingMarginRoute: AuthenticatedCostingMarginRoute,
+  AuthenticatedCostingMasterRoute: AuthenticatedCostingMasterRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedDashboardOperasionalRoute:
     AuthenticatedDashboardOperasionalRoute,
