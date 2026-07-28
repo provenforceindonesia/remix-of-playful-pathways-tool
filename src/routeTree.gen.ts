@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedShopfloorWoRouteImport } from './routes/_authenticated/shopfloor.wo'
+import { Route as AuthenticatedShopfloorInputProduksiRouteImport } from './routes/_authenticated/shopfloor.input-produksi'
 import { Route as AuthenticatedSalesTrackingRouteImport } from './routes/_authenticated/sales.tracking'
 import { Route as AuthenticatedSalesReviewRouteImport } from './routes/_authenticated/sales.review'
 import { Route as AuthenticatedSalesOrdersRouteImport } from './routes/_authenticated/sales.orders'
@@ -46,6 +47,12 @@ const AuthenticatedShopfloorWoRoute =
   AuthenticatedShopfloorWoRouteImport.update({
     id: '/shopfloor/wo',
     path: '/shopfloor/wo',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedShopfloorInputProduksiRoute =
+  AuthenticatedShopfloorInputProduksiRouteImport.update({
+    id: '/shopfloor/input-produksi',
+    path: '/shopfloor/input-produksi',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSalesTrackingRoute =
@@ -147,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
   '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRoutesByTo {
@@ -166,6 +174,7 @@ export interface FileRoutesByTo {
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
   '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRoutesById {
@@ -187,6 +196,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/_authenticated/sales/review': typeof AuthenticatedSalesReviewRoute
   '/_authenticated/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/_authenticated/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
   '/_authenticated/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRouteTypes {
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/sales/orders'
     | '/sales/review'
     | '/sales/tracking'
+    | '/shopfloor/input-produksi'
     | '/shopfloor/wo'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/sales/orders'
     | '/sales/review'
     | '/sales/tracking'
+    | '/shopfloor/input-produksi'
     | '/shopfloor/wo'
   id:
     | '__root__'
@@ -247,6 +259,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/orders'
     | '/_authenticated/sales/review'
     | '/_authenticated/sales/tracking'
+    | '/_authenticated/shopfloor/input-produksi'
     | '/_authenticated/shopfloor/wo'
   fileRoutesById: FileRoutesById
 }
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/shopfloor/wo'
       fullPath: '/shopfloor/wo'
       preLoaderRoute: typeof AuthenticatedShopfloorWoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shopfloor/input-produksi': {
+      id: '/_authenticated/shopfloor/input-produksi'
+      path: '/shopfloor/input-produksi'
+      fullPath: '/shopfloor/input-produksi'
+      preLoaderRoute: typeof AuthenticatedShopfloorInputProduksiRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/tracking': {
@@ -402,6 +422,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalesOrdersRoute: typeof AuthenticatedSalesOrdersRoute
   AuthenticatedSalesReviewRoute: typeof AuthenticatedSalesReviewRoute
   AuthenticatedSalesTrackingRoute: typeof AuthenticatedSalesTrackingRoute
+  AuthenticatedShopfloorInputProduksiRoute: typeof AuthenticatedShopfloorInputProduksiRoute
   AuthenticatedShopfloorWoRoute: typeof AuthenticatedShopfloorWoRoute
 }
 
@@ -422,6 +443,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalesOrdersRoute: AuthenticatedSalesOrdersRoute,
   AuthenticatedSalesReviewRoute: AuthenticatedSalesReviewRoute,
   AuthenticatedSalesTrackingRoute: AuthenticatedSalesTrackingRoute,
+  AuthenticatedShopfloorInputProduksiRoute:
+    AuthenticatedShopfloorInputProduksiRoute,
   AuthenticatedShopfloorWoRoute: AuthenticatedShopfloorWoRoute,
 }
 
