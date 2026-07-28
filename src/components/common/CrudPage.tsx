@@ -34,6 +34,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DataTable, type Column } from "./DataTable";
+import { DateInput } from "./DateInput";
 import { PageHeader } from "./PageHeader";
 import { cn } from "@/lib/utils";
 
