@@ -114,7 +114,17 @@
   --sidebar-accent-foreground: oklch(0.2600 0.0500 250);
   --sidebar-border: oklch(0.9000 0.0140 250);
   --sidebar-ring: oklch(0.6400 0.1180 211.53);
+
+  /* Glassmorphism surface */
+  --glass-bg: color-mix(in oklab, white 78%, transparent);
+  --glass-border: color-mix(in oklab, var(--foreground) 9%, transparent);
+  --glass-shadow: 0 1px 2px -1px color-mix(in oklab, var(--foreground) 10%, transparent),
+    0 18px 40px -30px color-mix(in oklab, var(--foreground) 45%, transparent);
+  --app-backdrop:
+    radial-gradient(900px 480px at 12% -8%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 70%),
+    radial-gradient(760px 420px at 92% 6%, color-mix(in oklab, var(--secondary) 10%, transparent), transparent 70%);
 }
+
 
 .dark {
   --background: oklch(0.1762 0.0330 256.39);
