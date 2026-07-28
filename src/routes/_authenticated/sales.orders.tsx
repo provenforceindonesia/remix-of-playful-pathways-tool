@@ -225,7 +225,7 @@ function SalesOrdersPage() {
     <>
       <CrudPage<Row>
         title="Customer Order"
-        description="Order pelanggan menjadi sumber perencanaan produksi. Tambahkan item setelah header dibuat."
+        description="Order pelanggan menjadi sumber perencanaan produksi. Produk, varian, qty, dan satuan dibuat sebagai item pertama order."
         table="sales_orders"
         invalidateKeys={[["sales_orders"]]}
         columns={columns}
@@ -237,6 +237,31 @@ function SalesOrdersPage() {
         softDelete
         exportName="customer-order"
         beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
+        onFieldChange={(name, value) => {
+          if (name !== "product_id") return;
+          const pid = String(value ?? "");
+          setOrderProductId(pid);
+          const p = productRows.find((r) => String(r.id) === pid);
+          const variants = (p?.product_variants as Row[]) ?? [];
+          return {
+            variant_id: variants.length === 1 ? String(variants[0].id) : "",
+            uom_id: p?.base_uom_id ? String(p.base_uom_id) : "",
+          };
+        }}
+        afterCreate={async (created, values) => {
+          const productId = String(values.product_id ?? "");
+          if (!productId || !created.id) return;
+          const product = productRows.find((r) => String(r.id) === productId);
+          const { error } = await supabase.from("sales_order_items").insert({
+            sales_order_id: String(created.id),
+            product_id: productId,
+            variant_id: values.variant_id ? String(values.variant_id) : null,
+            uom_id: values.uom_id ? String(values.uom_id) : null,
+            quantity: Number(values.quantity ?? 0),
+            unit_price: Number(product?.standard_selling_value ?? 0),
+          });
+          if (error) throw new Error(error.message);
+        }}
         rowActions={(row) => (
           <>
             <Button
