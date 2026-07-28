@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
+import { useEffect, useState } from "react";
+import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import {
   linesQuery,
   machinesQuery,
   plantsQuery,
+  reasonCodesQuery,
   settingsQuery,
   shiftsQuery,
   uomQuery,
@@ -16,6 +17,9 @@ import {
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin/configuration")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: typeof search.tab === "string" ? search.tab : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Master Configuration — MANUFACTUREIQ" },
@@ -30,30 +34,47 @@ export const Route = createFileRoute("/_authenticated/admin/configuration")({
 });
 
 type Row = Record<string, unknown>;
-type TabKey = "plants" | "lines" | "shifts" | "machines" | "warehouses" | "uom" | "settings";
+type TabKey =
+  | "plants"
+  | "lines"
+  | "shifts"
+  | "machines"
+  | "reasons"
+  | "warehouses"
+  | "uom"
+  | "settings";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "plants", label: "Plant" },
   { key: "lines", label: "Line" },
   { key: "shifts", label: "Shift" },
   { key: "machines", label: "Mesin" },
+  { key: "reasons", label: "Reason Code" },
   { key: "warehouses", label: "Gudang" },
   { key: "uom", label: "UoM" },
   { key: "settings", label: "Parameter" },
 ];
 
 function ConfigurationPage() {
-  const [tab, setTab] = useState<TabKey>("plants");
+  const { tab: tabParam } = Route.useSearch();
+  const [tab, setTab] = useState<TabKey>(
+    TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : "plants",
+  );
+  useEffect(() => {
+    if (tabParam && TABS.some((t) => t.key === tabParam)) setTab(tabParam as TabKey);
+  }, [tabParam]);
   const plants = useQuery(plantsQuery);
   const lines = useQuery(linesQuery);
   const shifts = useQuery(shiftsQuery);
   const machines = useQuery(machinesQuery);
+  const reasons = useQuery(reasonCodesQuery);
   const warehouses = useQuery(warehousesQuery);
   const uom = useQuery(uomQuery);
   const settings = useQuery(settingsQuery);
 
   const plantOptions = toOptions(plants.data as Row[], ["name"]);
   const lineOptions = toOptions(lines.data as Row[], ["name"]);
+
 
   const activeStatus = (r: Row) => <StatusBadge status={r.is_active ? "Aktif" : "Nonaktif"} />;
 
@@ -173,6 +194,39 @@ function ConfigurationPage() {
         },
       ],
     },
+    reasons: {
+      title: "Reason Code Downtime",
+      table: "downtime_reason_codes",
+      key: "downtime_reason_codes",
+      rows: (reasons.data ?? []) as Row[],
+      loading: reasons.isLoading,
+      columns: [
+        { key: "code", header: "Kode" },
+        { key: "name", header: "Nama" },
+        { key: "category", header: "Kategori" },
+        {
+          key: "requires_maintenance",
+          header: "Perlu Maintenance",
+          value: (r) => (r.requires_maintenance ? "Ya" : "Tidak"),
+        },
+        { key: "is_active", header: "Status", render: activeStatus },
+      ],
+      fields: [
+        { name: "code", label: "Kode", required: true },
+        { name: "name", label: "Nama", required: true },
+        {
+          name: "category",
+          label: "Kategori",
+          type: "select",
+          required: true,
+          defaultValue: "Mesin",
+          options: selectOptions(["Mesin", "Material", "Metode", "Manusia", "Eksternal", "Planned"]),
+        },
+        { name: "requires_maintenance", label: "Perlu Maintenance", type: "switch", defaultValue: false },
+        { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
+      ],
+    },
+
     warehouses: {
       title: "Gudang",
       table: "warehouses",
