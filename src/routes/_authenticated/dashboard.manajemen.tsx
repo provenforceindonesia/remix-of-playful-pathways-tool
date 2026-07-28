@@ -160,12 +160,18 @@ function ManagementDashboard() {
   }, [downtime.data]);
 
   const orderStats = useMemo(() => {
-    const list = (orders.data ?? []) as Array<{ status: string; total_value: number | null }>;
+    const list = (orders.data ?? []) as unknown as Array<{
+      status: string;
+      sales_order_items: Array<{ quantity: number; unit_price: number | null }> | null;
+    }>;
     const map = new Map<string, number>();
     let value = 0;
     for (const o of list) {
       map.set(o.status, (map.get(o.status) ?? 0) + 1);
-      value += Number(o.total_value ?? 0);
+      value += (o.sales_order_items ?? []).reduce(
+        (a, i) => a + Number(i.quantity ?? 0) * Number(i.unit_price ?? 0),
+        0,
+      );
     }
     return {
       value,
@@ -174,10 +180,10 @@ function ManagementDashboard() {
     };
   }, [orders.data]);
 
-  const stockValue = useMemo(
+  const stockQty = useMemo(
     () =>
-      ((stock.data ?? []) as Array<{ qty_on_hand: number; avg_cost: number | null }>).reduce(
-        (a, s) => a + Number(s.qty_on_hand ?? 0) * Number(s.avg_cost ?? 0),
+      ((stock.data ?? []) as unknown as Array<{ qty_on_hand: number }>).reduce(
+        (a, s) => a + Number(s.qty_on_hand ?? 0),
         0,
       ),
     [stock.data],
@@ -185,18 +191,21 @@ function ManagementDashboard() {
 
   const lossValue = useMemo(
     () =>
-      ((loss.data ?? []) as Array<{ total_loss_value: number | null }>).reduce(
-        (a, l) => a + Number(l.total_loss_value ?? 0),
+      ((loss.data ?? []) as unknown as Array<{ loss_value: number | null }>).reduce(
+        (a, l) => a + Number(l.loss_value ?? 0),
         0,
       ),
     [loss.data],
   );
 
   const avgHpp = useMemo(() => {
-    const details = ((hpp.data ?? []) as Array<{ standard_hpp_details: Array<{ total_hpp: number }> }>)
-      .flatMap((v) => v.standard_hpp_details ?? []);
+    const details = (
+      (hpp.data ?? []) as unknown as Array<{
+        standard_hpp_details: Array<{ hpp_per_unit: number | null }> | null;
+      }>
+    ).flatMap((v) => v.standard_hpp_details ?? []);
     return details.length
-      ? details.reduce((a, d) => a + Number(d.total_hpp ?? 0), 0) / details.length
+      ? details.reduce((a, d) => a + Number(d.hpp_per_unit ?? 0), 0) / details.length
       : 0;
   }, [hpp.data]);
 
@@ -206,13 +215,14 @@ function ManagementDashboard() {
   const margin = estimatedRevenue ? (estimatedProfit / estimatedRevenue) * 100 : 0;
   const si = speedIndexClass(agg.speed);
 
-  const machines = (health.data ?? []) as Array<{
+  const machines = (health.data ?? []) as unknown as Array<{
     machine_id: string;
     machine_code: string;
     machine_name: string;
     mtbf_hours: number | null;
     mttr_minutes: number | null;
-    failure_count: number | null;
+    downtime_frequency: number | null;
+    machine_condition: string | null;
     condition_label: string | null;
   }>;
 
