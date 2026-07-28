@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, uomQuery } from "@/lib/queries";
+import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
 import { formatCurrency, formatDate, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 
@@ -134,21 +134,15 @@ function OrderItemsEditor({
             </div>
             <div className="sm:col-span-3">
               {idx === 0 ? <Label className="mb-1 block text-xs">Varian</Label> : null}
-              <Select
-                value={item.variant_id}
-                onValueChange={(val) => patch(item.key, { variant_id: val })}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={variants.length ? "Pilih varian" : "Tidak ada varian"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {variants.map((v) => (
-                    <SelectItem key={String(v.id)} value={String(v.id)}>
-                      {[v.code, v.name].filter(Boolean).join(" — ")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                readOnly
+                tabIndex={-1}
+                placeholder={item.product_id ? "Tidak ada varian" : "Otomatis dari produk"}
+                value={(() => {
+                  const v = variants.find((r) => String(r.id) === item.variant_id);
+                  return v ? [v.code, v.name].filter(Boolean).join(" — ") : "";
+                })()}
+              />
             </div>
             <div className="sm:col-span-2">
               {idx === 0 ? <Label className="mb-1 block text-xs">Qty</Label> : null}
@@ -218,6 +212,7 @@ function SalesOrdersPage() {
   const { data: plants } = useQuery(plantsQuery);
   const { data: products } = useQuery(productsQuery);
   const { data: uoms } = useQuery(uomQuery);
+  const { data: settings } = useQuery(settingsQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["SALES", "SYSADMIN"].includes(role ?? "");
@@ -284,12 +279,33 @@ function SalesOrdersPage() {
   const productRows = (products ?? []) as Row[];
   const uomRows = (uoms ?? []) as Row[];
 
+  const nextSoPreview = useMemo(() => {
+    const cfg =
+      (((settings ?? []) as Row[]).find((s) => s.key === "so_number_format")?.value as
+        | Record<string, unknown>
+        | undefined) ?? {};
+    const prefix = String(cfg.prefix ?? "SO");
+    const sep = String(cfg.separator ?? "-");
+    const pad = Math.max(Number(cfg.padding ?? 4) || 4, 1);
+    const now = new Date();
+    const datePart =
+      String(cfg.date_pattern ?? "YYMM") === ""
+        ? ""
+        : `${String(now.getFullYear()).slice(-2)}${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const last = rows.reduce((max, r) => {
+      const n = Number(String(r.so_number ?? "").split(sep).pop());
+      return Number.isFinite(n) ? Math.max(max, n) : max;
+    }, 0);
+    return `${prefix}${datePart ? sep + datePart : ""}${sep}${String(last + 1).padStart(pad, "0")}`;
+  }, [settings, rows]);
+
   const fields: CrudField[] = [
     {
       name: "so_number",
       label: "Nomor SO (otomatis)",
-      editOnly: true,
-      readOnlyOnEdit: true,
+      readOnly: true,
+      virtual: true,
+      defaultValue: nextSoPreview,
       placeholder: "Digenerate sistem",
     },
     {
