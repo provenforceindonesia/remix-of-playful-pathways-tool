@@ -128,6 +128,15 @@ function SalesOrdersPage() {
     },
   ];
 
+  const productRows = (products ?? []) as Row[];
+  const uomRows = (uoms ?? []) as Row[];
+  const [orderProductId, setOrderProductId] = useState("");
+
+  const variantOptions = useMemo(() => {
+    const p = productRows.find((r) => String(r.id) === orderProductId);
+    return toOptions((p?.product_variants as Row[]) ?? [], ["code", "name"]);
+  }, [productRows, orderProductId]);
+
   const fields: CrudField[] = [
     {
       name: "so_number",
@@ -144,6 +153,42 @@ function SalesOrdersPage() {
       options: toOptions(customers as Row[], ["code", "name"]),
     },
     { name: "customer_po_ref", label: "Referensi PO Customer" },
+    {
+      name: "product_id",
+      label: "Produk",
+      type: "select",
+      virtual: true,
+      createOnly: true,
+      required: true,
+      placeholder: "Pilih produk",
+      options: toOptions(productRows, ["code", "name"]),
+    },
+    {
+      name: "variant_id",
+      label: "Varian (mengikuti produk)",
+      type: "select",
+      virtual: true,
+      createOnly: true,
+      placeholder: variantOptions.length ? "Pilih varian" : "Tidak ada varian",
+      options: variantOptions,
+    },
+    {
+      name: "quantity",
+      label: "Quantity",
+      type: "number",
+      virtual: true,
+      createOnly: true,
+      required: true,
+      placeholder: "0",
+    },
+    {
+      name: "uom_id",
+      label: "Satuan Order (otomatis)",
+      type: "select",
+      virtual: true,
+      createOnly: true,
+      options: toOptions(uomRows, ["code", "name"]),
+    },
     { name: "plant_id", label: "Plant", type: "select", options: toOptions(plants as Row[], ["name"]) },
     { name: "order_date", label: "Tanggal Order", type: "date", required: true, defaultValue: toISODate(new Date()) },
     { name: "required_date", label: "Tanggal Dibutuhkan", type: "date", required: true },
@@ -175,11 +220,12 @@ function SalesOrdersPage() {
     { name: "customer_note", label: "Catatan Customer", type: "textarea", full: true },
   ];
 
+
   return (
     <>
       <CrudPage<Row>
         title="Customer Order"
-        description="Order pelanggan menjadi sumber perencanaan produksi. Tambahkan item setelah header dibuat."
+        description="Order pelanggan menjadi sumber perencanaan produksi. Produk, varian, qty, dan satuan dibuat sebagai item pertama order."
         table="sales_orders"
         invalidateKeys={[["sales_orders"]]}
         columns={columns}
@@ -191,6 +237,31 @@ function SalesOrdersPage() {
         softDelete
         exportName="customer-order"
         beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
+        onFieldChange={(name, value) => {
+          if (name !== "product_id") return;
+          const pid = String(value ?? "");
+          setOrderProductId(pid);
+          const p = productRows.find((r) => String(r.id) === pid);
+          const variants = (p?.product_variants as Row[]) ?? [];
+          return {
+            variant_id: variants.length === 1 ? String(variants[0].id) : "",
+            uom_id: p?.base_uom_id ? String(p.base_uom_id) : "",
+          };
+        }}
+        afterCreate={async (created, values) => {
+          const productId = String(values.product_id ?? "");
+          if (!productId || !created.id) return;
+          const product = productRows.find((r) => String(r.id) === productId);
+          const { error } = await supabase.from("sales_order_items").insert({
+            sales_order_id: String(created.id),
+            product_id: productId,
+            variant_id: values.variant_id ? String(values.variant_id) : null,
+            uom_id: values.uom_id ? String(values.uom_id) : null,
+            quantity: Number(values.quantity ?? 0),
+            unit_price: Number(product?.standard_selling_value ?? 0),
+          });
+          if (error) throw new Error(error.message);
+        }}
         rowActions={(row) => (
           <>
             <Button

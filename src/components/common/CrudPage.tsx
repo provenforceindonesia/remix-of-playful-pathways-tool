@@ -51,8 +51,11 @@ export type CrudField = {
   full?: boolean;
   step?: string;
   readOnlyOnEdit?: boolean;
+  readOnly?: boolean;
   createOnly?: boolean;
   editOnly?: boolean;
+  /** Not sent to the table payload (used for side-effect inserts). */
+  virtual?: boolean;
 };
 
 export type CrudRow = Record<string, unknown>;
@@ -101,6 +104,8 @@ export function CrudPage<T extends CrudRow>({
   children,
   pageSize,
   rowActions,
+  afterCreate,
+  onFieldChange,
 }: {
   title: string;
   description?: string;
@@ -121,12 +126,23 @@ export function CrudPage<T extends CrudRow>({
   children?: ReactNode;
   pageSize?: number;
   rowActions?: (row: T) => ReactNode;
+  /** Runs after a successful insert, with the created row and raw form values. */
+  afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
+  /** Returns extra values to patch when a field changes (e.g. dependent fields). */
+  onFieldChange?: (
+    name: string,
+    value: unknown,
+    values: Record<string, unknown>,
+  ) => Record<string, unknown> | void;
 }) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
   const [deleting, setDeleting] = useState<T | null>(null);
   const [values, setValues] = useState<Record<string, unknown>>(() => emptyForm(fields));
+
+  const setValue = (name: string, value: unknown) =>
+    setValues((v) => ({ ...v, [name]: value, ...(onFieldChange?.(name, value, v) ?? {}) }));
 
   const invalidate = () =>
     invalidateKeys.forEach((k) => void qc.invalidateQueries({ queryKey: k }));
@@ -136,6 +152,7 @@ export function CrudPage<T extends CrudRow>({
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(src)) {
       const field = fields.find((f) => f.name === k);
+      if (field?.virtual) continue;
       if (field?.createOnly && isEdit) continue;
       if (field?.editOnly && !isEdit) continue;
       if (v === "" || v === undefined) {
@@ -158,8 +175,9 @@ export function CrudPage<T extends CrudRow>({
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
       } else {
-        const { error } = await db.from(table).insert(payload);
+        const { data, error } = await db.from(table).insert(payload).select().single();
         if (error) throw new Error(error.message);
+        if (afterCreate) await afterCreate((data ?? {}) as CrudRow, values);
       }
     },
     onSuccess: () => {
@@ -307,12 +325,12 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : f.type === "select" ? (
                     <Select
                       value={String(values[f.name] ?? "")}
-                      onValueChange={(val) => setValues((v) => ({ ...v, [f.name]: val }))}
+                      onValueChange={(val) => setValue(f.name, val)}
                     >
                       <SelectTrigger id={f.name} className="w-full">
                         <SelectValue placeholder={f.placeholder ?? "Pilih..."} />
@@ -330,7 +348,7 @@ export function CrudPage<T extends CrudRow>({
                       <Switch
                         id={f.name}
                         checked={Boolean(values[f.name])}
-                        onCheckedChange={(c) => setValues((v) => ({ ...v, [f.name]: c }))}
+                        onCheckedChange={(c) => setValue(f.name, c)}
                       />
                     </div>
                   ) : f.type === "date" || f.type === "time" || f.type === "datetime-local" ? (
@@ -340,8 +358,8 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : (
                     <Input
@@ -351,8 +369,8 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   )}
                 </div>
