@@ -279,12 +279,33 @@ function SalesOrdersPage() {
   const productRows = (products ?? []) as Row[];
   const uomRows = (uoms ?? []) as Row[];
 
+  const nextSoPreview = useMemo(() => {
+    const cfg =
+      (((settings ?? []) as Row[]).find((s) => s.key === "so_number_format")?.value as
+        | Record<string, unknown>
+        | undefined) ?? {};
+    const prefix = String(cfg.prefix ?? "SO");
+    const sep = String(cfg.separator ?? "-");
+    const pad = Math.max(Number(cfg.padding ?? 4) || 4, 1);
+    const now = new Date();
+    const datePart =
+      String(cfg.date_pattern ?? "YYMM") === ""
+        ? ""
+        : `${String(now.getFullYear()).slice(-2)}${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const last = rows.reduce((max, r) => {
+      const n = Number(String(r.so_number ?? "").split(sep).pop());
+      return Number.isFinite(n) ? Math.max(max, n) : max;
+    }, 0);
+    return `${prefix}${datePart ? sep + datePart : ""}${sep}${String(last + 1).padStart(pad, "0")}`;
+  }, [settings, rows]);
+
   const fields: CrudField[] = [
     {
       name: "so_number",
       label: "Nomor SO (otomatis)",
-      editOnly: true,
-      readOnlyOnEdit: true,
+      readOnly: true,
+      virtual: true,
+      defaultValue: nextSoPreview,
       placeholder: "Digenerate sistem",
     },
     {
