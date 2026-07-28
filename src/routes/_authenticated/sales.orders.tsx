@@ -51,6 +51,159 @@ type Item = {
   products?: { code?: string; name?: string } | null;
 };
 
+type DraftItem = {
+  key: string;
+  product_id: string;
+  variant_id: string;
+  uom_id: string;
+  quantity: string;
+  unit_price: string;
+};
+
+function OrderItemsEditor({
+  items,
+  onChange,
+  products,
+  uoms,
+}: {
+  items: DraftItem[];
+  onChange: (next: DraftItem[]) => void;
+  products: Row[];
+  uoms: Row[];
+}) {
+  const list = items.length
+    ? items
+    : [{ key: "0", product_id: "", variant_id: "", uom_id: "", quantity: "", unit_price: "" }];
+
+  const patch = (key: string, values: Partial<DraftItem>) =>
+    onChange(list.map((i) => (i.key === key ? { ...i, ...values } : i)));
+
+  const addRow = () =>
+    onChange([
+      ...list,
+      {
+        key: String(Date.now()),
+        product_id: "",
+        variant_id: "",
+        uom_id: "",
+        quantity: "",
+        unit_price: "",
+      },
+    ]);
+
+  const removeRow = (key: string) => onChange(list.filter((i) => i.key !== key));
+
+  const total = list.reduce(
+    (s, i) => s + Number(i.quantity || 0) * Number(i.unit_price || 0),
+    0,
+  );
+
+  return (
+    <div className="space-y-3 rounded-[0.5rem] border border-border/60 p-3">
+      {list.map((item, idx) => {
+        const product = products.find((p) => String(p.id) === item.product_id);
+        const variants = (product?.product_variants as Row[]) ?? [];
+        return (
+          <div key={item.key} className="grid gap-2 sm:grid-cols-12">
+            <div className="sm:col-span-4">
+              {idx === 0 ? <Label className="mb-1 block text-xs">Produk</Label> : null}
+              <Select
+                value={item.product_id}
+                onValueChange={(val) => {
+                  const p = products.find((r) => String(r.id) === val);
+                  const vs = (p?.product_variants as Row[]) ?? [];
+                  patch(item.key, {
+                    product_id: val,
+                    variant_id: vs.length === 1 ? String(vs[0].id) : "",
+                    uom_id: p?.base_uom_id ? String(p.base_uom_id) : "",
+                    unit_price: String(p?.standard_selling_value ?? ""),
+                  });
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Pilih produk" />
+                </SelectTrigger>
+                <SelectContent>
+                  {products.map((p) => (
+                    <SelectItem key={String(p.id)} value={String(p.id)}>
+                      {[p.code, p.name].filter(Boolean).join(" — ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-3">
+              {idx === 0 ? <Label className="mb-1 block text-xs">Varian</Label> : null}
+              <Select
+                value={item.variant_id}
+                onValueChange={(val) => patch(item.key, { variant_id: val })}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={variants.length ? "Pilih varian" : "Tidak ada varian"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {variants.map((v) => (
+                    <SelectItem key={String(v.id)} value={String(v.id)}>
+                      {[v.code, v.name].filter(Boolean).join(" — ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-2">
+              {idx === 0 ? <Label className="mb-1 block text-xs">Qty</Label> : null}
+              <Input
+                type="number"
+                step="any"
+                min="0"
+                placeholder="0"
+                value={item.quantity}
+                onChange={(e) => patch(item.key, { quantity: e.target.value })}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              {idx === 0 ? <Label className="mb-1 block text-xs">Satuan</Label> : null}
+              <Select value={item.uom_id} onValueChange={(val) => patch(item.key, { uom_id: val })}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="UoM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {uoms.map((u) => (
+                    <SelectItem key={String(u.id)} value={String(u.id)}>
+                      {[u.code, u.name].filter(Boolean).join(" — ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end sm:col-span-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-9 text-destructive hover:text-destructive"
+                onClick={() => removeRow(item.key)}
+                disabled={list.length === 1}
+                title="Hapus item"
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      })}
+      <div className="flex items-center justify-between">
+        <Button type="button" variant="outline" size="sm" onClick={addRow}>
+          <Plus className="size-4" /> Tambah Item
+        </Button>
+        <span className="font-mono text-sm text-muted-foreground">
+          Total: {formatCurrency(total)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 const soValue = (r: Row) =>
   (((r.sales_order_items as Item[]) ?? []) as Item[]).reduce(
     (s, i) => s + Number(i.quantity ?? 0) * Number(i.unit_price ?? 0),
