@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authenticated/sales.customers'
+import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 
 const AuthRoute = AuthRouteImport.update({
@@ -35,6 +36,12 @@ const AuthenticatedSalesCustomersRoute =
     path: '/sales/customers',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMasterProductsRoute =
+  AuthenticatedMasterProductsRouteImport.update({
+    id: '/master/products',
+    path: '/master/products',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardManajemenRoute =
   AuthenticatedDashboardManajemenRouteImport.update({
     id: '/dashboard/manajemen',
@@ -46,12 +53,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/master/products': typeof AuthenticatedMasterProductsRoute
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/master/products': typeof AuthenticatedMasterProductsRoute
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRoutesById {
@@ -60,19 +69,31 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
   '/_authenticated/sales/customers': typeof AuthenticatedSalesCustomersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard/manajemen' | '/sales/customers'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard/manajemen'
+    | '/master/products'
+    | '/sales/customers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard/manajemen' | '/sales/customers'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard/manajemen'
+    | '/master/products'
+    | '/sales/customers'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard/manajemen'
+    | '/_authenticated/master/products'
     | '/_authenticated/sales/customers'
   fileRoutesById: FileRoutesById
 }
@@ -112,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesCustomersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/master/products': {
+      id: '/_authenticated/master/products'
+      path: '/master/products'
+      fullPath: '/master/products'
+      preLoaderRoute: typeof AuthenticatedMasterProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/manajemen': {
       id: '/_authenticated/dashboard/manajemen'
       path: '/dashboard/manajemen'
@@ -124,11 +152,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
+  AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
   AuthenticatedSalesCustomersRoute: typeof AuthenticatedSalesCustomersRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
+  AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
   AuthenticatedSalesCustomersRoute: AuthenticatedSalesCustomersRoute,
 }
 
