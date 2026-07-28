@@ -73,19 +73,20 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-surface/95 px-3 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 border-b border-border/50 bg-surface/60 px-4 backdrop-blur-xl">
       <Button variant="ghost" size="icon" className="lg:hidden" onClick={onOpenMobile}>
         <Menu className="size-5" />
       </Button>
 
-      <div className="relative hidden w-64 md:block">
-        <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+      <div className="relative hidden w-72 md:block">
+        <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Pencarian global..."
-          className="h-9 pl-8"
+          className="h-10 rounded-full border-border/60 bg-muted/40 pl-9 backdrop-blur-sm"
         />
+
         {matches.length > 0 && (
           <div className="absolute top-11 left-0 z-50 w-full overflow-hidden rounded-lg border border-border bg-popover shadow-lg">
             {matches.map((m) => (
@@ -106,7 +107,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         value={filter.plantId ?? "all"}
         onValueChange={(v) => setFilter({ plantId: v === "all" ? null : v })}
       >
-        <SelectTrigger className="hidden h-9 w-40 lg:flex">
+        <SelectTrigger className="hidden h-10 w-40 rounded-full border-border/60 bg-muted/40 lg:flex">
           <SelectValue placeholder="Plant" />
         </SelectTrigger>
         <SelectContent>
@@ -123,7 +124,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         value={filter.shiftId ?? "all"}
         onValueChange={(v) => setFilter({ shiftId: v === "all" ? null : v })}
       >
-        <SelectTrigger className="hidden h-9 w-36 lg:flex">
+        <SelectTrigger className="hidden h-10 w-36 rounded-full border-border/60 bg-muted/40 lg:flex">
           <SelectValue placeholder="Shift" />
         </SelectTrigger>
         <SelectContent>
@@ -136,10 +137,14 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         </SelectContent>
       </Select>
 
-      <div className="ml-auto flex items-center gap-1">
-        <Badge variant="outline" className="hidden gap-1.5 border-success/40 text-success sm:flex">
+      <div className="ml-auto flex items-center gap-1.5">
+        <Badge
+          variant="outline"
+          className="hidden gap-1.5 rounded-full border-success/40 bg-success/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-success uppercase sm:flex"
+        >
           <Radio className="size-3 animate-pulse" /> Live
         </Badge>
+
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
