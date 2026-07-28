@@ -1,3 +1,4 @@
+import { CalendarRange, Truck } from "lucide-react";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -159,9 +160,9 @@ function CapacityPage() {
       }
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Rencana Kapasitas" value={capRows.length} tone="primary" />
-        <KpiCard label="Total Kapasitas / Shift" value={formatNumber(totalCapacity)} tone="info" />
-        <KpiCard label="Gap Manpower" value={formatNumber(gap, 1)} tone={gap > 0 ? "warning" : "success"} />
+        <KpiCard icon={<CalendarRange className="size-4" />} label="Rencana Kapasitas" value={capRows.length} tone="primary" />
+        <KpiCard icon={<CalendarRange className="size-4" />} label="Total Kapasitas / Shift" value={formatNumber(totalCapacity)} tone="info" />
+        <KpiCard icon={<Truck className="size-4" />} label="Gap Manpower" value={formatNumber(gap, 1)} tone={gap > 0 ? "warning" : "success"} />
       </div>
     </CrudPage>
   );

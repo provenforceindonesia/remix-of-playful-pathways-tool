@@ -1,3 +1,4 @@
+import { Truck } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -107,9 +108,9 @@ function PurchaseOrderPage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Total PO" value={rows.length} tone="primary" />
-        <KpiCard label="PO Berjalan" value={open} tone={open ? "warning" : "success"} />
-        <KpiCard label="Nilai Pembelian" value={formatCurrency(totalValue)} tone="info" />
+        <KpiCard icon={<Truck className="size-4" />} label="Total PO" value={rows.length} tone="primary" />
+        <KpiCard icon={<Truck className="size-4" />} label="PO Berjalan" value={open} tone={open ? "warning" : "success"} />
+        <KpiCard icon={<Truck className="size-4" />} label="Nilai Pembelian" value={formatCurrency(totalValue)} tone="info" />
       </div>
     </CrudPage>
   );

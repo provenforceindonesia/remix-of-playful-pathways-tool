@@ -1,3 +1,4 @@
+import { Boxes, ClipboardList } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -81,9 +82,9 @@ function StockPage() {
     <>
       <PageHeader title="Stok Material" description="Saldo stok real-time per gudang." />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Item Stok" value={rows.length} tone="primary" />
-        <KpiCard label="Stok Kritis" value={critical} tone={critical ? "danger" : "success"} />
-        <KpiCard label="Perlu Reorder" value={reorder} tone={reorder ? "warning" : "success"} />
+        <KpiCard icon={<Boxes className="size-4" />} label="Item Stok" value={rows.length} tone="primary" />
+        <KpiCard icon={<Boxes className="size-4" />} label="Stok Kritis" value={critical} tone={critical ? "danger" : "success"} />
+        <KpiCard icon={<ClipboardList className="size-4" />} label="Perlu Reorder" value={reorder} tone={reorder ? "warning" : "success"} />
       </div>
       <DataTable<Row> columns={columns} rows={rows} loading={isLoading} exportName="stok-material" />
     </>

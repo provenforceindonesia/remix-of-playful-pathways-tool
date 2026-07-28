@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { BadgeCheck, Undo2 } from "lucide-react";
+import { Activity, BadgeCheck, ShieldCheck, Undo2 } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -147,13 +147,13 @@ function ValidasiPage() {
         description="Data tervalidasi otomatis memperbarui progres order, backlog, dan KPI."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Menunggu Validasi" value={rows.length} tone="warning" />
-        <KpiCard
+        <KpiCard icon={<ShieldCheck className="size-4" />} label="Menunggu Validasi" value={rows.length} tone="warning" />
+        <KpiCard icon={<ShieldCheck className="size-4" />}
           label="Tervalidasi"
           value={all.filter((r) => r.status === "Tervalidasi").length}
           tone="success"
         />
-        <KpiCard
+        <KpiCard icon={<Activity className="size-4" />}
           label="Perlu Perbaikan"
           value={all.filter((r) => r.status === "Perlu Perbaikan").length}
           tone="danger"

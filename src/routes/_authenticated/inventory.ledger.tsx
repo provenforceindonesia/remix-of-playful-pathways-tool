@@ -1,3 +1,4 @@
+import { Layers } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -47,9 +48,9 @@ function LedgerPage() {
     <>
       <PageHeader title="Kartu Stok" description="500 mutasi stok terakhir dari seluruh gudang." />
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Total Mutasi" value={rows.length} tone="primary" />
-        <KpiCard label="Total Masuk" value={formatNumber(totalIn, 2)} tone="success" />
-        <KpiCard label="Total Keluar" value={formatNumber(totalOut, 2)} tone="warning" />
+        <KpiCard icon={<Layers className="size-4" />} label="Total Mutasi" value={rows.length} tone="primary" />
+        <KpiCard icon={<Layers className="size-4" />} label="Total Masuk" value={formatNumber(totalIn, 2)} tone="success" />
+        <KpiCard icon={<Layers className="size-4" />} label="Total Keluar" value={formatNumber(totalOut, 2)} tone="warning" />
       </div>
       <DataTable<Row> columns={columns} rows={rows} loading={isLoading} exportName="kartu-stok" />
     </>

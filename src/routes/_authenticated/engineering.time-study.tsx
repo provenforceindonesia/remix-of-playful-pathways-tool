@@ -1,3 +1,4 @@
+import { Layers, ShieldCheck, Timer } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -88,9 +89,9 @@ function TimeStudyPage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null, observer_id: profile?.id ?? null })}
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Total Studi" value={rows.length} tone="primary" />
-        <KpiCard label="Tervalidasi" value={validated} tone="success" />
-        <KpiCard label="Rata-rata Cycle Time" value={`${formatNumber(avgCt, 2)} dtk`} tone="info" />
+        <KpiCard icon={<Layers className="size-4" />} label="Total Studi" value={rows.length} tone="primary" />
+        <KpiCard icon={<ShieldCheck className="size-4" />} label="Tervalidasi" value={validated} tone="success" />
+        <KpiCard icon={<Timer className="size-4" />} label="Rata-rata Cycle Time" value={`${formatNumber(avgCt, 2)} dtk`} tone="info" />
       </div>
     </CrudPage>
   );

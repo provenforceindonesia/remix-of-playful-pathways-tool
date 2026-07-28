@@ -1,3 +1,4 @@
+import { Layers, Wallet } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -85,8 +86,8 @@ function ReceiptPage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
       toolbar={
         <div className="grid gap-4 sm:grid-cols-2">
-          <KpiCard label="Total Transaksi" value={rows.length} tone="primary" />
-          <KpiCard label="Nilai Penerimaan" value={formatCurrency(totalValue)} tone="success" />
+          <KpiCard icon={<Layers className="size-4" />} label="Total Transaksi" value={rows.length} tone="primary" />
+          <KpiCard icon={<Wallet className="size-4" />} label="Nilai Penerimaan" value={formatCurrency(totalValue)} tone="success" />
         </div>
       }
     />

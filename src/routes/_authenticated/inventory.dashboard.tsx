@@ -1,3 +1,4 @@
+import { Activity, Boxes, Layers, Truck } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -130,10 +131,10 @@ function InventoryDashboard() {
         description="Kesehatan persediaan material: posisi stok, reservasi, dan arus keluar-masuk gudang."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Item Stok" value={rows.length} tone="primary" />
-        <KpiCard label="Stok Kritis" value={critical.length} tone={critical.length ? "danger" : "success"} />
-        <KpiCard label="Qty Ter-reservasi" value={formatNumber(reservedQty, 2)} tone="info" />
-        <KpiCard label="PO Berjalan" value={openPo} tone={openPo ? "warning" : "success"} />
+        <KpiCard icon={<Boxes className="size-4" />} label="Item Stok" value={rows.length} tone="primary" />
+        <KpiCard icon={<Boxes className="size-4" />} label="Stok Kritis" value={critical.length} tone={critical.length ? "danger" : "success"} />
+        <KpiCard icon={<Layers className="size-4" />} label="Qty Ter-reservasi" value={formatNumber(reservedQty, 2)} tone="info" />
+        <KpiCard icon={<Truck className="size-4" />} label="PO Berjalan" value={openPo} tone={openPo ? "warning" : "success"} />
       </div>
       <div className="mb-5 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
@@ -174,8 +175,8 @@ function InventoryDashboard() {
         </Card>
       </div>
       <div className="mb-5 grid gap-4 sm:grid-cols-2">
-        <KpiCard label="Nilai Penerimaan Material" value={formatCurrency(receiptValue)} tone="info" />
-        <KpiCard label="Transaksi Pengeluaran" value={issueRows.length} tone="primary" />
+        <KpiCard icon={<Boxes className="size-4" />} label="Nilai Penerimaan Material" value={formatCurrency(receiptValue)} tone="info" />
+        <KpiCard icon={<Activity className="size-4" />} label="Transaksi Pengeluaran" value={issueRows.length} tone="primary" />
       </div>
       <DataTable<Row>
         columns={criticalColumns}

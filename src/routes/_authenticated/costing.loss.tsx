@@ -1,3 +1,4 @@
+import { Wallet } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -123,9 +124,9 @@ function LossPage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Total Loss" value={formatCurrency(totalLoss)} tone="danger" />
-        <KpiCard label="Loss Tervalidasi" value={formatCurrency(validatedLoss)} tone="warning" />
-        <KpiCard label="Catatan Loss" value={rows.length} tone="primary" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Total Loss" value={formatCurrency(totalLoss)} tone="danger" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Loss Tervalidasi" value={formatCurrency(validatedLoss)} tone="warning" />
+        <KpiCard icon={<Wallet className="size-4" />} label="Catatan Loss" value={rows.length} tone="primary" />
       </div>
       {byType.length > 0 && (
         <Card className="mb-5">

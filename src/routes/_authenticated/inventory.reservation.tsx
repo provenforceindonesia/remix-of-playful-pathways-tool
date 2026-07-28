@@ -1,3 +1,4 @@
+import { Activity, Layers } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -75,9 +76,9 @@ function ReservationPage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Total Reservasi" value={rows.length} tone="primary" />
-        <KpiCard label="Aktif (Reserved)" value={active.length} tone="warning" />
-        <KpiCard label="Qty Terkunci" value={formatNumber(totalQty, 2)} tone="info" />
+        <KpiCard icon={<Layers className="size-4" />} label="Total Reservasi" value={rows.length} tone="primary" />
+        <KpiCard icon={<Activity className="size-4" />} label="Aktif (Reserved)" value={active.length} tone="warning" />
+        <KpiCard icon={<Layers className="size-4" />} label="Qty Terkunci" value={formatNumber(totalQty, 2)} tone="info" />
       </div>
     </CrudPage>
   );

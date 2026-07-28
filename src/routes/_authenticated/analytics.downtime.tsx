@@ -1,3 +1,4 @@
+import { Activity, TimerOff } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -89,14 +90,14 @@ function DowntimeAnalyticsPage() {
         description="Fokuskan perbaikan pada penyebab dengan kontribusi waktu henti terbesar."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Downtime" value={durationLabel(totalMinutes)} tone="danger" />
-        <KpiCard label="Kejadian" value={formatNumber(rows.length)} tone="warning" />
-        <KpiCard
+        <KpiCard icon={<TimerOff className="size-4" />} label="Total Downtime" value={durationLabel(totalMinutes)} tone="danger" />
+        <KpiCard icon={<Activity className="size-4" />} label="Kejadian" value={formatNumber(rows.length)} tone="warning" />
+        <KpiCard icon={<Activity className="size-4" />}
           label="Rata-rata / Kejadian"
           value={durationLabel(rows.length ? totalMinutes / rows.length : 0)}
           tone="info"
         />
-        <KpiCard label="Butuh Maintenance" value={formatNumber(needMaintenance)} tone="purple" />
+        <KpiCard icon={<Activity className="size-4" />} label="Butuh Maintenance" value={formatNumber(needMaintenance)} tone="purple" />
       </div>
 
       <Card className="mb-5">

@@ -1,3 +1,4 @@
+import { Activity, AlertTriangle, Layers } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -106,9 +107,9 @@ function BacklogPage() {
       exportName="backlog"
     >
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Backlog Terbuka" value={open} tone={open ? "danger" : "success"} />
-        <KpiCard label="Sisa Qty" value={formatNumber(remaining)} tone="warning" />
-        <KpiCard
+        <KpiCard icon={<AlertTriangle className="size-4" />} label="Backlog Terbuka" value={open} tone={open ? "danger" : "success"} />
+        <KpiCard icon={<Layers className="size-4" />} label="Sisa Qty" value={formatNumber(remaining)} tone="warning" />
+        <KpiCard icon={<Activity className="size-4" />}
           label="Recovered"
           value={rows.filter((r) => r.status === "Recovered").length}
           tone="success"

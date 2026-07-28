@@ -1,3 +1,4 @@
+import { Layers } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
@@ -72,8 +73,8 @@ function IssuePage() {
       beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
       toolbar={
         <div className="grid gap-4 sm:grid-cols-2">
-          <KpiCard label="Total Transaksi" value={rows.length} tone="primary" />
-          <KpiCard label="Total Qty Keluar" value={formatNumber(rows.reduce((s, r) => s + num(r.qty), 0), 2)} tone="warning" />
+          <KpiCard icon={<Layers className="size-4" />} label="Total Transaksi" value={rows.length} tone="primary" />
+          <KpiCard icon={<Layers className="size-4" />} label="Total Qty Keluar" value={formatNumber(rows.reduce((s, r) => s + num(r.qty), 0), 2)} tone="warning" />
         </div>
       }
     />

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Check, X } from "lucide-react";
+import { Activity, Check, ShieldCheck, Wallet, X } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -131,9 +131,9 @@ function ReviewPage() {
       />
 
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Menunggu Review" value={rows.filter((r) => r.status === "Menunggu Review Produksi").length} tone="warning" />
-        <KpiCard label="Perlu Revisi" value={rows.filter((r) => r.status === "Perlu Revisi").length} tone="danger" />
-        <KpiCard
+        <KpiCard icon={<ShieldCheck className="size-4" />} label="Menunggu Review" value={rows.filter((r) => r.status === "Menunggu Review Produksi").length} tone="warning" />
+        <KpiCard icon={<Activity className="size-4" />} label="Perlu Revisi" value={rows.filter((r) => r.status === "Perlu Revisi").length} tone="danger" />
+        <KpiCard icon={<Wallet className="size-4" />}
           label="Total Nilai Antrian"
           value={formatCurrency(rows.reduce((s, r) => s + value(r), 0))}
           tone="primary"

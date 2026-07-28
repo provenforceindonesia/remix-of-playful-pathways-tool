@@ -1,3 +1,4 @@
+import { Activity, Cog, Gauge } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -72,14 +73,14 @@ function MachineStatusPage() {
         description="Kondisi mesin dihitung dari frekuensi downtime, MTBF, MTTR, dan OEE."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Mesin" value={rows.length} tone="primary" />
-        <KpiCard
+        <KpiCard icon={<Cog className="size-4" />} label="Total Mesin" value={rows.length} tone="primary" />
+        <KpiCard icon={<Activity className="size-4" />}
           label="Beroperasi"
           value={rows.filter((r) => r.machine_condition === "Beroperasi").length}
           tone="success"
         />
-        <KpiCard label="Butuh Perawatan" value={needCare} tone={needCare ? "danger" : "success"} />
-        <KpiCard
+        <KpiCard icon={<Activity className="size-4" />} label="Butuh Perawatan" value={needCare} tone={needCare ? "danger" : "success"} />
+        <KpiCard icon={<Gauge className="size-4" />}
           label="OEE Rata-rata"
           value={formatPercent(rows.length ? rows.reduce((s, r) => s + num(r.avg_oee), 0) / rows.length : 0)}
           tone="info"

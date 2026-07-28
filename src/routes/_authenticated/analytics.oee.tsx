@@ -1,3 +1,4 @@
+import { Activity, BadgeCheck, Gauge } from "lucide-react";
 import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -77,10 +78,10 @@ function OeePage() {
         description="OEE = Availability × Performance × Quality dari entri produksi tervalidasi."
       />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="OEE Rata-rata" value={formatPercent(avg(rows, "oee"))} tone="primary" />
-        <KpiCard label="Availability" value={formatPercent(avg(rows, "availability"))} tone="info" />
-        <KpiCard label="Performance" value={formatPercent(avg(rows, "performance"))} tone="warning" />
-        <KpiCard label="Quality" value={formatPercent(avg(rows, "quality"))} tone="success" />
+        <KpiCard icon={<Gauge className="size-4" />} label="OEE Rata-rata" value={formatPercent(avg(rows, "oee"))} tone="primary" />
+        <KpiCard icon={<Activity className="size-4" />} label="Availability" value={formatPercent(avg(rows, "availability"))} tone="info" />
+        <KpiCard icon={<Activity className="size-4" />} label="Performance" value={formatPercent(avg(rows, "performance"))} tone="warning" />
+        <KpiCard icon={<BadgeCheck className="size-4" />} label="Quality" value={formatPercent(avg(rows, "quality"))} tone="success" />
       </div>
 
       <Card className="mb-5">
