@@ -43,7 +43,23 @@ export type Option = { value: string; label: string };
 export type CrudField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "time" | "select" | "switch";
+  type?:
+    | "text"
+    | "textarea"
+    | "number"
+    | "date"
+    | "datetime-local"
+    | "time"
+    | "select"
+    | "switch"
+    | "custom";
+  /** Renderer for type: "custom" fields. */
+  render?: (ctx: {
+    value: unknown;
+    setValue: (v: unknown) => void;
+    values: Record<string, unknown>;
+    editing: boolean;
+  }) => ReactNode;
   options?: Option[];
   required?: boolean;
   placeholder?: string;
@@ -319,7 +335,14 @@ export function CrudPage<T extends CrudRow>({
                     {f.label}
                     {f.required ? <span className="text-destructive"> *</span> : null}
                   </Label>
-                  {f.type === "textarea" ? (
+                  {f.type === "custom" ? (
+                    f.render?.({
+                      value: values[f.name],
+                      setValue: (v) => setValue(f.name, v),
+                      values,
+                      editing: Boolean(editing),
+                    })
+                  ) : f.type === "textarea" ? (
                     <Textarea
                       id={f.name}
                       value={String(values[f.name] ?? "")}
