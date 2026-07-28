@@ -56,12 +56,13 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
                       onClick={onNavigate}
                       title={collapsed ? item.label : undefined}
                       className={cn(
-                        "flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors",
+                        "relative flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-sm transition-all duration-200",
                         active
-                          ? "bg-primary/15 font-medium text-primary"
-                          : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                          ? "bg-primary/12 font-semibold text-primary shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-primary)_28%,transparent)]"
+                          : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
                         collapsed && "justify-center",
                       )}
+
                     >
                       <Icon name={item.icon} className="size-4 shrink-0" />
                       {!collapsed && <span className="truncate">{item.label}</span>}
@@ -101,10 +102,11 @@ export function AppSidebar({
     <>
       <aside
         className={cn(
-          "relative hidden shrink-0 border-r border-sidebar-border transition-all duration-200 lg:block",
+          "relative hidden shrink-0 border-r border-sidebar-border/60 transition-all duration-200 lg:block",
           collapsed ? "w-16" : "w-64",
         )}
       >
+
         <div className="sticky top-0 h-screen">
           <SidebarBody collapsed={collapsed} />
           <Button
