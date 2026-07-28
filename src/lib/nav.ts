@@ -98,11 +98,12 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Master Data",
     items: [
       { label: "Produk & Varian", to: "/master/products", icon: "Package", roles: ALL },
-      { label: "Mesin & Work Center", to: "/admin/configuration", icon: "Cpu", roles: ["IE", "PPIC", "SYSADMIN"] },
-      { label: "Shift", to: "/admin/configuration", icon: "Clock", roles: ["IE", "PPIC", "SYSADMIN"] },
+      { label: "Mesin & Work Center", to: "/admin/configuration", icon: "Cpu", roles: ["IE", "PPIC", "SYSADMIN"], search: { tab: "machines" } },
+      { label: "Shift", to: "/admin/configuration", icon: "Clock", roles: ["IE", "PPIC", "SYSADMIN"], search: { tab: "shifts" } },
       { label: "Operator", to: "/admin/users", icon: "Users", roles: ["SYSADMIN"] },
       { label: "Routing & Standard", to: "/engineering/routing", icon: "Route", roles: ["IE", "SYSADMIN"] },
-      { label: "Reason Code", to: "/admin/configuration", icon: "ScrollText", roles: ["PPIC", "IE", "SYSADMIN"] },
+      { label: "Reason Code", to: "/admin/configuration", icon: "ScrollText", roles: ["PPIC", "IE", "SYSADMIN"], search: { tab: "reasons" } },
+
       { label: "BOM & Material", to: "/engineering/bom", icon: "Layers", roles: ["IE", "PPIC", "INVENTORY", "SYSADMIN"] },
     ],
   },
