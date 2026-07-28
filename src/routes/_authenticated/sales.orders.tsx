@@ -212,6 +212,7 @@ function SalesOrdersPage() {
   const { data: plants } = useQuery(plantsQuery);
   const { data: products } = useQuery(productsQuery);
   const { data: uoms } = useQuery(uomQuery);
+  const { data: settings } = useQuery(settingsQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["SALES", "SYSADMIN"].includes(role ?? "");
