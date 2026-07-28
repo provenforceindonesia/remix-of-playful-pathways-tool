@@ -335,7 +335,14 @@ export function CrudPage<T extends CrudRow>({
                     {f.label}
                     {f.required ? <span className="text-destructive"> *</span> : null}
                   </Label>
-                  {f.type === "textarea" ? (
+                  {f.type === "custom" ? (
+                    f.render?.({
+                      value: values[f.name],
+                      setValue: (v) => setValue(f.name, v),
+                      values,
+                      editing: Boolean(editing),
+                    })
+                  ) : f.type === "textarea" ? (
                     <Textarea
                       id={f.name}
                       value={String(values[f.name] ?? "")}
