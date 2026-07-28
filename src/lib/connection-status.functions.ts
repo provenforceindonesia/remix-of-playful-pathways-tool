@@ -22,12 +22,11 @@ export const getConnectionStatus = createServerFn({ method: "GET" })
     const { data: backendStatus, error: backendError } = await supabase
       .rpc("get_backend_status")
       .single();
-    const tableCount =
-      backendError || !backendStatus ? 0 : (backendStatus.table_count as number);
-    const realtimeActive =
-      backendError || !backendStatus
-        ? false
-        : (backendStatus.realtime_active as boolean);
+    const status = backendStatus as
+      | { table_count: number; realtime_active: boolean }
+      | undefined;
+    const tableCount = backendError || !status ? 0 : status.table_count;
+    const realtimeActive = backendError || !status ? false : status.realtime_active;
 
     return {
       auth: {
