@@ -31,6 +31,7 @@ import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authe
 import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
 import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
 import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
+import { Route as AuthenticatedAnalyticsBottleneckRouteImport } from './routes/_authenticated/analytics.bottleneck'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
 import { Route as AuthenticatedAdminOverviewRouteImport } from './routes/_authenticated/admin.overview'
@@ -165,6 +166,12 @@ const AuthenticatedAnalyticsDowntimeRoute =
     path: '/analytics/downtime',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsBottleneckRoute =
+  AuthenticatedAnalyticsBottleneckRouteImport.update({
+    id: '/analytics/bottleneck',
+    path: '/analytics/bottleneck',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
@@ -229,6 +237,7 @@ export interface FileRoutesByTo {
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
@@ -259,6 +268,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
   '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
@@ -289,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
+    | '/analytics/bottleneck'
     | '/analytics/downtime'
     | '/analytics/oee'
     | '/analytics/quality'
@@ -317,6 +328,7 @@ export interface FileRouteTypes {
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
+    | '/analytics/bottleneck'
     | '/analytics/downtime'
     | '/analytics/oee'
     | '/analytics/quality'
@@ -346,6 +358,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/overview'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
+    | '/_authenticated/analytics/bottleneck'
     | '/_authenticated/analytics/downtime'
     | '/_authenticated/analytics/oee'
     | '/_authenticated/analytics/quality'
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsDowntimeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/bottleneck': {
+      id: '/_authenticated/analytics/bottleneck'
+      path: '/analytics/bottleneck'
+      fullPath: '/analytics/bottleneck'
+      preLoaderRoute: typeof AuthenticatedAnalyticsBottleneckRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/admin/users'
@@ -573,6 +593,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminOverviewRoute: typeof AuthenticatedAdminOverviewRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAnalyticsBottleneckRoute: typeof AuthenticatedAnalyticsBottleneckRoute
   AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
   AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
   AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
@@ -600,6 +621,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminOverviewRoute: AuthenticatedAdminOverviewRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAnalyticsBottleneckRoute: AuthenticatedAnalyticsBottleneckRoute,
   AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
   AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
   AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
