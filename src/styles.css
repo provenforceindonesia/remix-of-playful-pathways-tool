@@ -182,20 +182,24 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Native date/time picker icons: center vertically and remain visible on dark surfaces */
+  /* Native date/time picker icons: keep at the far right edge, not centered vertically */
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="datetime-local"]::-webkit-calendar-picker-indicator,
   input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(0.5);
     cursor: pointer;
-    vertical-align: middle;
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    top: auto;
+    margin: 0;
   }
 
-  /* Ensure date input text sits on the same baseline as the picker icon */
+  /* Ensure date inputs establish a positioning context for the picker icon */
   input[type="date"],
   input[type="datetime-local"],
   input[type="time"] {
-    line-height: 1.25;
+    position: relative;
   }
 }
 
