@@ -12,7 +12,41 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedShopfloorWoRouteImport } from './routes/_authenticated/shopfloor.wo'
+import { Route as AuthenticatedShopfloorInputProduksiRouteImport } from './routes/_authenticated/shopfloor.input-produksi'
+import { Route as AuthenticatedShopfloorDowntimeRouteImport } from './routes/_authenticated/shopfloor.downtime'
+import { Route as AuthenticatedSalesTrackingRouteImport } from './routes/_authenticated/sales.tracking'
+import { Route as AuthenticatedSalesReviewRouteImport } from './routes/_authenticated/sales.review'
+import { Route as AuthenticatedSalesOrdersRouteImport } from './routes/_authenticated/sales.orders'
+import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authenticated/sales.customers'
+import { Route as AuthenticatedProductionWorkOrdersRouteImport } from './routes/_authenticated/production.work-orders'
+import { Route as AuthenticatedProductionValidasiRouteImport } from './routes/_authenticated/production.validasi'
+import { Route as AuthenticatedProductionPlansRouteImport } from './routes/_authenticated/production.plans'
+import { Route as AuthenticatedProductionHandoverRouteImport } from './routes/_authenticated/production.handover'
+import { Route as AuthenticatedProductionBacklogRouteImport } from './routes/_authenticated/production.backlog'
+import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/_authenticated/procurement.suppliers'
+import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
+import { Route as AuthenticatedInventoryStockRouteImport } from './routes/_authenticated/inventory.stock'
+import { Route as AuthenticatedInventoryReceiptRouteImport } from './routes/_authenticated/inventory.receipt'
+import { Route as AuthenticatedInventoryLedgerRouteImport } from './routes/_authenticated/inventory.ledger'
+import { Route as AuthenticatedInventoryIssueRouteImport } from './routes/_authenticated/inventory.issue'
+import { Route as AuthenticatedEngineeringRoutingRouteImport } from './routes/_authenticated/engineering.routing'
+import { Route as AuthenticatedEngineeringBomRouteImport } from './routes/_authenticated/engineering.bom'
+import { Route as AuthenticatedDashboardOrderRouteImport } from './routes/_authenticated/dashboard.order'
+import { Route as AuthenticatedDashboardOperasionalRouteImport } from './routes/_authenticated/dashboard.operasional'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
+import { Route as AuthenticatedCostingHppRouteImport } from './routes/_authenticated/costing.hpp'
+import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
+import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
+import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
+import { Route as AuthenticatedAnalyticsMesinRouteImport } from './routes/_authenticated/analytics.mesin'
+import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
+import { Route as AuthenticatedAnalyticsBottleneckRouteImport } from './routes/_authenticated/analytics.bottleneck'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
+import { Route as AuthenticatedAdminOverviewRouteImport } from './routes/_authenticated/admin.overview'
+import { Route as AuthenticatedAdminConfigurationRouteImport } from './routes/_authenticated/admin.configuration'
+import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -28,41 +62,451 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedShopfloorWoRoute =
+  AuthenticatedShopfloorWoRouteImport.update({
+    id: '/shopfloor/wo',
+    path: '/shopfloor/wo',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedShopfloorInputProduksiRoute =
+  AuthenticatedShopfloorInputProduksiRouteImport.update({
+    id: '/shopfloor/input-produksi',
+    path: '/shopfloor/input-produksi',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedShopfloorDowntimeRoute =
+  AuthenticatedShopfloorDowntimeRouteImport.update({
+    id: '/shopfloor/downtime',
+    path: '/shopfloor/downtime',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesTrackingRoute =
+  AuthenticatedSalesTrackingRouteImport.update({
+    id: '/sales/tracking',
+    path: '/sales/tracking',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesReviewRoute =
+  AuthenticatedSalesReviewRouteImport.update({
+    id: '/sales/review',
+    path: '/sales/review',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesOrdersRoute =
+  AuthenticatedSalesOrdersRouteImport.update({
+    id: '/sales/orders',
+    path: '/sales/orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesCustomersRoute =
+  AuthenticatedSalesCustomersRouteImport.update({
+    id: '/sales/customers',
+    path: '/sales/customers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProductionWorkOrdersRoute =
+  AuthenticatedProductionWorkOrdersRouteImport.update({
+    id: '/production/work-orders',
+    path: '/production/work-orders',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProductionValidasiRoute =
+  AuthenticatedProductionValidasiRouteImport.update({
+    id: '/production/validasi',
+    path: '/production/validasi',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProductionPlansRoute =
+  AuthenticatedProductionPlansRouteImport.update({
+    id: '/production/plans',
+    path: '/production/plans',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProductionHandoverRoute =
+  AuthenticatedProductionHandoverRouteImport.update({
+    id: '/production/handover',
+    path: '/production/handover',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProductionBacklogRoute =
+  AuthenticatedProductionBacklogRouteImport.update({
+    id: '/production/backlog',
+    path: '/production/backlog',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProcurementSuppliersRoute =
+  AuthenticatedProcurementSuppliersRouteImport.update({
+    id: '/procurement/suppliers',
+    path: '/procurement/suppliers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMasterProductsRoute =
+  AuthenticatedMasterProductsRouteImport.update({
+    id: '/master/products',
+    path: '/master/products',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryStockRoute =
+  AuthenticatedInventoryStockRouteImport.update({
+    id: '/inventory/stock',
+    path: '/inventory/stock',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryReceiptRoute =
+  AuthenticatedInventoryReceiptRouteImport.update({
+    id: '/inventory/receipt',
+    path: '/inventory/receipt',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryLedgerRoute =
+  AuthenticatedInventoryLedgerRouteImport.update({
+    id: '/inventory/ledger',
+    path: '/inventory/ledger',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryIssueRoute =
+  AuthenticatedInventoryIssueRouteImport.update({
+    id: '/inventory/issue',
+    path: '/inventory/issue',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEngineeringRoutingRoute =
+  AuthenticatedEngineeringRoutingRouteImport.update({
+    id: '/engineering/routing',
+    path: '/engineering/routing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEngineeringBomRoute =
+  AuthenticatedEngineeringBomRouteImport.update({
+    id: '/engineering/bom',
+    path: '/engineering/bom',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardOrderRoute =
+  AuthenticatedDashboardOrderRouteImport.update({
+    id: '/dashboard/order',
+    path: '/dashboard/order',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardOperasionalRoute =
+  AuthenticatedDashboardOperasionalRouteImport.update({
+    id: '/dashboard/operasional',
+    path: '/dashboard/operasional',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardManajemenRoute =
   AuthenticatedDashboardManajemenRouteImport.update({
     id: '/dashboard/manajemen',
     path: '/dashboard/manajemen',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCostingHppRoute = AuthenticatedCostingHppRouteImport.update({
+  id: '/costing/hpp',
+  path: '/costing/hpp',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnalyticsSpeedRoute =
+  AuthenticatedAnalyticsSpeedRouteImport.update({
+    id: '/analytics/speed',
+    path: '/analytics/speed',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsQualityRoute =
+  AuthenticatedAnalyticsQualityRouteImport.update({
+    id: '/analytics/quality',
+    path: '/analytics/quality',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsOeeRoute =
+  AuthenticatedAnalyticsOeeRouteImport.update({
+    id: '/analytics/oee',
+    path: '/analytics/oee',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsMesinRoute =
+  AuthenticatedAnalyticsMesinRouteImport.update({
+    id: '/analytics/mesin',
+    path: '/analytics/mesin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsDowntimeRoute =
+  AuthenticatedAnalyticsDowntimeRouteImport.update({
+    id: '/analytics/downtime',
+    path: '/analytics/downtime',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsBottleneckRoute =
+  AuthenticatedAnalyticsBottleneckRouteImport.update({
+    id: '/analytics/bottleneck',
+    path: '/analytics/bottleneck',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRolesRoute = AuthenticatedAdminRolesRouteImport.update({
+  id: '/admin/roles',
+  path: '/admin/roles',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminOverviewRoute =
+  AuthenticatedAdminOverviewRouteImport.update({
+    id: '/admin/overview',
+    path: '/admin/overview',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminConfigurationRoute =
+  AuthenticatedAdminConfigurationRouteImport.update({
+    id: '/admin/configuration',
+    path: '/admin/configuration',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/admin/overview': typeof AuthenticatedAdminOverviewRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
+  '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
+  '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
+  '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
+  '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
+  '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
+  '/inventory/stock': typeof AuthenticatedInventoryStockRoute
+  '/master/products': typeof AuthenticatedMasterProductsRoute
+  '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
+  '/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/production/handover': typeof AuthenticatedProductionHandoverRoute
+  '/production/plans': typeof AuthenticatedProductionPlansRoute
+  '/production/validasi': typeof AuthenticatedProductionValidasiRoute
+  '/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
+  '/sales/customers': typeof AuthenticatedSalesCustomersRoute
+  '/sales/orders': typeof AuthenticatedSalesOrdersRoute
+  '/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
+  '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
+  '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/admin/overview': typeof AuthenticatedAdminOverviewRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
+  '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
+  '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
+  '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/dashboard/order': typeof AuthenticatedDashboardOrderRoute
+  '/engineering/bom': typeof AuthenticatedEngineeringBomRoute
+  '/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
+  '/inventory/stock': typeof AuthenticatedInventoryStockRoute
+  '/master/products': typeof AuthenticatedMasterProductsRoute
+  '/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
+  '/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/production/handover': typeof AuthenticatedProductionHandoverRoute
+  '/production/plans': typeof AuthenticatedProductionPlansRoute
+  '/production/validasi': typeof AuthenticatedProductionValidasiRoute
+  '/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
+  '/sales/customers': typeof AuthenticatedSalesCustomersRoute
+  '/sales/orders': typeof AuthenticatedSalesOrdersRoute
+  '/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
+  '/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
+  '/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
+  '/_authenticated/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/_authenticated/admin/overview': typeof AuthenticatedAdminOverviewRoute
+  '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/analytics/bottleneck': typeof AuthenticatedAnalyticsBottleneckRoute
+  '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/_authenticated/analytics/mesin': typeof AuthenticatedAnalyticsMesinRoute
+  '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
+  '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
+  '/_authenticated/costing/hpp': typeof AuthenticatedCostingHppRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
+  '/_authenticated/dashboard/operasional': typeof AuthenticatedDashboardOperasionalRoute
+  '/_authenticated/dashboard/order': typeof AuthenticatedDashboardOrderRoute
+  '/_authenticated/engineering/bom': typeof AuthenticatedEngineeringBomRoute
+  '/_authenticated/engineering/routing': typeof AuthenticatedEngineeringRoutingRoute
+  '/_authenticated/inventory/issue': typeof AuthenticatedInventoryIssueRoute
+  '/_authenticated/inventory/ledger': typeof AuthenticatedInventoryLedgerRoute
+  '/_authenticated/inventory/receipt': typeof AuthenticatedInventoryReceiptRoute
+  '/_authenticated/inventory/stock': typeof AuthenticatedInventoryStockRoute
+  '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
+  '/_authenticated/procurement/suppliers': typeof AuthenticatedProcurementSuppliersRoute
+  '/_authenticated/production/backlog': typeof AuthenticatedProductionBacklogRoute
+  '/_authenticated/production/handover': typeof AuthenticatedProductionHandoverRoute
+  '/_authenticated/production/plans': typeof AuthenticatedProductionPlansRoute
+  '/_authenticated/production/validasi': typeof AuthenticatedProductionValidasiRoute
+  '/_authenticated/production/work-orders': typeof AuthenticatedProductionWorkOrdersRoute
+  '/_authenticated/sales/customers': typeof AuthenticatedSalesCustomersRoute
+  '/_authenticated/sales/orders': typeof AuthenticatedSalesOrdersRoute
+  '/_authenticated/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/_authenticated/sales/tracking': typeof AuthenticatedSalesTrackingRoute
+  '/_authenticated/shopfloor/downtime': typeof AuthenticatedShopfloorDowntimeRoute
+  '/_authenticated/shopfloor/input-produksi': typeof AuthenticatedShopfloorInputProduksiRoute
+  '/_authenticated/shopfloor/wo': typeof AuthenticatedShopfloorWoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard/manajemen'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/admin/audit'
+    | '/admin/configuration'
+    | '/admin/overview'
+    | '/admin/roles'
+    | '/admin/users'
+    | '/analytics/bottleneck'
+    | '/analytics/downtime'
+    | '/analytics/mesin'
+    | '/analytics/oee'
+    | '/analytics/quality'
+    | '/analytics/speed'
+    | '/costing/hpp'
+    | '/dashboard/manajemen'
+    | '/dashboard/operasional'
+    | '/dashboard/order'
+    | '/engineering/bom'
+    | '/engineering/routing'
+    | '/inventory/issue'
+    | '/inventory/ledger'
+    | '/inventory/receipt'
+    | '/inventory/stock'
+    | '/master/products'
+    | '/procurement/suppliers'
+    | '/production/backlog'
+    | '/production/handover'
+    | '/production/plans'
+    | '/production/validasi'
+    | '/production/work-orders'
+    | '/sales/customers'
+    | '/sales/orders'
+    | '/sales/review'
+    | '/sales/tracking'
+    | '/shopfloor/downtime'
+    | '/shopfloor/input-produksi'
+    | '/shopfloor/wo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard/manajemen'
+  to:
+    | '/'
+    | '/auth'
+    | '/admin/audit'
+    | '/admin/configuration'
+    | '/admin/overview'
+    | '/admin/roles'
+    | '/admin/users'
+    | '/analytics/bottleneck'
+    | '/analytics/downtime'
+    | '/analytics/mesin'
+    | '/analytics/oee'
+    | '/analytics/quality'
+    | '/analytics/speed'
+    | '/costing/hpp'
+    | '/dashboard/manajemen'
+    | '/dashboard/operasional'
+    | '/dashboard/order'
+    | '/engineering/bom'
+    | '/engineering/routing'
+    | '/inventory/issue'
+    | '/inventory/ledger'
+    | '/inventory/receipt'
+    | '/inventory/stock'
+    | '/master/products'
+    | '/procurement/suppliers'
+    | '/production/backlog'
+    | '/production/handover'
+    | '/production/plans'
+    | '/production/validasi'
+    | '/production/work-orders'
+    | '/sales/customers'
+    | '/sales/orders'
+    | '/sales/review'
+    | '/sales/tracking'
+    | '/shopfloor/downtime'
+    | '/shopfloor/input-produksi'
+    | '/shopfloor/wo'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/admin/audit'
+    | '/_authenticated/admin/configuration'
+    | '/_authenticated/admin/overview'
+    | '/_authenticated/admin/roles'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/analytics/bottleneck'
+    | '/_authenticated/analytics/downtime'
+    | '/_authenticated/analytics/mesin'
+    | '/_authenticated/analytics/oee'
+    | '/_authenticated/analytics/quality'
+    | '/_authenticated/analytics/speed'
+    | '/_authenticated/costing/hpp'
     | '/_authenticated/dashboard/manajemen'
+    | '/_authenticated/dashboard/operasional'
+    | '/_authenticated/dashboard/order'
+    | '/_authenticated/engineering/bom'
+    | '/_authenticated/engineering/routing'
+    | '/_authenticated/inventory/issue'
+    | '/_authenticated/inventory/ledger'
+    | '/_authenticated/inventory/receipt'
+    | '/_authenticated/inventory/stock'
+    | '/_authenticated/master/products'
+    | '/_authenticated/procurement/suppliers'
+    | '/_authenticated/production/backlog'
+    | '/_authenticated/production/handover'
+    | '/_authenticated/production/plans'
+    | '/_authenticated/production/validasi'
+    | '/_authenticated/production/work-orders'
+    | '/_authenticated/sales/customers'
+    | '/_authenticated/sales/orders'
+    | '/_authenticated/sales/review'
+    | '/_authenticated/sales/tracking'
+    | '/_authenticated/shopfloor/downtime'
+    | '/_authenticated/shopfloor/input-produksi'
+    | '/_authenticated/shopfloor/wo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +538,160 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/shopfloor/wo': {
+      id: '/_authenticated/shopfloor/wo'
+      path: '/shopfloor/wo'
+      fullPath: '/shopfloor/wo'
+      preLoaderRoute: typeof AuthenticatedShopfloorWoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shopfloor/input-produksi': {
+      id: '/_authenticated/shopfloor/input-produksi'
+      path: '/shopfloor/input-produksi'
+      fullPath: '/shopfloor/input-produksi'
+      preLoaderRoute: typeof AuthenticatedShopfloorInputProduksiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shopfloor/downtime': {
+      id: '/_authenticated/shopfloor/downtime'
+      path: '/shopfloor/downtime'
+      fullPath: '/shopfloor/downtime'
+      preLoaderRoute: typeof AuthenticatedShopfloorDowntimeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/tracking': {
+      id: '/_authenticated/sales/tracking'
+      path: '/sales/tracking'
+      fullPath: '/sales/tracking'
+      preLoaderRoute: typeof AuthenticatedSalesTrackingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/review': {
+      id: '/_authenticated/sales/review'
+      path: '/sales/review'
+      fullPath: '/sales/review'
+      preLoaderRoute: typeof AuthenticatedSalesReviewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/orders': {
+      id: '/_authenticated/sales/orders'
+      path: '/sales/orders'
+      fullPath: '/sales/orders'
+      preLoaderRoute: typeof AuthenticatedSalesOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/customers': {
+      id: '/_authenticated/sales/customers'
+      path: '/sales/customers'
+      fullPath: '/sales/customers'
+      preLoaderRoute: typeof AuthenticatedSalesCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production/work-orders': {
+      id: '/_authenticated/production/work-orders'
+      path: '/production/work-orders'
+      fullPath: '/production/work-orders'
+      preLoaderRoute: typeof AuthenticatedProductionWorkOrdersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production/validasi': {
+      id: '/_authenticated/production/validasi'
+      path: '/production/validasi'
+      fullPath: '/production/validasi'
+      preLoaderRoute: typeof AuthenticatedProductionValidasiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production/plans': {
+      id: '/_authenticated/production/plans'
+      path: '/production/plans'
+      fullPath: '/production/plans'
+      preLoaderRoute: typeof AuthenticatedProductionPlansRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production/handover': {
+      id: '/_authenticated/production/handover'
+      path: '/production/handover'
+      fullPath: '/production/handover'
+      preLoaderRoute: typeof AuthenticatedProductionHandoverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production/backlog': {
+      id: '/_authenticated/production/backlog'
+      path: '/production/backlog'
+      fullPath: '/production/backlog'
+      preLoaderRoute: typeof AuthenticatedProductionBacklogRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/procurement/suppliers': {
+      id: '/_authenticated/procurement/suppliers'
+      path: '/procurement/suppliers'
+      fullPath: '/procurement/suppliers'
+      preLoaderRoute: typeof AuthenticatedProcurementSuppliersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/master/products': {
+      id: '/_authenticated/master/products'
+      path: '/master/products'
+      fullPath: '/master/products'
+      preLoaderRoute: typeof AuthenticatedMasterProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/stock': {
+      id: '/_authenticated/inventory/stock'
+      path: '/inventory/stock'
+      fullPath: '/inventory/stock'
+      preLoaderRoute: typeof AuthenticatedInventoryStockRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/receipt': {
+      id: '/_authenticated/inventory/receipt'
+      path: '/inventory/receipt'
+      fullPath: '/inventory/receipt'
+      preLoaderRoute: typeof AuthenticatedInventoryReceiptRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/ledger': {
+      id: '/_authenticated/inventory/ledger'
+      path: '/inventory/ledger'
+      fullPath: '/inventory/ledger'
+      preLoaderRoute: typeof AuthenticatedInventoryLedgerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/issue': {
+      id: '/_authenticated/inventory/issue'
+      path: '/inventory/issue'
+      fullPath: '/inventory/issue'
+      preLoaderRoute: typeof AuthenticatedInventoryIssueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/engineering/routing': {
+      id: '/_authenticated/engineering/routing'
+      path: '/engineering/routing'
+      fullPath: '/engineering/routing'
+      preLoaderRoute: typeof AuthenticatedEngineeringRoutingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/engineering/bom': {
+      id: '/_authenticated/engineering/bom'
+      path: '/engineering/bom'
+      fullPath: '/engineering/bom'
+      preLoaderRoute: typeof AuthenticatedEngineeringBomRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/order': {
+      id: '/_authenticated/dashboard/order'
+      path: '/dashboard/order'
+      fullPath: '/dashboard/order'
+      preLoaderRoute: typeof AuthenticatedDashboardOrderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/operasional': {
+      id: '/_authenticated/dashboard/operasional'
+      path: '/dashboard/operasional'
+      fullPath: '/dashboard/operasional'
+      preLoaderRoute: typeof AuthenticatedDashboardOperasionalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/manajemen': {
       id: '/_authenticated/dashboard/manajemen'
       path: '/dashboard/manajemen'
@@ -101,15 +699,171 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardManajemenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/costing/hpp': {
+      id: '/_authenticated/costing/hpp'
+      path: '/costing/hpp'
+      fullPath: '/costing/hpp'
+      preLoaderRoute: typeof AuthenticatedCostingHppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/speed': {
+      id: '/_authenticated/analytics/speed'
+      path: '/analytics/speed'
+      fullPath: '/analytics/speed'
+      preLoaderRoute: typeof AuthenticatedAnalyticsSpeedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/quality': {
+      id: '/_authenticated/analytics/quality'
+      path: '/analytics/quality'
+      fullPath: '/analytics/quality'
+      preLoaderRoute: typeof AuthenticatedAnalyticsQualityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/oee': {
+      id: '/_authenticated/analytics/oee'
+      path: '/analytics/oee'
+      fullPath: '/analytics/oee'
+      preLoaderRoute: typeof AuthenticatedAnalyticsOeeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/mesin': {
+      id: '/_authenticated/analytics/mesin'
+      path: '/analytics/mesin'
+      fullPath: '/analytics/mesin'
+      preLoaderRoute: typeof AuthenticatedAnalyticsMesinRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/downtime': {
+      id: '/_authenticated/analytics/downtime'
+      path: '/analytics/downtime'
+      fullPath: '/analytics/downtime'
+      preLoaderRoute: typeof AuthenticatedAnalyticsDowntimeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/bottleneck': {
+      id: '/_authenticated/analytics/bottleneck'
+      path: '/analytics/bottleneck'
+      fullPath: '/analytics/bottleneck'
+      preLoaderRoute: typeof AuthenticatedAnalyticsBottleneckRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/roles': {
+      id: '/_authenticated/admin/roles'
+      path: '/admin/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AuthenticatedAdminRolesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/overview': {
+      id: '/_authenticated/admin/overview'
+      path: '/admin/overview'
+      fullPath: '/admin/overview'
+      preLoaderRoute: typeof AuthenticatedAdminOverviewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/configuration': {
+      id: '/_authenticated/admin/configuration'
+      path: '/admin/configuration'
+      fullPath: '/admin/configuration'
+      preLoaderRoute: typeof AuthenticatedAdminConfigurationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/audit': {
+      id: '/_authenticated/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
+  AuthenticatedAdminConfigurationRoute: typeof AuthenticatedAdminConfigurationRoute
+  AuthenticatedAdminOverviewRoute: typeof AuthenticatedAdminOverviewRoute
+  AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAnalyticsBottleneckRoute: typeof AuthenticatedAnalyticsBottleneckRoute
+  AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
+  AuthenticatedAnalyticsMesinRoute: typeof AuthenticatedAnalyticsMesinRoute
+  AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
+  AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
+  AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
+  AuthenticatedCostingHppRoute: typeof AuthenticatedCostingHppRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
+  AuthenticatedDashboardOperasionalRoute: typeof AuthenticatedDashboardOperasionalRoute
+  AuthenticatedDashboardOrderRoute: typeof AuthenticatedDashboardOrderRoute
+  AuthenticatedEngineeringBomRoute: typeof AuthenticatedEngineeringBomRoute
+  AuthenticatedEngineeringRoutingRoute: typeof AuthenticatedEngineeringRoutingRoute
+  AuthenticatedInventoryIssueRoute: typeof AuthenticatedInventoryIssueRoute
+  AuthenticatedInventoryLedgerRoute: typeof AuthenticatedInventoryLedgerRoute
+  AuthenticatedInventoryReceiptRoute: typeof AuthenticatedInventoryReceiptRoute
+  AuthenticatedInventoryStockRoute: typeof AuthenticatedInventoryStockRoute
+  AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
+  AuthenticatedProcurementSuppliersRoute: typeof AuthenticatedProcurementSuppliersRoute
+  AuthenticatedProductionBacklogRoute: typeof AuthenticatedProductionBacklogRoute
+  AuthenticatedProductionHandoverRoute: typeof AuthenticatedProductionHandoverRoute
+  AuthenticatedProductionPlansRoute: typeof AuthenticatedProductionPlansRoute
+  AuthenticatedProductionValidasiRoute: typeof AuthenticatedProductionValidasiRoute
+  AuthenticatedProductionWorkOrdersRoute: typeof AuthenticatedProductionWorkOrdersRoute
+  AuthenticatedSalesCustomersRoute: typeof AuthenticatedSalesCustomersRoute
+  AuthenticatedSalesOrdersRoute: typeof AuthenticatedSalesOrdersRoute
+  AuthenticatedSalesReviewRoute: typeof AuthenticatedSalesReviewRoute
+  AuthenticatedSalesTrackingRoute: typeof AuthenticatedSalesTrackingRoute
+  AuthenticatedShopfloorDowntimeRoute: typeof AuthenticatedShopfloorDowntimeRoute
+  AuthenticatedShopfloorInputProduksiRoute: typeof AuthenticatedShopfloorInputProduksiRoute
+  AuthenticatedShopfloorWoRoute: typeof AuthenticatedShopfloorWoRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
+  AuthenticatedAdminConfigurationRoute: AuthenticatedAdminConfigurationRoute,
+  AuthenticatedAdminOverviewRoute: AuthenticatedAdminOverviewRoute,
+  AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAnalyticsBottleneckRoute: AuthenticatedAnalyticsBottleneckRoute,
+  AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
+  AuthenticatedAnalyticsMesinRoute: AuthenticatedAnalyticsMesinRoute,
+  AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
+  AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
+  AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
+  AuthenticatedCostingHppRoute: AuthenticatedCostingHppRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
+  AuthenticatedDashboardOperasionalRoute:
+    AuthenticatedDashboardOperasionalRoute,
+  AuthenticatedDashboardOrderRoute: AuthenticatedDashboardOrderRoute,
+  AuthenticatedEngineeringBomRoute: AuthenticatedEngineeringBomRoute,
+  AuthenticatedEngineeringRoutingRoute: AuthenticatedEngineeringRoutingRoute,
+  AuthenticatedInventoryIssueRoute: AuthenticatedInventoryIssueRoute,
+  AuthenticatedInventoryLedgerRoute: AuthenticatedInventoryLedgerRoute,
+  AuthenticatedInventoryReceiptRoute: AuthenticatedInventoryReceiptRoute,
+  AuthenticatedInventoryStockRoute: AuthenticatedInventoryStockRoute,
+  AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
+  AuthenticatedProcurementSuppliersRoute:
+    AuthenticatedProcurementSuppliersRoute,
+  AuthenticatedProductionBacklogRoute: AuthenticatedProductionBacklogRoute,
+  AuthenticatedProductionHandoverRoute: AuthenticatedProductionHandoverRoute,
+  AuthenticatedProductionPlansRoute: AuthenticatedProductionPlansRoute,
+  AuthenticatedProductionValidasiRoute: AuthenticatedProductionValidasiRoute,
+  AuthenticatedProductionWorkOrdersRoute:
+    AuthenticatedProductionWorkOrdersRoute,
+  AuthenticatedSalesCustomersRoute: AuthenticatedSalesCustomersRoute,
+  AuthenticatedSalesOrdersRoute: AuthenticatedSalesOrdersRoute,
+  AuthenticatedSalesReviewRoute: AuthenticatedSalesReviewRoute,
+  AuthenticatedSalesTrackingRoute: AuthenticatedSalesTrackingRoute,
+  AuthenticatedShopfloorDowntimeRoute: AuthenticatedShopfloorDowntimeRoute,
+  AuthenticatedShopfloorInputProduksiRoute:
+    AuthenticatedShopfloorInputProduksiRoute,
+  AuthenticatedShopfloorWoRoute: AuthenticatedShopfloorWoRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
