@@ -188,7 +188,7 @@
   input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(0.5);
     cursor: pointer;
-    transform: translateY(10px);
+    margin-top: 0.4rem;
     margin-right: 0;
   }
 
