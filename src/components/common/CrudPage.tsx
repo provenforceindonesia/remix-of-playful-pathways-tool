@@ -325,12 +325,12 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : f.type === "select" ? (
                     <Select
                       value={String(values[f.name] ?? "")}
-                      onValueChange={(val) => setValues((v) => ({ ...v, [f.name]: val }))}
+                      onValueChange={(val) => setValue(f.name, val)}
                     >
                       <SelectTrigger id={f.name} className="w-full">
                         <SelectValue placeholder={f.placeholder ?? "Pilih..."} />
@@ -348,7 +348,7 @@ export function CrudPage<T extends CrudRow>({
                       <Switch
                         id={f.name}
                         checked={Boolean(values[f.name])}
-                        onCheckedChange={(c) => setValues((v) => ({ ...v, [f.name]: c }))}
+                        onCheckedChange={(c) => setValue(f.name, c)}
                       />
                     </div>
                   ) : f.type === "date" || f.type === "time" || f.type === "datetime-local" ? (
@@ -358,8 +358,8 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : (
                     <Input
@@ -369,8 +369,8 @@ export function CrudPage<T extends CrudRow>({
                       value={String(values[f.name] ?? "")}
                       required={f.required}
                       placeholder={f.placeholder}
-                      readOnly={Boolean(editing && f.readOnlyOnEdit)}
-                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
+                      readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
+                      onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   )}
                 </div>
