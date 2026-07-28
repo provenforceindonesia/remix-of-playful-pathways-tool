@@ -28,6 +28,7 @@ import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
+import { Route as AuthenticatedAnalyticsQualityRouteImport } from './routes/_authenticated/analytics.quality'
 import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
 import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
@@ -146,6 +147,12 @@ const AuthenticatedAnalyticsSpeedRoute =
     path: '/analytics/speed',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsQualityRoute =
+  AuthenticatedAnalyticsQualityRouteImport.update({
+    id: '/analytics/quality',
+    path: '/analytics/quality',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalyticsOeeRoute =
   AuthenticatedAnalyticsOeeRouteImport.update({
     id: '/analytics/oee',
@@ -196,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
@@ -223,6 +231,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
@@ -252,6 +261,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
   '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
+  '/_authenticated/analytics/quality': typeof AuthenticatedAnalyticsQualityRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/analytics/downtime'
     | '/analytics/oee'
+    | '/analytics/quality'
     | '/analytics/speed'
     | '/dashboard/manajemen'
     | '/master/products'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/analytics/downtime'
     | '/analytics/oee'
+    | '/analytics/quality'
     | '/analytics/speed'
     | '/dashboard/manajemen'
     | '/master/products'
@@ -336,6 +348,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users'
     | '/_authenticated/analytics/downtime'
     | '/_authenticated/analytics/oee'
+    | '/_authenticated/analytics/quality'
     | '/_authenticated/analytics/speed'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/master/products'
@@ -495,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsSpeedRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/quality': {
+      id: '/_authenticated/analytics/quality'
+      path: '/analytics/quality'
+      fullPath: '/analytics/quality'
+      preLoaderRoute: typeof AuthenticatedAnalyticsQualityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analytics/oee': {
       id: '/_authenticated/analytics/oee'
       path: '/analytics/oee'
@@ -555,6 +575,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
   AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
+  AuthenticatedAnalyticsQualityRoute: typeof AuthenticatedAnalyticsQualityRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
@@ -581,6 +602,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
   AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
+  AuthenticatedAnalyticsQualityRoute: AuthenticatedAnalyticsQualityRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
