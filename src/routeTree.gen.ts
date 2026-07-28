@@ -28,6 +28,7 @@ import { Route as AuthenticatedProcurementSuppliersRouteImport } from './routes/
 import { Route as AuthenticatedMasterProductsRouteImport } from './routes/_authenticated/master.products'
 import { Route as AuthenticatedDashboardManajemenRouteImport } from './routes/_authenticated/dashboard.manajemen'
 import { Route as AuthenticatedAnalyticsSpeedRouteImport } from './routes/_authenticated/analytics.speed'
+import { Route as AuthenticatedAnalyticsOeeRouteImport } from './routes/_authenticated/analytics.oee'
 import { Route as AuthenticatedAnalyticsDowntimeRouteImport } from './routes/_authenticated/analytics.downtime'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
@@ -145,6 +146,12 @@ const AuthenticatedAnalyticsSpeedRoute =
     path: '/analytics/speed',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalyticsOeeRoute =
+  AuthenticatedAnalyticsOeeRouteImport.update({
+    id: '/analytics/oee',
+    path: '/analytics/oee',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalyticsDowntimeRoute =
   AuthenticatedAnalyticsDowntimeRouteImport.update({
     id: '/analytics/downtime',
@@ -188,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
@@ -214,6 +222,7 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/master/products': typeof AuthenticatedMasterProductsRoute
@@ -242,6 +251,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/analytics/downtime': typeof AuthenticatedAnalyticsDowntimeRoute
+  '/_authenticated/analytics/oee': typeof AuthenticatedAnalyticsOeeRoute
   '/_authenticated/analytics/speed': typeof AuthenticatedAnalyticsSpeedRoute
   '/_authenticated/dashboard/manajemen': typeof AuthenticatedDashboardManajemenRoute
   '/_authenticated/master/products': typeof AuthenticatedMasterProductsRoute
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/analytics/downtime'
+    | '/analytics/oee'
     | '/analytics/speed'
     | '/dashboard/manajemen'
     | '/master/products'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/users'
     | '/analytics/downtime'
+    | '/analytics/oee'
     | '/analytics/speed'
     | '/dashboard/manajemen'
     | '/master/products'
@@ -323,6 +335,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
     | '/_authenticated/analytics/downtime'
+    | '/_authenticated/analytics/oee'
     | '/_authenticated/analytics/speed'
     | '/_authenticated/dashboard/manajemen'
     | '/_authenticated/master/products'
@@ -482,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsSpeedRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analytics/oee': {
+      id: '/_authenticated/analytics/oee'
+      path: '/analytics/oee'
+      fullPath: '/analytics/oee'
+      preLoaderRoute: typeof AuthenticatedAnalyticsOeeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analytics/downtime': {
       id: '/_authenticated/analytics/downtime'
       path: '/analytics/downtime'
@@ -534,6 +554,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAnalyticsDowntimeRoute: typeof AuthenticatedAnalyticsDowntimeRoute
+  AuthenticatedAnalyticsOeeRoute: typeof AuthenticatedAnalyticsOeeRoute
   AuthenticatedAnalyticsSpeedRoute: typeof AuthenticatedAnalyticsSpeedRoute
   AuthenticatedDashboardManajemenRoute: typeof AuthenticatedDashboardManajemenRoute
   AuthenticatedMasterProductsRoute: typeof AuthenticatedMasterProductsRoute
@@ -559,6 +580,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAnalyticsDowntimeRoute: AuthenticatedAnalyticsDowntimeRoute,
+  AuthenticatedAnalyticsOeeRoute: AuthenticatedAnalyticsOeeRoute,
   AuthenticatedAnalyticsSpeedRoute: AuthenticatedAnalyticsSpeedRoute,
   AuthenticatedDashboardManajemenRoute: AuthenticatedDashboardManajemenRoute,
   AuthenticatedMasterProductsRoute: AuthenticatedMasterProductsRoute,
