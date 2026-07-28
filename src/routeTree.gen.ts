@@ -54,6 +54,7 @@ import { Route as AuthenticatedAnalyticsBottleneckRouteImport } from './routes/_
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminRolesRouteImport } from './routes/_authenticated/admin.roles'
 import { Route as AuthenticatedAdminOverviewRouteImport } from './routes/_authenticated/admin.overview'
+import { Route as AuthenticatedAdminConnectionStatusRouteImport } from './routes/_authenticated/admin.connection-status'
 import { Route as AuthenticatedAdminConfigurationRouteImport } from './routes/_authenticated/admin.configuration'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 
@@ -320,6 +321,12 @@ const AuthenticatedAdminOverviewRoute =
     path: '/admin/overview',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminConnectionStatusRoute =
+  AuthenticatedAdminConnectionStatusRouteImport.update({
+    id: '/admin/connection-status',
+    path: '/admin/connection-status',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminConfigurationRoute =
   AuthenticatedAdminConfigurationRouteImport.update({
     id: '/admin/configuration',
@@ -337,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/admin/connection-status': typeof AuthenticatedAdminConnectionStatusRoute
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -385,6 +393,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/admin/connection-status': typeof AuthenticatedAdminConnectionStatusRoute
   '/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -435,6 +444,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/configuration': typeof AuthenticatedAdminConfigurationRoute
+  '/_authenticated/admin/connection-status': typeof AuthenticatedAdminConnectionStatusRoute
   '/_authenticated/admin/overview': typeof AuthenticatedAdminOverviewRoute
   '/_authenticated/admin/roles': typeof AuthenticatedAdminRolesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
@@ -485,6 +495,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin/audit'
     | '/admin/configuration'
+    | '/admin/connection-status'
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
@@ -533,6 +544,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin/audit'
     | '/admin/configuration'
+    | '/admin/connection-status'
     | '/admin/overview'
     | '/admin/roles'
     | '/admin/users'
@@ -582,6 +594,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/configuration'
+    | '/_authenticated/admin/connection-status'
     | '/_authenticated/admin/overview'
     | '/_authenticated/admin/roles'
     | '/_authenticated/admin/users'
@@ -949,6 +962,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOverviewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/connection-status': {
+      id: '/_authenticated/admin/connection-status'
+      path: '/admin/connection-status'
+      fullPath: '/admin/connection-status'
+      preLoaderRoute: typeof AuthenticatedAdminConnectionStatusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/configuration': {
       id: '/_authenticated/admin/configuration'
       path: '/admin/configuration'
@@ -969,6 +989,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminConfigurationRoute: typeof AuthenticatedAdminConfigurationRoute
+  AuthenticatedAdminConnectionStatusRoute: typeof AuthenticatedAdminConnectionStatusRoute
   AuthenticatedAdminOverviewRoute: typeof AuthenticatedAdminOverviewRoute
   AuthenticatedAdminRolesRoute: typeof AuthenticatedAdminRolesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
@@ -1016,6 +1037,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminConfigurationRoute: AuthenticatedAdminConfigurationRoute,
+  AuthenticatedAdminConnectionStatusRoute:
+    AuthenticatedAdminConnectionStatusRoute,
   AuthenticatedAdminOverviewRoute: AuthenticatedAdminOverviewRoute,
   AuthenticatedAdminRolesRoute: AuthenticatedAdminRolesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
