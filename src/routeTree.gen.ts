@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedSalesTrackingRouteImport } from './routes/_authenticated/sales.tracking'
 import { Route as AuthenticatedSalesReviewRouteImport } from './routes/_authenticated/sales.review'
 import { Route as AuthenticatedSalesOrdersRouteImport } from './routes/_authenticated/sales.orders'
 import { Route as AuthenticatedSalesCustomersRouteImport } from './routes/_authenticated/sales.customers'
@@ -38,6 +39,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSalesTrackingRoute =
+  AuthenticatedSalesTrackingRouteImport.update({
+    id: '/sales/tracking',
+    path: '/sales/tracking',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSalesReviewRoute =
   AuthenticatedSalesReviewRouteImport.update({
     id: '/sales/review',
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -131,6 +139,7 @@ export interface FileRoutesByTo {
   '/sales/customers': typeof AuthenticatedSalesCustomersRoute
   '/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/sales/tracking': typeof AuthenticatedSalesTrackingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -148,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/customers': typeof AuthenticatedSalesCustomersRoute
   '/_authenticated/sales/orders': typeof AuthenticatedSalesOrdersRoute
   '/_authenticated/sales/review': typeof AuthenticatedSalesReviewRoute
+  '/_authenticated/sales/tracking': typeof AuthenticatedSalesTrackingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/sales/customers'
     | '/sales/orders'
     | '/sales/review'
+    | '/sales/tracking'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/sales/customers'
     | '/sales/orders'
     | '/sales/review'
+    | '/sales/tracking'
   id:
     | '__root__'
     | '/'
@@ -196,6 +208,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/customers'
     | '/_authenticated/sales/orders'
     | '/_authenticated/sales/review'
+    | '/_authenticated/sales/tracking'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sales/tracking': {
+      id: '/_authenticated/sales/tracking'
+      path: '/sales/tracking'
+      fullPath: '/sales/tracking'
+      preLoaderRoute: typeof AuthenticatedSalesTrackingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/review': {
       id: '/_authenticated/sales/review'
@@ -319,6 +339,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalesCustomersRoute: typeof AuthenticatedSalesCustomersRoute
   AuthenticatedSalesOrdersRoute: typeof AuthenticatedSalesOrdersRoute
   AuthenticatedSalesReviewRoute: typeof AuthenticatedSalesReviewRoute
+  AuthenticatedSalesTrackingRoute: typeof AuthenticatedSalesTrackingRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -334,6 +355,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalesCustomersRoute: AuthenticatedSalesCustomersRoute,
   AuthenticatedSalesOrdersRoute: AuthenticatedSalesOrdersRoute,
   AuthenticatedSalesReviewRoute: AuthenticatedSalesReviewRoute,
+  AuthenticatedSalesTrackingRoute: AuthenticatedSalesTrackingRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
