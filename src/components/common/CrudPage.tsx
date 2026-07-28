@@ -104,6 +104,8 @@ export function CrudPage<T extends CrudRow>({
   children,
   pageSize,
   rowActions,
+  afterCreate,
+  onFieldChange,
 }: {
   title: string;
   description?: string;
@@ -124,12 +126,23 @@ export function CrudPage<T extends CrudRow>({
   children?: ReactNode;
   pageSize?: number;
   rowActions?: (row: T) => ReactNode;
+  /** Runs after a successful insert, with the created row and raw form values. */
+  afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
+  /** Returns extra values to patch when a field changes (e.g. dependent fields). */
+  onFieldChange?: (
+    name: string,
+    value: unknown,
+    values: Record<string, unknown>,
+  ) => Record<string, unknown> | void;
 }) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
   const [deleting, setDeleting] = useState<T | null>(null);
   const [values, setValues] = useState<Record<string, unknown>>(() => emptyForm(fields));
+
+  const setValue = (name: string, value: unknown) =>
+    setValues((v) => ({ ...v, [name]: value, ...(onFieldChange?.(name, value, v) ?? {}) }));
 
   const invalidate = () =>
     invalidateKeys.forEach((k) => void qc.invalidateQueries({ queryKey: k }));
@@ -139,6 +152,7 @@ export function CrudPage<T extends CrudRow>({
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(src)) {
       const field = fields.find((f) => f.name === k);
+      if (field?.virtual) continue;
       if (field?.createOnly && isEdit) continue;
       if (field?.editOnly && !isEdit) continue;
       if (v === "" || v === undefined) {
@@ -161,8 +175,9 @@ export function CrudPage<T extends CrudRow>({
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
       } else {
-        const { error } = await db.from(table).insert(payload);
+        const { data, error } = await db.from(table).insert(payload).select().single();
         if (error) throw new Error(error.message);
+        if (afterCreate) await afterCreate((data ?? {}) as CrudRow, values);
       }
     },
     onSuccess: () => {
