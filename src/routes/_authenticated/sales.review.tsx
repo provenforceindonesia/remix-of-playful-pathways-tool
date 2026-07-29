@@ -181,20 +181,25 @@ function ReviewPage() {
       header: "Aksi",
       align: "right",
       sortable: false,
-      render: (r) =>
-        ["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)) ? (
-          <div className="flex justify-end gap-1">
-            <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
-              <Check className="size-4" /> Konfirmasi
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
-              <X className="size-4" /> Revisi
-            </Button>
-          </div>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        ),
+      render: (r) => (
+        <div className="flex justify-end gap-1">
+          <Button size="sm" variant="ghost" onClick={() => setDetail(r)}>
+            <Eye className="size-4" /> Detail SO
+          </Button>
+          {["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)) ? (
+            <>
+              <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
+                <Check className="size-4" /> Konfirmasi
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
+                <X className="size-4" /> Revisi
+              </Button>
+            </>
+          ) : null}
+        </div>
+      ),
     },
+
   ];
 
   return (
