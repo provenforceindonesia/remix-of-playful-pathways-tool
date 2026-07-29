@@ -1,23 +1,26 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarRange, CircleDollarSign, Plus, Send, Trash2 } from "lucide-react";
+import {
+  CalendarRange,
+  CircleDollarSign,
+  Eye,
+  LineChart,
+  Plus,
+  Send,
+  Trash2,
+  Undo2,
+} from "lucide-react";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
 import { KpiCard } from "@/components/common/KpiCard";
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -29,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+
 
 export const Route = createFileRoute("/_authenticated/sales/orders")({
   head: () => ({
@@ -215,6 +219,7 @@ const soValue = (r: Row) =>
 
 function SalesOrdersPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const { role, profile } = useAuth();
   const { data, isLoading } = useQuery(salesOrdersQuery);
   const { data: customers } = useQuery(customersQuery);
@@ -249,6 +254,22 @@ function SalesOrdersPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  const withdraw = useMutation({
+    mutationFn: async (row: Row) => {
+      const { error } = await supabase
+        .from("sales_orders")
+        .update({ status: "Draft", submitted_at: null })
+        .eq("id", String(row.id));
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Order ditarik kembali ke Draft");
+      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
 
   const columns: Column<Row>[] = [
     { key: "so_number", header: "No. SO" },
@@ -481,34 +502,84 @@ function SalesOrdersPage() {
           const { error } = await supabase.from("sales_order_items").insert(payload);
           if (error) throw new Error(error.message);
         }}
-        rowActions={(row) => (
-          <>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDetail(row);
-              }}
-            >
-              Item
-            </Button>
-            {canWrite && row.status === "Draft" ? (
+        rowCanEdit={(row) => ["Draft", "Perlu Revisi"].includes(String(row.status ?? ""))}
+        rowCanDelete={(row) => String(row.status ?? "") === "Draft"}
+        rowActions={(row) => {
+          const status = String(row.status ?? "");
+          return (
+            <>
               <Button
                 variant="ghost"
                 size="icon"
                 className="size-8"
-                title="Kirim untuk review"
+                title="Detail SO"
                 onClick={(e) => {
                   e.stopPropagation();
-                  submit.mutate(row);
+                  setDetail(row);
                 }}
               >
-                <Send className="size-4" />
+                <Eye className="size-4" />
               </Button>
-            ) : null}
-          </>
-        )}
+              {canWrite && status === "Draft" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Kirim ke Production Control"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    submit.mutate(row);
+                  }}
+                >
+                  <Send className="size-4" />
+                </Button>
+              ) : null}
+              {canWrite && status === "Perlu Revisi" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Kirim Ulang"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    submit.mutate(row);
+                  }}
+                >
+                  <Send className="size-4" />
+                </Button>
+              ) : null}
+              {canWrite && status === "Menunggu Review Produksi" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Tarik Kembali"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    withdraw.mutate(row);
+                  }}
+                >
+                  <Undo2 className="size-4" />
+                </Button>
+              ) : null}
+              {["Dalam Produksi", "Sebagian Terpenuhi"].includes(status) ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Lihat Progress"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void navigate({ to: "/sales/tracking" });
+                  }}
+                >
+                  <LineChart className="size-4" />
+                </Button>
+              ) : null}
+            </>
+          );
+        }}
+
       >
         <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
           <KpiCard
@@ -526,174 +597,7 @@ function SalesOrdersPage() {
         </div>
       </CrudPage>
 
-      <ItemsDialog
-        order={detailRow}
-        onClose={() => setDetail(null)}
-        products={(products ?? []) as Row[]}
-        uoms={(uoms ?? []) as Row[]}
-        canWrite={canWrite}
-      />
+      <SalesOrderDetailDialog order={detailRow ?? null} onClose={() => setDetail(null)} />
     </>
-  );
-}
-
-function ItemsDialog({
-  order,
-  onClose,
-  products,
-  uoms,
-  canWrite,
-}: {
-  order: Row | null;
-  onClose: () => void;
-  products: Row[];
-  uoms: Row[];
-  canWrite: boolean;
-}) {
-  const qc = useQueryClient();
-  const [productId, setProductId] = useState("");
-  const [uomId, setUomId] = useState("");
-  const [qty, setQty] = useState("");
-  const [price, setPrice] = useState("");
-
-  const items = ((order?.sales_order_items as Item[]) ?? []) as Item[];
-
-  const add = useMutation({
-    mutationFn: async () => {
-      if (!order) return;
-      const { error } = await supabase.from("sales_order_items").insert({
-        sales_order_id: String(order.id),
-        product_id: productId,
-        uom_id: uomId || null,
-        quantity: Number(qty || 0),
-        unit_price: Number(price || 0),
-      });
-      if (error) throw new Error(error.message);
-    },
-    onSuccess: () => {
-      setProductId("");
-      setQty("");
-      setPrice("");
-      toast.success("Item ditambahkan");
-      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const del = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("sales_order_items").delete().eq("id", id);
-      if (error) throw new Error(error.message);
-    },
-    onSuccess: () => {
-      toast.success("Item dihapus");
-      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  return (
-    <Dialog open={Boolean(order)} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Item Order {String(order?.so_number ?? "")}</DialogTitle>
-          <DialogDescription>Rincian produk yang dipesan pelanggan.</DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-2">
-          {items.length === 0 ? (
-            <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              Belum ada item pada order ini.
-            </p>
-          ) : (
-            items.map((it) => (
-              <div
-                key={it.id}
-                className="flex items-center justify-between gap-3 rounded-lg border p-3 text-sm"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium">
-                    {it.products?.code} — {it.products?.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatNumber(it.quantity)} × {formatCurrency(it.unit_price)} · terpenuhi{" "}
-                    {formatNumber(it.fulfilled_qty)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">
-                    {formatCurrency(Number(it.quantity) * Number(it.unit_price))}
-                  </span>
-                  {canWrite && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="size-8 text-destructive"
-                      onClick={() => del.mutate(it.id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {canWrite && (
-          <form
-            className="grid gap-3 border-t pt-4 sm:grid-cols-5"
-            onSubmit={(e) => {
-              e.preventDefault();
-              add.mutate();
-            }}
-          >
-            <div className="space-y-2 sm:col-span-2">
-              <Label>Produk</Label>
-              <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pilih produk" />
-                </SelectTrigger>
-                <SelectContent>
-                  {toOptions(products, ["code", "name"]).map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>UoM</Label>
-              <Select value={uomId} onValueChange={setUomId}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="UoM" />
-                </SelectTrigger>
-                <SelectContent>
-                  {toOptions(uoms, ["code"]).map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Qty</Label>
-              <Input type="number" value={qty} onChange={(e) => setQty(e.target.value)} required />
-            </div>
-            <div className="space-y-2">
-              <Label>Harga Satuan</Label>
-              <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-            </div>
-            <div className="sm:col-span-5">
-              <Button type="submit" disabled={!productId || add.isPending}>
-                <Plus className="size-4" /> Tambah Item
-              </Button>
-            </div>
-          </form>
-        )}
-      </DialogContent>
-    </Dialog>
   );
 }

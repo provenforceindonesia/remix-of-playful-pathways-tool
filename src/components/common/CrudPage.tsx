@@ -122,6 +122,8 @@ export function CrudPage<T extends CrudRow>({
   children,
   pageSize,
   rowActions,
+  rowCanEdit,
+  rowCanDelete,
   afterCreate,
   afterUpdate,
   onFieldChange,
@@ -147,6 +149,9 @@ export function CrudPage<T extends CrudRow>({
   children?: ReactNode;
   pageSize?: number;
   rowActions?: (row: T) => ReactNode;
+  rowCanEdit?: (row: T) => boolean;
+  rowCanDelete?: (row: T) => boolean;
+
   /** Runs after a successful insert, with the created row and raw form values. */
   afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
   /** Runs after a successful update, with the edited row and raw form values. */
@@ -260,7 +265,7 @@ export function CrudPage<T extends CrudRow>({
         render: (row) => (
           <div className="flex justify-end gap-1">
             {rowActions?.(row)}
-            {canWrite && (
+            {canWrite && (rowCanEdit?.(row) ?? true) && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -273,7 +278,7 @@ export function CrudPage<T extends CrudRow>({
                 <Pencil className="size-4" />
               </Button>
             )}
-            {canDelete && (
+            {canDelete && (rowCanDelete?.(row) ?? true) && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -291,7 +296,7 @@ export function CrudPage<T extends CrudRow>({
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, canWrite, canDelete, rowActions]);
+  }, [columns, canWrite, canDelete, rowActions, rowCanEdit, rowCanDelete]);
 
   return (
     <>
