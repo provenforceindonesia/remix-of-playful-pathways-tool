@@ -296,7 +296,7 @@ export function CrudPage<T extends CrudRow>({
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, canWrite, canDelete, rowActions]);
+  }, [columns, canWrite, canDelete, rowActions, rowCanEdit, rowCanDelete]);
 
   return (
     <>
