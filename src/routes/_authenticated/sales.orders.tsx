@@ -414,20 +414,6 @@ function SalesOrdersPage() {
 
   return (
     <>
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          icon={<CalendarRange className="size-4" />}
-          label="Total Order Bulan Ini"
-          value={monthly.count}
-          tone="primary"
-        />
-        <KpiCard
-          icon={<CircleDollarSign className="size-4" />}
-          label="Total Nilai Order Bulan Ini"
-          value={formatCurrency(monthly.value)}
-          tone="success"
-        />
-      </div>
       <CrudPage<Row>
         title="Customer Order"
         description="Order pelanggan menjadi sumber perencanaan produksi. Tambahkan satu atau beberapa item produk pada order."
@@ -466,7 +452,6 @@ function SalesOrdersPage() {
           const { error } = await supabase.from("sales_order_items").insert(payload);
           if (error) throw new Error(error.message);
         }}
-
         rowActions={(row) => (
           <>
             <Button
@@ -495,7 +480,22 @@ function SalesOrdersPage() {
             ) : null}
           </>
         )}
-      />
+      >
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <KpiCard
+            icon={<CalendarRange className="size-4" />}
+            label="Total Order Bulan Ini"
+            value={monthly.count}
+            tone="primary"
+          />
+          <KpiCard
+            icon={<CircleDollarSign className="size-4" />}
+            label="Total Nilai Order Bulan Ini"
+            value={formatCurrency(monthly.value)}
+            tone="success"
+          />
+        </div>
+      </CrudPage>
 
       <ItemsDialog
         order={detailRow}
