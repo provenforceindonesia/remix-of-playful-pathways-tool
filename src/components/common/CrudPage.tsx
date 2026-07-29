@@ -149,6 +149,9 @@ export function CrudPage<T extends CrudRow>({
   children?: ReactNode;
   pageSize?: number;
   rowActions?: (row: T) => ReactNode;
+  rowCanEdit?: (row: T) => boolean;
+  rowCanDelete?: (row: T) => boolean;
+
   /** Runs after a successful insert, with the created row and raw form values. */
   afterCreate?: (created: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
   /** Runs after a successful update, with the edited row and raw form values. */
