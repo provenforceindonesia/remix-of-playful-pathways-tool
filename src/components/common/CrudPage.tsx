@@ -122,6 +122,8 @@ export function CrudPage<T extends CrudRow>({
   children,
   pageSize,
   rowActions,
+  rowCanEdit,
+  rowCanDelete,
   afterCreate,
   afterUpdate,
   onFieldChange,
