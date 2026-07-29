@@ -9,6 +9,7 @@ import { KpiCard } from "@/components/common/KpiCard";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -305,9 +306,13 @@ function SalesOrdersPage() {
     {
       key: "progress_pct",
       header: "Progress",
-      align: "right",
       value: (r) => Number(r.progress_pct ?? 0),
-      render: (r) => formatPercent(Number(r.progress_pct ?? 0)),
+      render: (r) => (
+        <div className="flex items-center gap-2">
+          <Progress value={Number(r.progress_pct ?? 0)} className="h-1.5 w-20" />
+          <span className="whitespace-nowrap">{formatPercent(Number(r.progress_pct ?? 0))}</span>
+        </div>
+      ),
     },
     {
       key: "status",

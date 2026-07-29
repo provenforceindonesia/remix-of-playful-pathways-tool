@@ -37,15 +37,31 @@ export const formatDateTime = (v: string | Date | null | undefined) => {
 
 export const formatFullDateTime = (v: string | Date | null | undefined) => {
   if (!v) return "-";
-  return new Intl.DateTimeFormat("id-ID", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(v));
+  const d = new Date(v);
+  const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+  const dayName = days[d.getDay()];
+  const day = String(d.getDate());
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${dayName}, ${day} ${month} ${year}, ${hours}:${minutes}`;
 };
+
 
 
 export const toISODate = (d: Date) => {
