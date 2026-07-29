@@ -37,6 +37,8 @@ import { DataTable, type Column } from "./DataTable";
 import { DateInput } from "./DateInput";
 import { PageHeader } from "./PageHeader";
 import { cn } from "@/lib/utils";
+import { recordAudit } from "@/lib/audit";
+import { useAuth } from "@/lib/auth";
 
 export type Option = { value: string; label: string };
 
