@@ -101,7 +101,7 @@ function OrderDashboard() {
   return (
     <>
       <PageHeader title="Dashboard Order" description="Status pemenuhan seluruh customer order." />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard label="Rata-rata Progress" value={formatPercent(avgProgress)} icon={<Gauge />} sub="pemenuhan order" tone="info" />
         <KpiCard label="Order Terlambat" value={late} icon={<AlarmClock />} sub="lewat tanggal dibutuhkan" tone={late ? "danger" : "success"} />
       </div>

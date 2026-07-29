@@ -72,7 +72,7 @@ function MachineStatusPage() {
         title="Status Mesin"
         description="Kondisi mesin dihitung dari frekuensi downtime, MTBF, MTTR, dan OEE."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<Cog className="size-4" />} label="Total Mesin" value={rows.length} tone="primary" />
         <KpiCard icon={<Activity className="size-4" />}
           label="Beroperasi"

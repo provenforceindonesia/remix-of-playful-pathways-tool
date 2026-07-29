@@ -145,7 +145,7 @@ function CostingPage() {
         title="HPP & Costing"
         description={`Versi HPP aktif: ${String(activeVersion?.version_code ?? "-")}`}
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<Wallet className="size-4" />} label="HPP Standar / Unit" value={formatCurrency(avgStandard)} tone="primary" />
         <KpiCard icon={<Wallet className="size-4" />} label="Biaya Aktual / Unit" value={formatCurrency(actualPerUnit)} tone="info" />
         <KpiCard icon={<Wallet className="size-4" />}
