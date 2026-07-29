@@ -201,6 +201,18 @@ function ReviewPage() {
 
       <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <KpiCard
+          icon={<ShieldCheck className="size-4" />}
+          label="Menunggu direview"
+          value={rows.filter((r) => r.status === "Menunggu Review Produksi").length}
+          tone="warning"
+        />
+        <KpiCard
+          icon={<Activity className="size-4" />}
+          label="Perlu revisi"
+          value={rows.filter((r) => r.status === "Perlu Revisi").length}
+          tone="danger"
+        />
+        <KpiCard
           icon={<CalendarRange className="size-4" />}
           label="Total Order Bulan Ini"
           value={monthly.count}
@@ -213,20 +225,8 @@ function ReviewPage() {
           tone="success"
         />
         <KpiCard
-          icon={<ShieldCheck className="size-4" />}
-          label="Menunggu Review"
-          value={rows.filter((r) => r.status === "Menunggu Review Produksi").length}
-          tone="warning"
-        />
-        <KpiCard
-          icon={<Activity className="size-4" />}
-          label="Perlu Revisi"
-          value={rows.filter((r) => r.status === "Perlu Revisi").length}
-          tone="danger"
-        />
-        <KpiCard
           icon={<Wallet className="size-4" />}
-          label="Total Nilai Antrian"
+          label="Total Nilai antrian"
           value={formatCurrency(pending.reduce((s, r) => s + value(r), 0))}
           tone="primary"
         />
