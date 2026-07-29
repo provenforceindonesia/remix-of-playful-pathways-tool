@@ -427,6 +427,7 @@ function SalesOrdersPage() {
         canDelete={canWrite}
         softDelete
         createInToolbar
+        exportable={false}
         beforePayload={(v) => ({ ...v, status: v.status || "Draft", created_by: profile?.id ?? null })}
         afterCreate={async (created, values) => {
           const items = ((values.__items as DraftItem[]) ?? []).filter(

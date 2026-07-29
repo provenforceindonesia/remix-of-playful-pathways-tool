@@ -115,6 +115,7 @@ export function CrudPage<T extends CrudRow>({
   beforePayload,
   toRowValues,
   exportName,
+  exportable = true,
   headerActions,
   toolbar,
   createInToolbar,
@@ -139,6 +140,7 @@ export function CrudPage<T extends CrudRow>({
   beforePayload?: (values: Record<string, unknown>) => Record<string, unknown>;
   toRowValues?: (row: T) => Record<string, unknown>;
   exportName?: string;
+  exportable?: boolean;
   headerActions?: ReactNode;
   toolbar?: ReactNode;
   createInToolbar?: boolean;
@@ -314,7 +316,7 @@ export function CrudPage<T extends CrudRow>({
         columns={allColumns}
         rows={rows}
         loading={loading}
-        exportName={exportName ?? table}
+        exportName={exportable ? (exportName ?? table) : undefined}
         toolbar={toolbar}
         toolbarActions={
           canWrite && createInToolbar ? (
