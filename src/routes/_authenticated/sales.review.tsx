@@ -157,6 +157,12 @@ function ReviewPage() {
       value: totalQty,
       render: (r) => formatNumber(totalQty(r)),
     },
+    {
+      key: "uom",
+      header: "Satuan",
+      value: uomCodes,
+      render: (r) => <span className="truncate">{uomCodes(r) || "-"}</span>,
+    },
     { key: "order_date", header: "Tgl Order", render: (r) => formatDate(r.order_date as string) },
     { key: "required_date", header: "Dibutuhkan", render: (r) => formatDate(r.required_date as string) },
     { key: "priority", header: "Prioritas", render: (r) => <StatusBadge status={String(r.priority)} /> },
