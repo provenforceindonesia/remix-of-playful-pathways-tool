@@ -292,8 +292,13 @@ function ReviewPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Catatan Production Control</Label>
-                <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+                <Label>Catatan (Opsional)</Label>
+                <Textarea
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  rows={3}
+                  className="bg-surface text-foreground placeholder:text-muted-foreground"
+                />
               </div>
             </div>
           ) : (
