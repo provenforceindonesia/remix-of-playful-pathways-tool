@@ -1,23 +1,26 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarRange, CircleDollarSign, Plus, Send, Trash2 } from "lucide-react";
+import {
+  CalendarRange,
+  CircleDollarSign,
+  Eye,
+  LineChart,
+  Plus,
+  Send,
+  Trash2,
+  Undo2,
+} from "lucide-react";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
 import { KpiCard } from "@/components/common/KpiCard";
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -29,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+
 
 export const Route = createFileRoute("/_authenticated/sales/orders")({
   head: () => ({
