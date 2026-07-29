@@ -117,6 +117,7 @@ export function CrudPage<T extends CrudRow>({
   exportName,
   headerActions,
   toolbar,
+  createInToolbar,
   children,
   pageSize,
   rowActions,
