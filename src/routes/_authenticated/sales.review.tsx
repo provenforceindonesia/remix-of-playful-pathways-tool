@@ -35,9 +35,9 @@ import { useAuth } from "@/lib/auth";
 export const Route = createFileRoute("/_authenticated/sales/review")({
   head: () => ({
     meta: [
-      { title: "Permintaan Order — MANUFACTUREIQ" },
+      { title: "Permintaan Customer Order — MANUFACTUREIQ" },
       { name: "description", content: "Satu halaman untuk memantau seluruh customer order sekaligus menyetujui atau menolaknya." },
-      { property: "og:title", content: "Permintaan Order — MANUFACTUREIQ" },
+      { property: "og:title", content: "Permintaan Customer Order — MANUFACTUREIQ" },
       { property: "og:description", content: "Monitoring dan review customer order dalam satu menu." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
