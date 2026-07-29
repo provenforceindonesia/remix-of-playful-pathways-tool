@@ -219,6 +219,7 @@ const soValue = (r: Row) =>
 
 function SalesOrdersPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const { role, profile } = useAuth();
   const { data, isLoading } = useQuery(salesOrdersQuery);
   const { data: customers } = useQuery(customersQuery);
