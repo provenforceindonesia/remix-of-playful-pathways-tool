@@ -485,34 +485,84 @@ function SalesOrdersPage() {
           const { error } = await supabase.from("sales_order_items").insert(payload);
           if (error) throw new Error(error.message);
         }}
-        rowActions={(row) => (
-          <>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDetail(row);
-              }}
-            >
-              Item
-            </Button>
-            {canWrite && row.status === "Draft" ? (
+        rowCanEdit={(row) => ["Draft", "Perlu Revisi"].includes(String(row.status ?? ""))}
+        rowCanDelete={(row) => String(row.status ?? "") === "Draft"}
+        rowActions={(row) => {
+          const status = String(row.status ?? "");
+          return (
+            <>
               <Button
                 variant="ghost"
                 size="icon"
                 className="size-8"
-                title="Kirim untuk review"
+                title="Detail SO"
                 onClick={(e) => {
                   e.stopPropagation();
-                  submit.mutate(row);
+                  setDetail(row);
                 }}
               >
-                <Send className="size-4" />
+                <Eye className="size-4" />
               </Button>
-            ) : null}
-          </>
-        )}
+              {canWrite && status === "Draft" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Kirim ke Production Control"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    submit.mutate(row);
+                  }}
+                >
+                  <Send className="size-4" />
+                </Button>
+              ) : null}
+              {canWrite && status === "Perlu Revisi" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Kirim Ulang"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    submit.mutate(row);
+                  }}
+                >
+                  <Send className="size-4" />
+                </Button>
+              ) : null}
+              {canWrite && status === "Menunggu Review Produksi" ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Tarik Kembali"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    withdraw.mutate(row);
+                  }}
+                >
+                  <Undo2 className="size-4" />
+                </Button>
+              ) : null}
+              {["Dalam Produksi", "Sebagian Terpenuhi"].includes(status) ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  title="Lihat Progress"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void navigate({ to: "/sales/tracking" });
+                  }}
+                >
+                  <LineChart className="size-4" />
+                </Button>
+              ) : null}
+            </>
+          );
+        }}
+
       >
         <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
           <KpiCard
