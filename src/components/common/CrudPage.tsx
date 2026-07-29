@@ -197,25 +197,44 @@ export function CrudPage<T extends CrudRow>({
       const isEdit = Boolean(editing);
       const payload = clean(values, isEdit);
       if (isEdit) {
+        const before = editing as CrudRow;
         const { error } = await db
           .from(table)
           .update(payload)
           .eq("id", String((editing as CrudRow).id));
         if (error) throw new Error(error.message);
         if (afterUpdate) await afterUpdate(editing as CrudRow, values);
+        await recordAudit(actor, {
+          entity: table,
+          recordId: String(before.id ?? ""),
+          action: "UPDATE",
+          fromStatus: before.status ? String(before.status) : null,
+          toStatus: payload.status ? String(payload.status) : null,
+          before,
+          after: payload,
+        });
       } else {
         const { data, error } = await db.from(table).insert(payload).select().single();
         if (error) throw new Error(error.message);
         if (afterCreate) await afterCreate((data ?? {}) as CrudRow, values);
+        await recordAudit(actor, {
+          entity: table,
+          recordId: data?.id ? String(data.id) : null,
+          action: "CREATE",
+          toStatus: payload.status ? String(payload.status) : null,
+          after: (data ?? payload) as Record<string, unknown>,
+        });
       }
     },
     onSuccess: () => {
-      toast.success(editing ? "Data diperbarui" : "Data ditambahkan");
+      toast.success(editing ? `${title} diperbarui` : `${title} ditambahkan`, {
+        description: "Perubahan tercatat pada audit trail.",
+      });
       setOpen(false);
       setEditing(null);
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error("Gagal menyimpan data", { description: e.message }),
   });
 
   const remove = useMutation({
@@ -225,14 +244,21 @@ export function CrudPage<T extends CrudRow>({
         ? await q.update({ deleted_at: new Date().toISOString() }).eq("id", String(row.id))
         : await q.delete().eq("id", String(row.id));
       if (error) throw new Error(error.message);
+      await recordAudit(actor, {
+        entity: table,
+        recordId: String(row.id),
+        action: softDelete ? "SOFT_DELETE" : "DELETE",
+        fromStatus: row.status ? String(row.status) : null,
+        before: row as CrudRow,
+      });
     },
 
     onSuccess: () => {
-      toast.success("Data dihapus");
+      toast.success(`${title} dihapus`, { description: "Aksi tercatat pada audit trail." });
       setDeleting(null);
       invalidate();
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error("Gagal menghapus data", { description: e.message }),
   });
 
   const openCreate = () => {
