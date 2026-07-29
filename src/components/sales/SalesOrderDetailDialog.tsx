@@ -65,16 +65,23 @@ const RowLine = ({ label, value }: { label: string; value: React.ReactNode }) =>
 export function SalesOrderDetailDialog({
   order,
   onClose,
+  onApprove,
+  onRevise,
 }: {
   order: Row | null;
   onClose: () => void;
+  onApprove?: (order: Row) => void;
+  onRevise?: (order: Row) => void;
 }) {
   const open = Boolean(order);
   const soId = order ? String(order.id) : "";
+  const status = String(order?.status ?? "");
+  const isPending = ["Menunggu Review Produksi", "Perlu Revisi", "Draft"].includes(status);
 
   const { data: profiles } = useQuery({ ...profilesQuery, enabled: open });
   const { data: plans } = useQuery({ ...productionPlansQuery, enabled: open });
   const { data: wos } = useQuery({ ...workOrdersQuery, enabled: open });
+  const { data: routings } = useQuery({ ...routingsQuery, enabled: open && isPending });
   const { data: history } = useQuery({
     queryKey: ["approval_history", "sales_orders", soId],
     enabled: open && Boolean(soId),
