@@ -2,9 +2,10 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Plus, Send, Trash2 } from "lucide-react";
+import { CalendarRange, CircleDollarSign, Plus, Send, Trash2 } from "lucide-react";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
+import { KpiCard } from "@/components/common/KpiCard";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -401,8 +402,35 @@ function SalesOrdersPage() {
   ];
 
 
+  const monthly = useMemo(() => {
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const inMonth = rows.filter((r) => String(r.order_date ?? "").startsWith(ym));
+    return {
+      label: now.toLocaleDateString("id-ID", { month: "long", year: "numeric" }),
+      count: inMonth.length,
+      value: inMonth.reduce((s, r) => s + soValue(r), 0),
+    };
+  }, [rows]);
+
   return (
     <>
+      <div className="mb-5 grid gap-4 sm:grid-cols-2">
+        <KpiCard
+          label="Total Order Bulan Ini"
+          value={monthly.count}
+          icon={<CalendarRange />}
+          sub={`periode ${monthly.label}`}
+          tone="primary"
+        />
+        <KpiCard
+          label="Total Nilai Order Bulan Ini"
+          value={formatCurrency(monthly.value)}
+          icon={<CircleDollarSign />}
+          sub={`akumulasi nilai order ${monthly.label}`}
+          tone="success"
+        />
+      </div>
       <CrudPage<Row>
         title="Customer Order"
         description="Order pelanggan menjadi sumber perencanaan produksi. Tambahkan satu atau beberapa item produk pada order."
