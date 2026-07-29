@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Activity, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
+import { Activity, AlertTriangle, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -66,6 +66,14 @@ const productNames = (r: Row) =>
     .map((i) => i.products?.name ?? "-")
     .filter(Boolean)
     .join(", ");
+
+const lateDays = (r: Row, d: Date) => {
+  const req = r.required_date ? new Date(String(r.required_date)) : null;
+  if (!req || Number.isNaN(req.getTime())) return 0;
+  const ms = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() -
+    new Date(req.getFullYear(), req.getMonth(), req.getDate()).getTime();
+  return Math.max(0, Math.round(ms / 86400000));
+};
 
 function ReviewPage() {
   const qc = useQueryClient();
