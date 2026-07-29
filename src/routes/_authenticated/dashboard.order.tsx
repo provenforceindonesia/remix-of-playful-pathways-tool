@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { PageHeader } from "@/components/common/PageHeader";
-import { AlarmClock, Gauge, ShoppingCart, Wallet } from "lucide-react";
+import { AlarmClock, Gauge } from "lucide-react";
 import { KpiCard } from "@/components/common/KpiCard";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -65,10 +65,10 @@ function OrderDashboard() {
   }, [rows]);
 
   const late = rows.filter((r) => r.status === "Terlambat").length;
-  const totalValue = rows.reduce((s, r) => s + orderValue(r), 0);
   const avgProgress = rows.length
     ? rows.reduce((s, r) => s + num(r.progress_pct), 0) / rows.length
     : 0;
+
 
 
   const columns: Column<Row>[] = [
@@ -102,8 +102,6 @@ function OrderDashboard() {
     <>
       <PageHeader title="Dashboard Order" description="Status pemenuhan seluruh customer order." />
       <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Order" value={rows.length} icon={<ShoppingCart />} sub="customer order aktif" tone="purple" />
-        <KpiCard label="Nilai Order" value={formatCurrency(totalValue)} icon={<Wallet />} sub="total nilai kontrak" tone="success" />
         <KpiCard label="Rata-rata Progress" value={formatPercent(avgProgress)} icon={<Gauge />} sub="pemenuhan order" tone="info" />
         <KpiCard label="Order Terlambat" value={late} icon={<AlarmClock />} sub="lewat tanggal dibutuhkan" tone={late ? "danger" : "success"} />
       </div>
