@@ -51,7 +51,14 @@ type Item = {
   unit_price: number;
   fulfilled_qty: number;
   products?: { code?: string; name?: string } | null;
+  units_of_measure?: { code?: string } | null;
 };
+
+const uomCodes = (r: Row) =>
+  ((r.sales_order_items as Item[]) ?? [])
+    .map((i) => i.units_of_measure?.code ?? "-")
+    .filter(Boolean)
+    .join(", ");
 
 type DraftItem = {
   key: string;
@@ -283,6 +290,12 @@ function SalesOrdersPage() {
             0,
           ),
         ),
+    },
+    {
+      key: "uom",
+      header: "Satuan",
+      value: uomCodes,
+      render: (r) => <span className="truncate">{uomCodes(r) || "-"}</span>,
     },
     { key: "order_date", header: "Tgl Order", render: (r) => formatDate(r.order_date as string) },
     { key: "required_date", header: "Dibutuhkan", render: (r) => formatDate(r.required_date as string) },
