@@ -116,20 +116,6 @@ function OrderDashboard() {
         <KpiCard label="Nilai Order" value={formatCurrency(totalValue)} icon={<Wallet />} sub="total nilai kontrak" tone="success" />
         <KpiCard label="Rata-rata Progress" value={formatPercent(avgProgress)} icon={<Gauge />} sub="pemenuhan order" tone="info" />
         <KpiCard label="Order Terlambat" value={late} icon={<AlarmClock />} sub="lewat tanggal dibutuhkan" tone={late ? "danger" : "success"} />
-        <KpiCard
-          label="Total Order Bulan Ini"
-          value={monthly.count}
-          icon={<CalendarRange />}
-          sub={`periode ${monthly.label}`}
-          tone="primary"
-        />
-        <KpiCard
-          label="Nilai Order Bulan Ini"
-          value={formatCurrency(monthly.value)}
-          icon={<CircleDollarSign />}
-          sub={`total nilai order ${monthly.label}`}
-          tone="warning"
-        />
       </div>
 
       <Card className="mb-5">
