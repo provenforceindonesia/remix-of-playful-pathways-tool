@@ -166,6 +166,13 @@ export function CrudPage<T extends CrudRow>({
   ) => Record<string, unknown> | void;
 }) {
   const qc = useQueryClient();
+  const { profile, role } = useAuth();
+  const actor = {
+    id: profile?.id ?? null,
+    username: profile?.username ?? null,
+    role: role ?? null,
+    plant_id: profile?.plant_id ?? null,
+  };
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
   const [deleting, setDeleting] = useState<T | null>(null);
