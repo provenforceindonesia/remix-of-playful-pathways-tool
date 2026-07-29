@@ -93,7 +93,7 @@ function SpeedPage() {
         title="Kecepatan & Output"
         description="Speed index membandingkan kecepatan aktual terhadap kecepatan standar mesin."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<Gauge className="size-4" />} label="Rata-rata Speed Index" value={formatPercent(avgSpeed)} tone={cls.tone} sub={cls.label} />
         <KpiCard icon={<PackageCheck className="size-4" />} label="Total Good Output" value={formatNumber(totalGood)} tone="success" />
         <KpiCard icon={<Target className="size-4" />} label="Total Target" value={formatNumber(totalTarget)} tone="info" />

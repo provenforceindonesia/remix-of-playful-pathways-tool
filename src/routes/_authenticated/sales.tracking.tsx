@@ -99,7 +99,7 @@ function TrackingPage() {
         title="Order Tracking"
         description="Progres pemenuhan order dihitung dari output produksi yang telah tervalidasi."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<ClipboardList className="size-4" />} label="Total Order" value={rows.length} tone="primary" />
         <KpiCard icon={<Activity className="size-4" />} label="Sedang Berjalan" value={running} tone="info" />
         <KpiCard icon={<AlertTriangle className="size-4" />} label="Terlambat" value={late} tone={late ? "danger" : "success"} />

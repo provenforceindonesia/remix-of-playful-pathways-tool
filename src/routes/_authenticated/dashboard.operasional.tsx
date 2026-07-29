@@ -93,7 +93,7 @@ function OperationalDashboard() {
   return (
     <>
       <PageHeader title="Dashboard Operasional" description="Ringkasan performa produksi harian." />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard label="WO Berjalan" value={running} icon={<ClipboardList />} sub={`${woRows.length} work order`} tone="purple" />
         <KpiCard label="Good Output" value={formatNumber(totalGood)} unit="pcs" icon={<CheckCircle2 />} sub="akumulasi periode" tone="success" />
         <KpiCard label="OEE Rata-rata" value={formatPercent(avgOee)} icon={<Activity />} sub={speed.label} tone="info" />

@@ -87,7 +87,7 @@ function ConnectionStatusPage() {
         }
       />
 
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard
           label="Status Auth"
           value={isLoading ? "..." : data?.auth.active ? "Aktif" : "Mati"}

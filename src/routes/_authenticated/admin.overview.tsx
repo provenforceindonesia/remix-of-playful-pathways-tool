@@ -77,7 +77,7 @@ function OverviewPage() {
         }
       />
 
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard label="User Aktif" value={formatNumber(activeUsers)} icon={<Users className="size-4" />} tone="primary" />
         <KpiCard label="Mesin Terdaftar" value={formatNumber(machineRows.length)} icon={<Activity className="size-4" />} tone="info" />
         <KpiCard label="Work Order" value={formatNumber(woRows.length)} icon={<ShieldCheck className="size-4" />} tone="purple" />

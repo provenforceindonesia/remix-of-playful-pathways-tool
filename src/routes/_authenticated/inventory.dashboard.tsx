@@ -130,7 +130,7 @@ function InventoryDashboard() {
         title="Inventory Dashboard"
         description="Kesehatan persediaan material: posisi stok, reservasi, dan arus keluar-masuk gudang."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<Boxes className="size-4" />} label="Item Stok" value={rows.length} tone="primary" />
         <KpiCard icon={<Boxes className="size-4" />} label="Stok Kritis" value={critical.length} tone={critical.length ? "danger" : "success"} />
         <KpiCard icon={<Layers className="size-4" />} label="Qty Ter-reservasi" value={formatNumber(reservedQty, 2)} tone="info" />

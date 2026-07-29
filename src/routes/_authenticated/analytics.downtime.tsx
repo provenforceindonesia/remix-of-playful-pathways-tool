@@ -89,7 +89,7 @@ function DowntimeAnalyticsPage() {
         title="Analisis Downtime"
         description="Fokuskan perbaikan pada penyebab dengan kontribusi waktu henti terbesar."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<TimerOff className="size-4" />} label="Total Downtime" value={durationLabel(totalMinutes)} tone="danger" />
         <KpiCard icon={<Activity className="size-4" />} label="Kejadian" value={formatNumber(rows.length)} tone="warning" />
         <KpiCard icon={<Activity className="size-4" />}

@@ -77,7 +77,7 @@ function OeePage() {
         title="Analisis OEE"
         description="OEE = Availability × Performance × Quality dari entri produksi tervalidasi."
       />
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
         <KpiCard icon={<Gauge className="size-4" />} label="OEE Rata-rata" value={formatPercent(avg(rows, "oee"))} tone="primary" />
         <KpiCard icon={<Activity className="size-4" />} label="Availability" value={formatPercent(avg(rows, "availability"))} tone="info" />
         <KpiCard icon={<Activity className="size-4" />} label="Performance" value={formatPercent(avg(rows, "performance"))} tone="warning" />
