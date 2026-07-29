@@ -255,6 +255,22 @@ function SalesOrdersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const withdraw = useMutation({
+    mutationFn: async (row: Row) => {
+      const { error } = await supabase
+        .from("sales_orders")
+        .update({ status: "Draft", submitted_at: null })
+        .eq("id", String(row.id));
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Order ditarik kembali ke Draft");
+      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   const columns: Column<Row>[] = [
     { key: "so_number", header: "No. SO" },
     {
