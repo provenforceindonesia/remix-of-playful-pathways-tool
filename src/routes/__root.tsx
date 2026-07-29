@@ -85,11 +85,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Kontrol performa manufaktur: order, work order, produksi, inventory, downtime, dan costing dalam satu sistem.",
+          "Sistem kontrol performa manufaktur: order, produksi, downtime, inventory, dan costing real-time.",
       },
       { name: "author", content: "MANUFACTUREIQ" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "MANUFACTUREIQ — Manufacturing Performance Control" },
+      { name: "twitter:title", content: "MANUFACTUREIQ — Manufacturing Performance Control" },
+      { property: "og:description", content: "Sistem kontrol performa manufaktur: order, produksi, downtime, inventory, dan costing real-time." },
+      { name: "twitter:description", content: "Sistem kontrol performa manufaktur: order, produksi, downtime, inventory, dan costing real-time." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8526378d-2bfc-4d62-bf17-f8de9f16fd45/id-preview-914117e8--e22724d6-c2a6-4d17-bb38-8c6269d017c1.lovable.app-1785308415514.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8526378d-2bfc-4d62-bf17-f8de9f16fd45/id-preview-914117e8--e22724d6-c2a6-4d17-bb38-8c6269d017c1.lovable.app-1785308415514.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

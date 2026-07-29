@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "MANUFACTUREIQ — Manufacturing Performance Control" },
       {
         property: "og:description",
-        content: "Pantau OEE, backlog, inventory, dan HPP dalam satu platform terintegrasi.",
+        content: "Sistem kontrol performa manufaktur: order, produksi, downtime, inventory, dan costing real-time.",
       },
     ],
   }),
