@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Activity, AlertTriangle, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
+import { Activity, AlertTriangle, CalendarRange, Check, CircleDollarSign, Eye, ShieldCheck, Wallet, X } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -31,6 +31,7 @@ import {
   toISODate,
 } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 
 export const Route = createFileRoute("/_authenticated/sales/review")({
   head: () => ({
@@ -92,6 +93,7 @@ function ReviewPage() {
   }, [rows]);
 
   const [target, setTarget] = useState<{ row: Row; mode: "approve" | "revise" } | null>(null);
+  const [detail, setDetail] = useState<Row | null>(null);
   const [note, setNote] = useState("");
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>(undefined);
 
@@ -181,20 +183,25 @@ function ReviewPage() {
       header: "Aksi",
       align: "right",
       sortable: false,
-      render: (r) =>
-        ["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)) ? (
-          <div className="flex justify-end gap-1">
-            <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
-              <Check className="size-4" /> Konfirmasi
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
-              <X className="size-4" /> Revisi
-            </Button>
-          </div>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        ),
+      render: (r) => (
+        <div className="flex justify-end gap-1">
+          <Button size="sm" variant="ghost" onClick={() => setDetail(r)}>
+            <Eye className="size-4" /> Detail SO
+          </Button>
+          {["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)) ? (
+            <>
+              <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
+                <Check className="size-4" /> Konfirmasi
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
+                <X className="size-4" /> Revisi
+              </Button>
+            </>
+          ) : null}
+        </div>
+      ),
     },
+
   ];
 
   return (
@@ -321,6 +328,10 @@ function ReviewPage() {
         </DialogContent>
       </Dialog>
 
+      <SalesOrderDetailDialog
+        order={detail ? ((rows.find((r) => r.id === detail.id) ?? detail) as Row) : null}
+        onClose={() => setDetail(null)}
+      />
     </>
   );
 }
