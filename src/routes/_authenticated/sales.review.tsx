@@ -112,6 +112,8 @@ function ReviewPage() {
   const act = useMutation({
     mutationFn: async () => {
       if (!target) return;
+      const from = String(target.row.status ?? "");
+      const to = target.mode === "approve" ? "Dikonfirmasi" : "Perlu Revisi";
       const payload =
         target.mode === "approve"
           ? {
@@ -127,15 +129,43 @@ function ReviewPage() {
         .update(payload)
         .eq("id", String(target.row.id));
       if (error) throw new Error(error.message);
+      await recordAudit(
+        {
+          id: profile?.id ?? null,
+          username: profile?.username ?? null,
+          role: role ?? null,
+          plant_id: profile?.plant_id ?? null,
+        },
+        {
+          entity: "sales_orders",
+          recordId: String(target.row.id),
+          action: target.mode === "approve" ? "Konfirmasi Order" : "Minta Revisi",
+          fromStatus: from,
+          toStatus: to,
+          note: note.trim() || null,
+          after: payload as Record<string, unknown>,
+        },
+      );
     },
     onSuccess: () => {
-      toast.success(target?.mode === "approve" ? "Order dikonfirmasi" : "Order dikembalikan untuk revisi");
+      const so = String(target?.row.so_number ?? "");
+      if (target?.mode === "approve") {
+        toast.success(`SO ${so} dikonfirmasi`, {
+          description: deliveryDate
+            ? `Tanggal pemenuhan: ${formatDate(toISODate(deliveryDate))}`
+            : "Order masuk antrean produksi.",
+        });
+      } else {
+        toast.success(`SO ${so} dikembalikan untuk revisi`, {
+          description: "Sales admin akan menerima catatan revisi.",
+        });
+      }
       setTarget(null);
       setNote("");
       setDeliveryDate(undefined);
       void qc.invalidateQueries({ queryKey: ["sales_orders"] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error("Aksi gagal disimpan", { description: e.message }),
   });
 
   const columns: Column<Row>[] = [
