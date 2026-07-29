@@ -97,7 +97,7 @@ function ReviewPage() {
               confirmed_delivery_date: deliveryDate ? toISODate(deliveryDate) : null,
               approved_by: profile?.id ?? null,
               approved_at: new Date().toISOString(),
-              revision_note: null,
+              revision_note: note.trim() ? note.trim() : null,
             }
           : { status: "Perlu Revisi", revision_note: note };
       const { error } = await supabase
