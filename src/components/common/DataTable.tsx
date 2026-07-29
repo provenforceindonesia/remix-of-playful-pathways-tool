@@ -26,6 +26,7 @@ export function DataTable<T extends Record<string, unknown>>({
   emptyTitle,
   onRowClick,
   toolbar,
+  toolbarActions,
 }: {
   columns: Column<T>[];
   rows: T[];
