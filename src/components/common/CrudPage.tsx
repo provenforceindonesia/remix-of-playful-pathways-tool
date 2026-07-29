@@ -141,6 +141,7 @@ export function CrudPage<T extends CrudRow>({
   exportName?: string;
   headerActions?: ReactNode;
   toolbar?: ReactNode;
+  createInToolbar?: boolean;
   children?: ReactNode;
   pageSize?: number;
   rowActions?: (row: T) => ReactNode;
