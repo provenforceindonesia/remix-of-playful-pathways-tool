@@ -65,10 +65,10 @@ function OrderDashboard() {
   }, [rows]);
 
   const late = rows.filter((r) => r.status === "Terlambat").length;
-  const totalValue = rows.reduce((s, r) => s + orderValue(r), 0);
   const avgProgress = rows.length
     ? rows.reduce((s, r) => s + num(r.progress_pct), 0) / rows.length
     : 0;
+
 
 
   const columns: Column<Row>[] = [
