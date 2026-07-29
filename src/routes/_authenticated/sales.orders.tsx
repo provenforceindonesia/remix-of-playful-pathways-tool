@@ -426,6 +426,7 @@ function SalesOrdersPage() {
         canWrite={canWrite}
         canDelete={canWrite}
         softDelete
+        createInToolbar
         exportName="customer-order"
         beforePayload={(v) => ({ ...v, status: v.status || "Draft", created_by: profile?.id ?? null })}
         afterCreate={async (created, values) => {

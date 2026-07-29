@@ -26,6 +26,7 @@ export function DataTable<T extends Record<string, unknown>>({
   emptyTitle,
   onRowClick,
   toolbar,
+  toolbarActions,
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -36,6 +37,7 @@ export function DataTable<T extends Record<string, unknown>>({
   emptyTitle?: string;
   onRowClick?: (row: T) => void;
   toolbar?: ReactNode;
+  toolbarActions?: ReactNode;
 }) {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
@@ -115,6 +117,7 @@ export function DataTable<T extends Record<string, unknown>>({
             </div>
           )}
           {toolbar}
+          {toolbarActions}
           {exportName && (
             <Button variant="outline" size="sm" onClick={exportCsv}>
               <Download className="size-4" /> Ekspor CSV
