@@ -48,7 +48,12 @@ export const Route = createFileRoute("/_authenticated/sales/review")({
 });
 
 type Row = Record<string, unknown>;
-type Item = { quantity: number; unit_price: number; products?: { name?: string } | null };
+type Item = {
+  quantity: number;
+  unit_price: number;
+  products?: { name?: string } | null;
+  units_of_measure?: { code?: string } | null;
+};
 
 const value = (r: Row) =>
   (((r.sales_order_items as Item[]) ?? []) as Item[]).reduce(
@@ -65,6 +70,12 @@ const totalQty = (r: Row) =>
 const productNames = (r: Row) =>
   (((r.sales_order_items as Item[]) ?? []) as Item[])
     .map((i) => i.products?.name ?? "-")
+    .filter(Boolean)
+    .join(", ");
+
+const uomCodes = (r: Row) =>
+  (((r.sales_order_items as Item[]) ?? []) as Item[])
+    .map((i) => i.units_of_measure?.code ?? "-")
     .filter(Boolean)
     .join(", ");
 
