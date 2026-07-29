@@ -117,6 +117,7 @@ export function DataTable<T extends Record<string, unknown>>({
             </div>
           )}
           {toolbar}
+          {toolbarActions}
           {exportName && (
             <Button variant="outline" size="sm" onClick={exportCsv}>
               <Download className="size-4" /> Ekspor CSV
