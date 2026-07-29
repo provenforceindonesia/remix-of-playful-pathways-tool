@@ -155,6 +155,11 @@ function ReviewPage() {
       render: (r) => formatCurrency(value(r)),
     },
     {
+      key: "approved_at",
+      header: "Dikonfirmasi tgl",
+      render: (r) => formatFullDateTime(r.approved_at as string),
+    },
+    {
       key: "created_at",
       header: "Dibuat tgl",
       render: (r) => formatFullDateTime(r.created_at as string),
