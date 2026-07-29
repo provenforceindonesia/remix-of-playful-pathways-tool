@@ -407,7 +407,6 @@ function SalesOrdersPage() {
     const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     const inMonth = rows.filter((r) => String(r.order_date ?? "").startsWith(ym));
     return {
-      label: now.toLocaleDateString("id-ID", { month: "long", year: "numeric" }),
       count: inMonth.length,
       value: inMonth.reduce((s, r) => s + soValue(r), 0),
     };
