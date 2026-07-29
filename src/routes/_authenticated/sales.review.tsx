@@ -35,10 +35,10 @@ import { useAuth } from "@/lib/auth";
 export const Route = createFileRoute("/_authenticated/sales/review")({
   head: () => ({
     meta: [
-      { title: "Permintaan Customer Order — MANUFACTUREIQ" },
-      { name: "description", content: "Satu halaman untuk memantau seluruh customer order sekaligus menyetujui atau menolaknya." },
-      { property: "og:title", content: "Permintaan Customer Order — MANUFACTUREIQ" },
-      { property: "og:description", content: "Monitoring dan review customer order dalam satu menu." },
+      { title: "Review Sales Order — MANUFACTUREIQ" },
+      { name: "description", content: "Periksa kebutuhan customer dan tetapkan tanggal pemenuhan produksi." },
+      { property: "og:title", content: "Review Sales Order — MANUFACTUREIQ" },
+      { property: "og:description", content: "Periksa kebutuhan customer dan tetapkan tanggal pemenuhan produksi." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -195,8 +195,8 @@ function ReviewPage() {
   return (
     <>
       <PageHeader
-        title="Permintaan Customer Order"
-        description="Seluruh customer order dalam satu halaman: pantau, konfirmasi, atau minta revisi."
+        title="Sales Order"
+        description="Periksa kebutuhan customer dan tetapkan tanggal pemenuhan produksi."
       />
 
       <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
