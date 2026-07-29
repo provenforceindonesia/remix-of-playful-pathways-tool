@@ -31,6 +31,7 @@ import {
   toISODate,
 } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { recordAudit } from "@/lib/audit";
 import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 
 export const Route = createFileRoute("/_authenticated/sales/review")({
