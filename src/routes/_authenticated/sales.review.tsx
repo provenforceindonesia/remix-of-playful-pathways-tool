@@ -90,7 +90,7 @@ const lateDays = (r: Row, d: Date) => {
 
 function ReviewPage() {
   const qc = useQueryClient();
-  const { profile } = useAuth();
+  const { profile, role } = useAuth();
   const { data, isLoading } = useQuery(salesOrdersQuery);
   const rows = (data ?? []) as Row[];
   const pending = rows.filter((r) =>
