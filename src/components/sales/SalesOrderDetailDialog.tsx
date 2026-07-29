@@ -14,7 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
-import { productionPlansQuery, profilesQuery, workOrdersQuery } from "@/lib/queries";
+import {
+  productionPlansQuery,
+  profilesQuery,
+  routingsQuery,
+  workOrdersQuery,
+} from "@/lib/queries";
 import {
   formatCurrency,
   formatDate,
@@ -60,16 +65,23 @@ const RowLine = ({ label, value }: { label: string; value: React.ReactNode }) =>
 export function SalesOrderDetailDialog({
   order,
   onClose,
+  onApprove,
+  onRevise,
 }: {
   order: Row | null;
   onClose: () => void;
+  onApprove?: (order: Row) => void;
+  onRevise?: (order: Row) => void;
 }) {
   const open = Boolean(order);
   const soId = order ? String(order.id) : "";
+  const status = String(order?.status ?? "");
+  const isPending = ["Menunggu Review Produksi", "Perlu Revisi", "Draft"].includes(status);
 
   const { data: profiles } = useQuery({ ...profilesQuery, enabled: open });
   const { data: plans } = useQuery({ ...productionPlansQuery, enabled: open });
   const { data: wos } = useQuery({ ...workOrdersQuery, enabled: open });
+  const { data: routings } = useQuery({ ...routingsQuery, enabled: open && isPending });
   const { data: history } = useQuery({
     queryKey: ["approval_history", "sales_orders", soId],
     enabled: open && Boolean(soId),
@@ -162,6 +174,22 @@ export function SalesOrderDetailDialog({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, order, profiles, plans, wos]);
 
+  const plan = relatedPlans[0] as Row | undefined;
+  const readinessTone = (v: string) =>
+    /siap|tersedia|ready|ok/i.test(v)
+      ? "bg-success/10 text-success"
+      : /kurang|tidak|belum tersedia|shortage/i.test(v)
+        ? "bg-destructive/10 text-destructive"
+        : "bg-muted text-muted-foreground";
+  const materialReadiness = plan ? String(plan.material_readiness ?? "-") : "Belum Diperiksa";
+  const capacityReadiness = plan ? String(plan.capacity_readiness ?? "-") : "Belum Diperiksa";
+  const orderProductIds = new Set(
+    items.map((i) => String((i as { product_id?: string }).product_id ?? "")),
+  );
+  const routingReady = ((routings ?? []) as Row[]).some(
+    (r) => orderProductIds.has(String(r.product_id ?? "")) && String(r.status ?? "") !== "Draft",
+  );
+
   if (!order) return null;
 
   return (
@@ -170,9 +198,12 @@ export function SalesOrderDetailDialog({
         <DialogHeader>
           <DialogTitle>Detail Sales Order</DialogTitle>
           <DialogDescription>
-            Informasi lengkap pesanan, nilai order, jadwal pemenuhan, dan perkembangan produksinya.
+            {isPending
+              ? "Periksa detail pesanan, kebutuhan customer, dan kesiapan awal sebelum mengonfirmasi tanggal pemenuhan."
+              : "Informasi lengkap pesanan, nilai order, jadwal pemenuhan, dan perkembangan produksinya."}
           </DialogDescription>
         </DialogHeader>
+
 
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
@@ -245,99 +276,157 @@ export function SalesOrderDetailDialog({
             </div>
           </Section>
 
-          <Section title="Jadwal Pemenuhan">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Field label="Tanggal Order" value={formatDate(order.order_date as string)} />
-              <Field
-                label="Tanggal Dibutuhkan Customer"
-                value={formatDate(order.required_date as string)}
-              />
-              <Field
-                label="Tanggal Pemenuhan Dikonfirmasi"
-                value={
-                  order.confirmed_delivery_date
-                    ? formatDate(order.confirmed_delivery_date as string)
-                    : "Belum ditetapkan"
-                }
-              />
-              <Field
-                label="Dikonfirmasi pada"
-                value={formatFullDateTime(order.approved_at as string)}
-              />
-              <Field label="Dikonfirmasi oleh" value={person(order.approved_by) ?? "-"} />
-            </div>
-            {confirmed ? (
-              lateDays > 0 ? (
-                <p className="mt-3 flex items-center gap-1.5 rounded-lg bg-destructive/10 px-2.5 py-1.5 text-xs font-medium text-destructive">
-                  <AlertTriangle className="size-3.5" /> Terlambat {lateDays} hari — Order Berisiko
-                </p>
-              ) : (
-                <p className="mt-3 flex items-center gap-1.5 rounded-lg bg-success/10 px-2.5 py-1.5 text-xs font-medium text-success">
-                  <Check className="size-3.5" /> Sesuai kebutuhan customer
-                </p>
-              )
-            ) : null}
-          </Section>
-
-          <Section title="Progress Pemenuhan">
-            <RowLine label="Finished Good Tervalidasi" value={`${formatNumber(fulfilledQty)} pcs`} />
-            <RowLine label="Quantity Sales Order" value={`${formatNumber(totalQty)} pcs`} />
-            <RowLine label="Sisa Belum Terpenuhi" value={`${formatNumber(remainingQty)} pcs`} />
-            <div className="my-3 flex items-center gap-3">
-              <Progress value={pct} className="h-2 flex-1" />
-              <span className="text-sm font-semibold">{formatPercent(pct)}</span>
-            </div>
-            <RowLine label="Nilai Sudah Terpenuhi" value={formatCurrency(fulfilledValue)} />
-            <RowLine
-              label="Nilai Belum Terpenuhi"
-              value={formatCurrency(Math.max(0, totalValue - fulfilledValue))}
-            />
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Status Pemenuhan</span>
-              <StatusBadge status={String(order.status)} />
-            </div>
-          </Section>
-
-          <Section title="Keterkaitan Produksi">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs text-muted-foreground">Production Plan</p>
-                  <p className="text-sm font-medium">
-                    {relatedPlans.length
-                      ? relatedPlans.map((p) => String(p.plan_number ?? "-")).join(", ")
-                      : "Belum dibuat"}
-                  </p>
+          {isPending ? (
+            <>
+              <Section title="Permintaan Pemenuhan">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Field label="Tanggal Order" value={formatDate(order.order_date as string)} />
+                  <Field
+                    label="Tanggal Dibutuhkan Customer"
+                    value={formatDate(order.required_date as string)}
+                  />
+                  <Field label="Tanggal Pemenuhan Dikonfirmasi" value="Belum ditetapkan" />
+                  <Field
+                    label="Status Review Produksi"
+                    value={
+                      status === "Perlu Revisi"
+                        ? "Dikembalikan untuk revisi Sales"
+                        : "Menunggu pemeriksaan Production Control"
+                    }
+                  />
                 </div>
-                {relatedPlans.length ? (
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/production/plans">Lihat Plan</Link>
-                  </Button>
-                ) : null}
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs text-muted-foreground">Work Order</p>
-                  <p className="text-sm font-medium">
-                    {relatedWos.length
-                      ? relatedWos.map((w) => String(w.wo_number ?? "-")).join(", ")
-                      : "Belum dibuat"}
-                  </p>
+              </Section>
+
+              <Section title="Hasil Pemeriksaan Produksi">
+                <div className="space-y-2">
+                  {[
+                    { label: "Ketersediaan Material", value: materialReadiness },
+                    { label: "Ketersediaan Kapasitas", value: capacityReadiness },
+                    {
+                      label: "Routing dan Standar Produksi",
+                      value: routingReady ? "Tersedia" : "Belum Diperiksa",
+                    },
+                  ].map((c) => (
+                    <div key={c.label} className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-muted-foreground">{c.label}</span>
+                      <span
+                        className={`rounded-md px-2 py-0.5 text-[11px] font-semibold tracking-wide uppercase ${readinessTone(c.value)}`}
+                      >
+                        {c.value}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="pt-2">
+                    <Field
+                      label="Catatan Production Control"
+                      value={String(order.revision_note ?? "") || "Belum ada catatan"}
+                    />
+                  </div>
                 </div>
-                {relatedWos.length ? (
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/production/work-orders">Lihat WO</Link>
-                  </Button>
+              </Section>
+            </>
+          ) : (
+            <>
+              <Section title="Jadwal Pemenuhan">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Field label="Tanggal Order" value={formatDate(order.order_date as string)} />
+                  <Field
+                    label="Tanggal Dibutuhkan Customer"
+                    value={formatDate(order.required_date as string)}
+                  />
+                  <Field
+                    label="Tanggal Pemenuhan Dikonfirmasi"
+                    value={
+                      order.confirmed_delivery_date
+                        ? formatDate(order.confirmed_delivery_date as string)
+                        : "Belum ditetapkan"
+                    }
+                  />
+                  <Field
+                    label="Dikonfirmasi pada"
+                    value={formatFullDateTime(order.approved_at as string)}
+                  />
+                  <Field label="Dikonfirmasi oleh" value={person(order.approved_by) ?? "-"} />
+                </div>
+                {confirmed ? (
+                  lateDays > 0 ? (
+                    <p className="mt-3 flex items-center gap-1.5 rounded-lg bg-destructive/10 px-2.5 py-1.5 text-xs font-medium text-destructive">
+                      <AlertTriangle className="size-3.5" /> Terlambat {lateDays} hari — Order
+                      Berisiko
+                    </p>
+                  ) : (
+                    <p className="mt-3 flex items-center gap-1.5 rounded-lg bg-success/10 px-2.5 py-1.5 text-xs font-medium text-success">
+                      <Check className="size-3.5" /> Sesuai kebutuhan customer
+                    </p>
+                  )
                 ) : null}
-              </div>
-              <div className="pt-1">
-                <Field
-                  label="Catatan Production Control"
-                  value={String(order.revision_note ?? "") || "Tidak ada catatan"}
+              </Section>
+
+              <Section title="Progress Pemenuhan">
+                <RowLine
+                  label="Finished Good Tervalidasi"
+                  value={`${formatNumber(fulfilledQty)} pcs`}
                 />
-              </div>
-            </div>
-          </Section>
+                <RowLine label="Quantity Sales Order" value={`${formatNumber(totalQty)} pcs`} />
+                <RowLine label="Sisa Belum Terpenuhi" value={`${formatNumber(remainingQty)} pcs`} />
+                <div className="my-3 flex items-center gap-3">
+                  <Progress value={pct} className="h-2 flex-1" />
+                  <span className="text-sm font-semibold">{formatPercent(pct)}</span>
+                </div>
+                <RowLine label="Nilai Sudah Terpenuhi" value={formatCurrency(fulfilledValue)} />
+                <RowLine
+                  label="Nilai Belum Terpenuhi"
+                  value={formatCurrency(Math.max(0, totalValue - fulfilledValue))}
+                />
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Status Pemenuhan</span>
+                  <StatusBadge status={String(order.status)} />
+                </div>
+              </Section>
+
+              <Section title="Keterkaitan Produksi">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Production Plan</p>
+                      <p className="text-sm font-medium">
+                        {relatedPlans.length
+                          ? relatedPlans.map((p) => String(p.plan_number ?? "-")).join(", ")
+                          : "Belum dibuat"}
+                      </p>
+                    </div>
+                    {relatedPlans.length ? (
+                      <Button asChild variant="outline" size="sm">
+                        <Link to="/production/plans">Lihat Plan</Link>
+                      </Button>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Work Order</p>
+                      <p className="text-sm font-medium">
+                        {relatedWos.length
+                          ? relatedWos.map((w) => String(w.wo_number ?? "-")).join(", ")
+                          : "Belum dibuat"}
+                      </p>
+                    </div>
+                    {relatedWos.length ? (
+                      <Button asChild variant="outline" size="sm">
+                        <Link to="/production/work-orders">Lihat WO</Link>
+                      </Button>
+                    ) : null}
+                  </div>
+                  <div className="pt-1">
+                    <Field
+                      label="Catatan Production Control"
+                      value={String(order.revision_note ?? "") || "Tidak ada catatan"}
+                    />
+                  </div>
+                </div>
+              </Section>
+            </>
+          )}
+
 
           <Section title="Riwayat Status">
             {timeline.length === 0 ? (
@@ -362,10 +451,22 @@ export function SalesOrderDetailDialog({
           <Button variant="outline" onClick={onClose}>
             Tutup
           </Button>
-          <Button asChild>
-            <Link to="/production/plans">Buka Production Plan</Link>
-          </Button>
+          {isPending ? (
+            <>
+              {onRevise ? (
+                <Button variant="outline" onClick={() => onRevise(order)}>
+                  Kembalikan untuk Revisi
+                </Button>
+              ) : null}
+              {onApprove ? <Button onClick={() => onApprove(order)}>Konfirmasi Order</Button> : null}
+            </>
+          ) : (
+            <Button asChild>
+              <Link to="/production/plans">Buka Production Plan</Link>
+            </Button>
+          )}
         </DialogFooter>
+
       </DialogContent>
     </Dialog>
   );
