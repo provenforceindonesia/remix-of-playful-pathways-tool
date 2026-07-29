@@ -32,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { recordAudit } from "@/lib/audit";
 
 
 export const Route = createFileRoute("/_authenticated/sales/orders")({
@@ -237,8 +238,16 @@ function SalesOrdersPage() {
     [rows, detail],
   );
 
+  const actor = {
+    id: profile?.id ?? null,
+    username: profile?.username ?? null,
+    role: role ?? null,
+    plant_id: profile?.plant_id ?? null,
+  };
+
   const submit = useMutation({
     mutationFn: async (row: Row) => {
+      const from = String(row.status ?? "");
       const { error } = await supabase
         .from("sales_orders")
         .update({
@@ -247,27 +256,48 @@ function SalesOrdersPage() {
         })
         .eq("id", String(row.id));
       if (error) throw new Error(error.message);
+      await recordAudit(actor, {
+        entity: "sales_orders",
+        recordId: String(row.id),
+        action: from === "Perlu Revisi" ? "Kirim Ulang" : "Kirim ke Production Control",
+        fromStatus: from,
+        toStatus: "Menunggu Review Produksi",
+        after: { so_number: row.so_number },
+      });
     },
-    onSuccess: () => {
-      toast.success("Order dikirim untuk review produksi");
+    onSuccess: (_d, row) => {
+      toast.success(`SO ${String(row.so_number ?? "")} dikirim untuk review produksi`, {
+        description: "Status berubah menjadi Menunggu Review Produksi.",
+      });
       void qc.invalidateQueries({ queryKey: ["sales_orders"] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error("Gagal mengirim order", { description: e.message }),
   });
 
   const withdraw = useMutation({
     mutationFn: async (row: Row) => {
+      const from = String(row.status ?? "");
       const { error } = await supabase
         .from("sales_orders")
         .update({ status: "Draft", submitted_at: null })
         .eq("id", String(row.id));
       if (error) throw new Error(error.message);
+      await recordAudit(actor, {
+        entity: "sales_orders",
+        recordId: String(row.id),
+        action: "Tarik Kembali",
+        fromStatus: from,
+        toStatus: "Draft",
+        after: { so_number: row.so_number },
+      });
     },
-    onSuccess: () => {
-      toast.success("Order ditarik kembali ke Draft");
+    onSuccess: (_d, row) => {
+      toast.success(`SO ${String(row.so_number ?? "")} ditarik kembali ke Draft`, {
+        description: "Order dapat diubah kembali sebelum dikirim ulang.",
+      });
       void qc.invalidateQueries({ queryKey: ["sales_orders"] });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error("Gagal menarik order", { description: e.message }),
   });
 
 
