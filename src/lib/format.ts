@@ -35,6 +35,19 @@ export const formatDateTime = (v: string | Date | null | undefined) => {
   );
 };
 
+export const formatFullDateTime = (v: string | Date | null | undefined) => {
+  if (!v) return "-";
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(v));
+};
+
+
 export const toISODate = (d: Date) => {
   const tz = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
   return tz.toISOString().slice(0, 10);
