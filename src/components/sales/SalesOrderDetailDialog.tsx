@@ -451,10 +451,22 @@ export function SalesOrderDetailDialog({
           <Button variant="outline" onClick={onClose}>
             Tutup
           </Button>
-          <Button asChild>
-            <Link to="/production/plans">Buka Production Plan</Link>
-          </Button>
+          {isPending ? (
+            <>
+              {onRevise ? (
+                <Button variant="outline" onClick={() => onRevise(order)}>
+                  Kembalikan untuk Revisi
+                </Button>
+              ) : null}
+              {onApprove ? <Button onClick={() => onApprove(order)}>Konfirmasi Order</Button> : null}
+            </>
+          ) : (
+            <Button asChild>
+              <Link to="/production/plans">Buka Production Plan</Link>
+            </Button>
+          )}
         </DialogFooter>
+
       </DialogContent>
     </Dialog>
   );
