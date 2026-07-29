@@ -298,6 +298,11 @@ function SalesOrdersPage() {
       render: (r) => formatCurrency(soValue(r)),
     },
     {
+      key: "created_at",
+      header: "Dibuat tgl",
+      render: (r) => formatFullDateTime(r.created_at as string),
+    },
+    {
       key: "progress_pct",
       header: "Progress",
       align: "right",
