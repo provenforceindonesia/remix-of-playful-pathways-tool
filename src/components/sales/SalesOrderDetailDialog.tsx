@@ -174,6 +174,22 @@ export function SalesOrderDetailDialog({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, order, profiles, plans, wos]);
 
+  const plan = relatedPlans[0] as Row | undefined;
+  const readinessTone = (v: string) =>
+    /siap|tersedia|ready|ok/i.test(v)
+      ? "bg-success/10 text-success"
+      : /kurang|tidak|belum tersedia|shortage/i.test(v)
+        ? "bg-destructive/10 text-destructive"
+        : "bg-muted text-muted-foreground";
+  const materialReadiness = plan ? String(plan.material_readiness ?? "-") : "Belum Diperiksa";
+  const capacityReadiness = plan ? String(plan.capacity_readiness ?? "-") : "Belum Diperiksa";
+  const orderProductIds = new Set(
+    items.map((i) => String((i as { product_id?: string }).product_id ?? "")),
+  );
+  const routingReady = ((routings ?? []) as Row[]).some(
+    (r) => orderProductIds.has(String(r.product_id ?? "")) && String(r.status ?? "") !== "Draft",
+  );
+
   if (!order) return null;
 
   return (
@@ -182,9 +198,12 @@ export function SalesOrderDetailDialog({
         <DialogHeader>
           <DialogTitle>Detail Sales Order</DialogTitle>
           <DialogDescription>
-            Informasi lengkap pesanan, nilai order, jadwal pemenuhan, dan perkembangan produksinya.
+            {isPending
+              ? "Periksa detail pesanan, kebutuhan customer, dan kesiapan awal sebelum mengonfirmasi tanggal pemenuhan."
+              : "Informasi lengkap pesanan, nilai order, jadwal pemenuhan, dan perkembangan produksinya."}
           </DialogDescription>
         </DialogHeader>
+
 
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
