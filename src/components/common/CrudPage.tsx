@@ -265,7 +265,7 @@ export function CrudPage<T extends CrudRow>({
         render: (row) => (
           <div className="flex justify-end gap-1">
             {rowActions?.(row)}
-            {canWrite && (
+            {canWrite && (rowCanEdit?.(row) ?? true) && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -278,7 +278,7 @@ export function CrudPage<T extends CrudRow>({
                 <Pencil className="size-4" />
               </Button>
             )}
-            {canDelete && (
+            {canDelete && (rowCanDelete?.(row) ?? true) && (
               <Button
                 variant="ghost"
                 size="icon"
