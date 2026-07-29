@@ -14,7 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
-import { productionPlansQuery, profilesQuery, workOrdersQuery } from "@/lib/queries";
+import {
+  productionPlansQuery,
+  profilesQuery,
+  routingsQuery,
+  workOrdersQuery,
+} from "@/lib/queries";
 import {
   formatCurrency,
   formatDate,
