@@ -64,8 +64,8 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Customer Order",
     items: [
-      { label: "Customer Order", to: "/sales/orders", icon: "FileText", roles: ["SALES", "PPIC", "SYSADMIN"] },
-      { label: "Review Permintaan Order", to: "/sales/review", icon: "ShieldCheck", roles: ["PPIC", "SYSADMIN"] },
+      { label: "Customer Order", to: "/sales/orders", icon: "FileText", roles: ["SALES", "SYSADMIN"] },
+      { label: "Permintaan Order", to: "/sales/review", icon: "ShieldCheck", roles: ["PPIC", "SYSADMIN"] },
       { label: "Order Tracking", to: "/sales/tracking", icon: "Radar", roles: ALL },
       { label: "Master Customer", to: "/sales/customers", icon: "Building2", roles: ["SALES", "PPIC", "SYSADMIN"] },
     ],
