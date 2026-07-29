@@ -415,19 +415,17 @@ function SalesOrdersPage() {
 
   return (
     <>
-      <div className="mb-5 grid gap-4 sm:grid-cols-2">
+      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
+          icon={<CalendarRange className="size-4" />}
           label="Total Order Bulan Ini"
           value={monthly.count}
-          icon={<CalendarRange />}
-          sub={`periode ${monthly.label}`}
           tone="primary"
         />
         <KpiCard
+          icon={<CircleDollarSign className="size-4" />}
           label="Total Nilai Order Bulan Ini"
           value={formatCurrency(monthly.value)}
-          icon={<CircleDollarSign />}
-          sub={`akumulasi nilai order ${monthly.label}`}
           tone="success"
         />
       </div>
