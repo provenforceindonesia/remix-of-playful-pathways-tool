@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Activity, Check, ShieldCheck, Wallet, X } from "lucide-react";
+import { Activity, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { KpiCard } from "@/components/common/KpiCard";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { DatePickerField } from "@/components/common/DatePickerField";
@@ -21,16 +22,23 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { salesOrdersQuery } from "@/lib/queries";
-import { formatCurrency, formatDate, toISODate } from "@/lib/format";
+import {
+  formatCurrency,
+  formatDate,
+  formatFullDateTime,
+  formatNumber,
+  formatPercent,
+  toISODate,
+} from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/sales/review")({
   head: () => ({
     meta: [
-      { title: "Review Permintaan Order — MANUFACTUREIQ" },
-      { name: "description", content: "Review kelayakan produksi atas order pelanggan sebelum dikonfirmasi." },
-      { property: "og:title", content: "Review Permintaan Order — MANUFACTUREIQ" },
-      { property: "og:description", content: "Konfirmasi atau minta revisi customer order." },
+      { title: "Permintaan Order — MANUFACTUREIQ" },
+      { name: "description", content: "Satu halaman untuk memantau seluruh customer order sekaligus menyetujui atau menolaknya." },
+      { property: "og:title", content: "Permintaan Order — MANUFACTUREIQ" },
+      { property: "og:description", content: "Monitoring dan review customer order dalam satu menu." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -39,7 +47,7 @@ export const Route = createFileRoute("/_authenticated/sales/review")({
 });
 
 type Row = Record<string, unknown>;
-type Item = { quantity: number; unit_price: number };
+type Item = { quantity: number; unit_price: number; products?: { name?: string } | null };
 
 const value = (r: Row) =>
   (((r.sales_order_items as Item[]) ?? []) as Item[]).reduce(
@@ -47,13 +55,33 @@ const value = (r: Row) =>
     0,
   );
 
+const totalQty = (r: Row) =>
+  (((r.sales_order_items as Item[]) ?? []) as Item[]).reduce(
+    (s, i) => s + Number(i.quantity ?? 0),
+    0,
+  );
+
+const productNames = (r: Row) =>
+  (((r.sales_order_items as Item[]) ?? []) as Item[])
+    .map((i) => i.products?.name ?? "-")
+    .filter(Boolean)
+    .join(", ");
+
 function ReviewPage() {
   const qc = useQueryClient();
   const { profile } = useAuth();
   const { data, isLoading } = useQuery(salesOrdersQuery);
-  const rows = ((data ?? []) as Row[]).filter((r) =>
+  const rows = (data ?? []) as Row[];
+  const pending = rows.filter((r) =>
     ["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)),
   );
+
+  const monthly = useMemo(() => {
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const inMonth = rows.filter((r) => String(r.order_date ?? "").startsWith(ym));
+    return { count: inMonth.length, value: inMonth.reduce((s, r) => s + value(r), 0) };
+  }, [rows]);
 
   const [target, setTarget] = useState<{ row: Row; mode: "approve" | "revise" } | null>(null);
   const [note, setNote] = useState("");
@@ -95,14 +123,44 @@ function ReviewPage() {
       header: "Customer",
       value: (r) => (r.customers as { name?: string } | null)?.name ?? "-",
     },
+    {
+      key: "product",
+      header: "Produk",
+      value: productNames,
+      render: (r) => <span className="truncate">{productNames(r) || "-"}</span>,
+    },
+    {
+      key: "quantity",
+      header: "Qty",
+      align: "right",
+      value: totalQty,
+      render: (r) => formatNumber(totalQty(r)),
+    },
+    { key: "order_date", header: "Tgl Order", render: (r) => formatDate(r.order_date as string) },
     { key: "required_date", header: "Dibutuhkan", render: (r) => formatDate(r.required_date as string) },
     { key: "priority", header: "Prioritas", render: (r) => <StatusBadge status={String(r.priority)} /> },
     {
       key: "value",
-      header: "Nilai",
+      header: "Nilai Order",
       align: "right",
       value,
       render: (r) => formatCurrency(value(r)),
+    },
+    {
+      key: "created_at",
+      header: "Dibuat tgl",
+      render: (r) => formatFullDateTime(r.created_at as string),
+    },
+    {
+      key: "progress_pct",
+      header: "Progress",
+      value: (r) => Number(r.progress_pct ?? 0),
+      render: (r) => (
+        <div className="flex items-center gap-2">
+          <Progress value={Number(r.progress_pct ?? 0)} className="h-1.5 w-20" />
+          <span className="whitespace-nowrap">{formatPercent(Number(r.progress_pct ?? 0))}</span>
+        </div>
+      ),
     },
     { key: "status", header: "Status", render: (r) => <StatusBadge status={String(r.status)} /> },
     {
@@ -110,37 +168,63 @@ function ReviewPage() {
       header: "Aksi",
       align: "right",
       sortable: false,
-      render: (r) => (
-        <div className="flex justify-end gap-1">
-          <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
-            <Check className="size-4" /> Konfirmasi
-          </Button>
-          <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
-            <X className="size-4" /> Revisi
-          </Button>
-        </div>
-      ),
+      render: (r) =>
+        ["Menunggu Review Produksi", "Perlu Revisi"].includes(String(r.status)) ? (
+          <div className="flex justify-end gap-1">
+            <Button size="sm" onClick={() => setTarget({ row: r, mode: "approve" })}>
+              <Check className="size-4" /> Konfirmasi
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setTarget({ row: r, mode: "revise" })}>
+              <X className="size-4" /> Revisi
+            </Button>
+          </div>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
     },
   ];
 
   return (
     <>
       <PageHeader
-        title="Review Permintaan Order"
-        description="Periksa kapasitas dan kesiapan material sebelum mengonfirmasi order."
+        title="Permintaan Order"
+        description="Seluruh customer order dalam satu halaman: pantau, konfirmasi, atau minta revisi."
       />
 
-      <div className="mb-5 grid gap-4 sm:grid-cols-3">
-        <KpiCard icon={<ShieldCheck className="size-4" />} label="Menunggu Review" value={rows.filter((r) => r.status === "Menunggu Review Produksi").length} tone="warning" />
-        <KpiCard icon={<Activity className="size-4" />} label="Perlu Revisi" value={rows.filter((r) => r.status === "Perlu Revisi").length} tone="danger" />
-        <KpiCard icon={<Wallet className="size-4" />}
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <KpiCard
+          icon={<CalendarRange className="size-4" />}
+          label="Total Order Bulan Ini"
+          value={monthly.count}
+          tone="primary"
+        />
+        <KpiCard
+          icon={<CircleDollarSign className="size-4" />}
+          label="Total Nilai Order Bulan Ini"
+          value={formatCurrency(monthly.value)}
+          tone="success"
+        />
+        <KpiCard
+          icon={<ShieldCheck className="size-4" />}
+          label="Menunggu Review"
+          value={rows.filter((r) => r.status === "Menunggu Review Produksi").length}
+          tone="warning"
+        />
+        <KpiCard
+          icon={<Activity className="size-4" />}
+          label="Perlu Revisi"
+          value={rows.filter((r) => r.status === "Perlu Revisi").length}
+          tone="danger"
+        />
+        <KpiCard
+          icon={<Wallet className="size-4" />}
           label="Total Nilai Antrian"
-          value={formatCurrency(rows.reduce((s, r) => s + value(r), 0))}
+          value={formatCurrency(pending.reduce((s, r) => s + value(r), 0))}
           tone="primary"
         />
       </div>
 
-      <DataTable<Row> columns={columns} rows={rows} loading={isLoading} exportName="review-order" />
+      <DataTable<Row> columns={columns} rows={rows} loading={isLoading} exportName="permintaan-order" />
 
       <Dialog open={Boolean(target)} onOpenChange={(o) => !o && setTarget(null)}>
         <DialogContent>
