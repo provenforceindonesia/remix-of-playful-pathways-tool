@@ -299,7 +299,7 @@ export function CrudPage<T extends CrudRow>({
         actions={
           <>
             {headerActions}
-            {canWrite && (
+            {canWrite && !createInToolbar && (
               <Button onClick={openCreate}>
                 <Plus className="size-4" /> Tambah
               </Button>
@@ -316,6 +316,13 @@ export function CrudPage<T extends CrudRow>({
         loading={loading}
         exportName={exportName ?? table}
         toolbar={toolbar}
+        toolbarActions={
+          canWrite && createInToolbar ? (
+            <Button onClick={openCreate}>
+              <Plus className="size-4" /> Tambah
+            </Button>
+          ) : null
+        }
         pageSize={pageSize}
       />
 
