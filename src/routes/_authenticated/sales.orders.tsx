@@ -32,6 +32,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { recordAudit } from "@/lib/audit";
 
 
 export const Route = createFileRoute("/_authenticated/sales/orders")({
