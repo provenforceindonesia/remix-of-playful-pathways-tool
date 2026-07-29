@@ -481,7 +481,7 @@ function SalesOrdersPage() {
           </>
         )}
       >
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <KpiCard
             icon={<CalendarRange className="size-4" />}
             label="Total Order Bulan Ini"
