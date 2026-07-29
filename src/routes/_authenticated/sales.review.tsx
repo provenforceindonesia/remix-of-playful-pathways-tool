@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Activity, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
+import { Activity, AlertTriangle, CalendarRange, Check, CircleDollarSign, ShieldCheck, Wallet, X } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -67,6 +67,14 @@ const productNames = (r: Row) =>
     .filter(Boolean)
     .join(", ");
 
+const lateDays = (r: Row, d: Date) => {
+  const req = r.required_date ? new Date(String(r.required_date)) : null;
+  if (!req || Number.isNaN(req.getTime())) return 0;
+  const ms = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() -
+    new Date(req.getFullYear(), req.getMonth(), req.getDate()).getTime();
+  return Math.max(0, Math.round(ms / 86400000));
+};
+
 function ReviewPage() {
   const qc = useQueryClient();
   const { profile } = useAuth();
@@ -97,7 +105,7 @@ function ReviewPage() {
               confirmed_delivery_date: deliveryDate ? toISODate(deliveryDate) : null,
               approved_by: profile?.id ?? null,
               approved_at: new Date().toISOString(),
-              revision_note: null,
+              revision_note: note.trim() ? note.trim() : null,
             }
           : { status: "Perlu Revisi", revision_note: note };
       const { error } = await supabase
@@ -234,14 +242,54 @@ function ReviewPage() {
             </DialogTitle>
             <DialogDescription>
               {target?.mode === "approve"
-                ? "Tetapkan tanggal pengiriman yang dikonfirmasi produksi."
+                ? "Tetapkan tanggal barang selesai dan siap dipenuhi oleh Production Control."
                 : "Jelaskan alasan revisi agar tim sales dapat menindaklanjuti."}
             </DialogDescription>
           </DialogHeader>
           {target?.mode === "approve" ? (
-            <div className="space-y-2">
-              <Label>Confirmed Delivery Date</Label>
-              <DatePickerField value={deliveryDate} onChange={setDeliveryDate} />
+            <div className="space-y-4">
+              <div className="rounded-xl border bg-muted/40 p-3 text-sm">
+                <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Ringkasan Order
+                </p>
+                <p className="font-medium">
+                  {String(target.row.so_number ?? "-")} ·{" "}
+                  {(target.row.customers as { name?: string } | null)?.name ?? "-"}
+                </p>
+                <p className="text-muted-foreground">
+                  {productNames(target.row) || "-"} · {formatNumber(totalQty(target.row))} pcs
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-muted-foreground">Tanggal Dibutuhkan Customer</Label>
+                <p className="text-sm font-medium">{formatDate(target.row.required_date as string)}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>
+                  Tanggal Pemenuhan yang Dikonfirmasi <span className="text-destructive">*</span>
+                </Label>
+                <DatePickerField value={deliveryDate} onChange={setDeliveryDate} />
+                {deliveryDate ? (
+                  lateDays(target.row, deliveryDate) > 0 ? (
+                    <p className="flex items-center gap-1.5 rounded-lg bg-destructive/10 px-2.5 py-1.5 text-xs font-medium text-destructive">
+                      <AlertTriangle className="size-3.5" />
+                      Terlambat {lateDays(target.row, deliveryDate)} hari — Order Berisiko
+                    </p>
+                  ) : (
+                    <p className="flex items-center gap-1.5 rounded-lg bg-success/10 px-2.5 py-1.5 text-xs font-medium text-success">
+                      <Check className="size-3.5" />
+                      Sesuai kebutuhan customer
+                    </p>
+                  )
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <Label>Catatan Production Control</Label>
+                <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+              </div>
             </div>
           ) : (
             <div className="space-y-2">
@@ -253,12 +301,16 @@ function ReviewPage() {
             <Button variant="outline" onClick={() => setTarget(null)}>
               Batal
             </Button>
-            <Button onClick={() => act.mutate()} disabled={act.isPending}>
-              Simpan
+            <Button
+              onClick={() => act.mutate()}
+              disabled={act.isPending || (target?.mode === "approve" && !deliveryDate)}
+            >
+              {target?.mode === "approve" ? "Konfirmasi Order" : "Simpan"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </>
   );
 }
