@@ -141,6 +141,7 @@ export function CrudPage<T extends CrudRow>({
   toRowValues?: (row: T) => Record<string, unknown>;
   exportName?: string;
   exportable?: boolean;
+  headerActions?: ReactNode;
   toolbar?: ReactNode;
   createInToolbar?: boolean;
   children?: ReactNode;
