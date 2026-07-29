@@ -331,7 +331,19 @@ function ReviewPage() {
       <SalesOrderDetailDialog
         order={detail ? ((rows.find((r) => r.id === detail.id) ?? detail) as Row) : null}
         onClose={() => setDetail(null)}
+        onApprove={(row) => {
+          setDetail(null);
+          setNote("");
+          setDeliveryDate(undefined);
+          setTarget({ row, mode: "approve" });
+        }}
+        onRevise={(row) => {
+          setDetail(null);
+          setNote("");
+          setTarget({ row, mode: "revise" });
+        }}
       />
+
     </>
   );
 }
