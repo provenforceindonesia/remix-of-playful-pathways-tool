@@ -580,13 +580,7 @@ function SalesOrdersPage() {
         </div>
       </CrudPage>
 
-      <ItemsDialog
-        order={detailRow}
-        onClose={() => setDetail(null)}
-        products={(products ?? []) as Row[]}
-        uoms={(uoms ?? []) as Row[]}
-        canWrite={canWrite}
-      />
+      <SalesOrderDetailDialog order={detailRow ?? null} onClose={() => setDetail(null)} />
     </>
   );
 }
