@@ -735,6 +735,71 @@ function SalesOrdersPage() {
       </CrudPage>
 
       <SalesOrderDetailDialog order={detailRow ?? null} onClose={() => setDetail(null)} />
+
+      <Dialog open={Boolean(cancelTarget)} onOpenChange={(o) => !o && setCancelTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {cancelTarget?.mode === "cancel"
+                ? "Batalkan Sales Order"
+                : cancelTarget?.mode === "request"
+                  ? "Ajukan Pembatalan"
+                  : "Batalkan Pengajuan Pembatalan"}
+            </DialogTitle>
+            <DialogDescription>
+              {cancelTarget?.mode === "cancel"
+                ? "Order belum masuk produksi sehingga dapat langsung dibatalkan."
+                : cancelTarget?.mode === "request"
+                  ? "Order sudah direncanakan/diproduksi. Pengajuan akan menunggu persetujuan Production Control."
+                  : "Pengajuan pembatalan akan ditarik dan order kembali ke status sebelumnya."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            <div className="rounded-xl border bg-muted/40 p-3 text-sm">
+              <p className="font-medium">
+                {String(cancelTarget?.row.so_number ?? "-")} ·{" "}
+                {(cancelTarget?.row.customers as { name?: string } | null)?.name ?? "-"}
+              </p>
+              <p className="text-muted-foreground">
+                Status saat ini: {String(cancelTarget?.row.status ?? "-")}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label>
+                Alasan {cancelTarget?.mode === "withdraw-request" ? "(Opsional)" : ""}
+                {cancelTarget?.mode !== "withdraw-request" ? (
+                  <span className="text-destructive"> *</span>
+                ) : null}
+              </Label>
+              <Textarea
+                value={cancelNote}
+                onChange={(e) => setCancelNote(e.target.value)}
+                rows={3}
+                className="bg-surface text-foreground placeholder:text-muted-foreground"
+                placeholder="Tuliskan alasan pembatalan"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelTarget(null)}>
+              Batal
+            </Button>
+            <Button
+              variant={cancelTarget?.mode === "withdraw-request" ? "default" : "destructive"}
+              disabled={
+                cancelAction.isPending ||
+                (cancelTarget?.mode !== "withdraw-request" && !cancelNote.trim())
+              }
+              onClick={() => cancelAction.mutate()}
+            >
+              Simpan
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 }
