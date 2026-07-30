@@ -24,6 +24,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -32,7 +41,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
+import {
+  customersQuery,
+  plantsQuery,
+  productionPlansQuery,
+  productsQuery,
+  salesOrdersQuery,
+  settingsQuery,
+  uomQuery,
+} from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { recordAudit } from "@/lib/audit";
