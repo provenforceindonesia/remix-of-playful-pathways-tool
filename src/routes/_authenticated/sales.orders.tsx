@@ -629,76 +629,90 @@ function SalesOrdersPage() {
         rowCanDelete={(row) => String(row.status ?? "") === "Draft"}
         rowActions={(row) => {
           const status = String(row.status ?? "");
+          const planned = hasPlan(row);
+          const canDirectCancel =
+            ["Menunggu Review Produksi", "Perlu Revisi"].includes(status) ||
+            (status === "Dikonfirmasi" && !planned);
+          const canRequestCancel =
+            (status === "Dikonfirmasi" && planned) ||
+            ["Direncanakan", "Dalam Produksi", "Sebagian Terpenuhi", "Terlambat"].includes(status);
+          const canSeeProgress =
+            (status === "Dikonfirmasi" && planned) ||
+            ["Direncanakan", "Dalam Produksi", "Sebagian Terpenuhi", "Terlambat"].includes(status);
+          const iconBtn = (
+            key: string,
+            title: string,
+            icon: React.ReactNode,
+            onClick: () => void,
+            danger = false,
+          ) => (
+            <Button
+              key={key}
+              variant="ghost"
+              size="icon"
+              className={danger ? "size-8 text-destructive hover:text-destructive" : "size-8"}
+              title={title}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+              }}
+            >
+              {icon}
+            </Button>
+          );
+
           return (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8"
-                title="Detail SO"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDetail(row);
-                }}
-              >
-                <Eye className="size-4" />
-              </Button>
-              {canWrite && status === "Draft" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Kirim ke Production Control"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    submit.mutate(row);
-                  }}
-                >
-                  <Send className="size-4" />
-                </Button>
-              ) : null}
-              {canWrite && status === "Perlu Revisi" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Kirim Ulang"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    submit.mutate(row);
-                  }}
-                >
-                  <Send className="size-4" />
-                </Button>
-              ) : null}
-              {canWrite && status === "Menunggu Review Produksi" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Tarik Kembali"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    withdraw.mutate(row);
-                  }}
-                >
-                  <Undo2 className="size-4" />
-                </Button>
-              ) : null}
-              {["Dalam Produksi", "Sebagian Terpenuhi"].includes(status) ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Lihat Progress"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    void navigate({ to: "/sales/tracking" });
-                  }}
-                >
-                  <LineChart className="size-4" />
-                </Button>
-              ) : null}
+              {iconBtn("detail", "Detail SO", <Eye className="size-4" />, () => setDetail(row))}
+              {canWrite && status === "Draft"
+                ? iconBtn("send", "Kirim ke Production Control", <Send className="size-4" />, () =>
+                    submit.mutate(row),
+                  )
+                : null}
+              {canWrite && status === "Perlu Revisi"
+                ? iconBtn("resend", "Kirim Ulang", <Send className="size-4" />, () =>
+                    submit.mutate(row),
+                  )
+                : null}
+              {canWrite && status === "Menunggu Review Produksi"
+                ? iconBtn("withdraw", "Tarik Kembali", <Undo2 className="size-4" />, () =>
+                    withdraw.mutate(row),
+                  )
+                : null}
+              {canSeeProgress
+                ? iconBtn("progress", "Lihat Progress", <LineChart className="size-4" />, () =>
+                    void navigate({ to: "/sales/tracking" }),
+                  )
+                : null}
+              {canWrite && canDirectCancel
+                ? iconBtn(
+                    "cancel",
+                    "Batalkan SO",
+                    <Ban className="size-4" />,
+                    () => openCancel(row, "cancel"),
+                    true,
+                  )
+                : null}
+              {canWrite && canRequestCancel
+                ? iconBtn(
+                    "request-cancel",
+                    status === "Dikonfirmasi"
+                      ? "Ajukan Pembatalan"
+                      : "Ajukan Pembatalan Sisa Order",
+                    <ShieldAlert className="size-4" />,
+                    () => openCancel(row, "request"),
+                    true,
+                  )
+                : null}
+              {canWrite && status === "Menunggu Persetujuan Pembatalan"
+                ? iconBtn(
+                    "withdraw-cancel",
+                    "Batalkan Pengajuan Pembatalan",
+                    <RotateCcw className="size-4" />,
+                    () => openCancel(row, "withdraw-request"),
+                  )
+                : null}
+
             </>
           );
         }}
