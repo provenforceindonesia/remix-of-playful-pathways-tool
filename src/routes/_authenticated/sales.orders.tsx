@@ -3,12 +3,15 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  Ban,
   CalendarRange,
   CircleDollarSign,
   Eye,
   LineChart,
   Plus,
+  RotateCcw,
   Send,
+  ShieldAlert,
   Trash2,
   Undo2,
 } from "lucide-react";
@@ -21,6 +24,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -29,7 +41,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { customersQuery, plantsQuery, productsQuery, salesOrdersQuery, settingsQuery, uomQuery } from "@/lib/queries";
+import {
+  customersQuery,
+  plantsQuery,
+  productionPlansQuery,
+  productsQuery,
+  salesOrdersQuery,
+  settingsQuery,
+  uomQuery,
+} from "@/lib/queries";
 import { formatCurrency, formatDate, formatFullDateTime, formatNumber, formatPercent, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { recordAudit } from "@/lib/audit";
@@ -228,10 +248,19 @@ function SalesOrdersPage() {
   const { data: products } = useQuery(productsQuery);
   const { data: uoms } = useQuery(uomQuery);
   const { data: settings } = useQuery(settingsQuery);
+  const { data: plans } = useQuery(productionPlansQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["SALES", "SYSADMIN"].includes(role ?? "");
   const [detail, setDetail] = useState<Row | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<{
+    row: Row;
+    mode: "cancel" | "request" | "withdraw-request";
+  } | null>(null);
+  const [cancelNote, setCancelNote] = useState("");
+
+  const hasPlan = (row: Row) =>
+    ((plans ?? []) as Row[]).some((p) => String(p.sales_order_id ?? "") === String(row.id));
 
   const detailRow = useMemo(
     () => rows.find((r) => String(r.id) === String(detail?.id ?? "")) ?? detail,
@@ -299,6 +328,70 @@ function SalesOrdersPage() {
     },
     onError: (e: Error) => toast.error("Gagal menarik order", { description: e.message }),
   });
+
+  const cancelAction = useMutation({
+    mutationFn: async () => {
+      if (!cancelTarget) return;
+      const { row, mode } = cancelTarget;
+      const from = String(row.status ?? "");
+      const note = cancelNote.trim();
+
+      let to = "Dibatalkan";
+      let action = "Batalkan SO";
+
+      if (mode === "request") {
+        to = "Menunggu Persetujuan Pembatalan";
+        action = hasPlan(row) && from === "Dikonfirmasi"
+          ? "Ajukan Pembatalan"
+          : "Ajukan Pembatalan Sisa Order";
+      } else if (mode === "withdraw-request") {
+        action = "Batalkan Pengajuan Pembatalan";
+        const { data: hist } = await supabase
+          .from("approval_history")
+          .select("from_status,action,created_at")
+          .eq("entity", "sales_orders")
+          .eq("record_id", String(row.id))
+          .order("created_at", { ascending: false })
+          .limit(10);
+        const prev = ((hist ?? []) as Array<{ action?: string; from_status?: string }>).find(
+          (h) => String(h.action ?? "").startsWith("Ajukan Pembatalan"),
+        )?.from_status;
+        to = prev && prev !== "Menunggu Persetujuan Pembatalan" ? prev : "Dikonfirmasi";
+      }
+
+      const { error } = await supabase
+        .from("sales_orders")
+        .update({ status: to, revision_note: note || (row.revision_note as string | null) || null })
+        .eq("id", String(row.id));
+      if (error) throw new Error(error.message);
+
+      await recordAudit(actor, {
+        entity: "sales_orders",
+        recordId: String(row.id),
+        action,
+        fromStatus: from,
+        toStatus: to,
+        note: note || null,
+        after: { so_number: row.so_number, status: to },
+      });
+      return { action, to };
+    },
+    onSuccess: (res) => {
+      const so = String(cancelTarget?.row.so_number ?? "");
+      toast.success(`${res?.action ?? "Aksi"} — SO ${so}`, {
+        description: `Status order kini ${res?.to ?? "-"}.`,
+      });
+      setCancelTarget(null);
+      setCancelNote("");
+      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
+    },
+    onError: (e: Error) => toast.error("Aksi pembatalan gagal", { description: e.message }),
+  });
+
+  const openCancel = (row: Row, mode: "cancel" | "request" | "withdraw-request") => {
+    setCancelNote("");
+    setCancelTarget({ row, mode });
+  };
 
 
   const columns: Column<Row>[] = [
@@ -536,76 +629,90 @@ function SalesOrdersPage() {
         rowCanDelete={(row) => String(row.status ?? "") === "Draft"}
         rowActions={(row) => {
           const status = String(row.status ?? "");
+          const planned = hasPlan(row);
+          const canDirectCancel =
+            ["Menunggu Review Produksi", "Perlu Revisi"].includes(status) ||
+            (status === "Dikonfirmasi" && !planned);
+          const canRequestCancel =
+            (status === "Dikonfirmasi" && planned) ||
+            ["Direncanakan", "Dalam Produksi", "Sebagian Terpenuhi", "Terlambat"].includes(status);
+          const canSeeProgress =
+            (status === "Dikonfirmasi" && planned) ||
+            ["Direncanakan", "Dalam Produksi", "Sebagian Terpenuhi", "Terlambat"].includes(status);
+          const iconBtn = (
+            key: string,
+            title: string,
+            icon: React.ReactNode,
+            onClick: () => void,
+            danger = false,
+          ) => (
+            <Button
+              key={key}
+              variant="ghost"
+              size="icon"
+              className={danger ? "size-8 text-destructive hover:text-destructive" : "size-8"}
+              title={title}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+              }}
+            >
+              {icon}
+            </Button>
+          );
+
           return (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8"
-                title="Detail SO"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDetail(row);
-                }}
-              >
-                <Eye className="size-4" />
-              </Button>
-              {canWrite && status === "Draft" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Kirim ke Production Control"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    submit.mutate(row);
-                  }}
-                >
-                  <Send className="size-4" />
-                </Button>
-              ) : null}
-              {canWrite && status === "Perlu Revisi" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Kirim Ulang"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    submit.mutate(row);
-                  }}
-                >
-                  <Send className="size-4" />
-                </Button>
-              ) : null}
-              {canWrite && status === "Menunggu Review Produksi" ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Tarik Kembali"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    withdraw.mutate(row);
-                  }}
-                >
-                  <Undo2 className="size-4" />
-                </Button>
-              ) : null}
-              {["Dalam Produksi", "Sebagian Terpenuhi"].includes(status) ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8"
-                  title="Lihat Progress"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    void navigate({ to: "/sales/tracking" });
-                  }}
-                >
-                  <LineChart className="size-4" />
-                </Button>
-              ) : null}
+              {iconBtn("detail", "Detail SO", <Eye className="size-4" />, () => setDetail(row))}
+              {canWrite && status === "Draft"
+                ? iconBtn("send", "Kirim ke Production Control", <Send className="size-4" />, () =>
+                    submit.mutate(row),
+                  )
+                : null}
+              {canWrite && status === "Perlu Revisi"
+                ? iconBtn("resend", "Kirim Ulang", <Send className="size-4" />, () =>
+                    submit.mutate(row),
+                  )
+                : null}
+              {canWrite && status === "Menunggu Review Produksi"
+                ? iconBtn("withdraw", "Tarik Kembali", <Undo2 className="size-4" />, () =>
+                    withdraw.mutate(row),
+                  )
+                : null}
+              {canSeeProgress
+                ? iconBtn("progress", "Lihat Progress", <LineChart className="size-4" />, () =>
+                    void navigate({ to: "/sales/tracking" }),
+                  )
+                : null}
+              {canWrite && canDirectCancel
+                ? iconBtn(
+                    "cancel",
+                    "Batalkan SO",
+                    <Ban className="size-4" />,
+                    () => openCancel(row, "cancel"),
+                    true,
+                  )
+                : null}
+              {canWrite && canRequestCancel
+                ? iconBtn(
+                    "request-cancel",
+                    status === "Dikonfirmasi"
+                      ? "Ajukan Pembatalan"
+                      : "Ajukan Pembatalan Sisa Order",
+                    <ShieldAlert className="size-4" />,
+                    () => openCancel(row, "request"),
+                    true,
+                  )
+                : null}
+              {canWrite && status === "Menunggu Persetujuan Pembatalan"
+                ? iconBtn(
+                    "withdraw-cancel",
+                    "Batalkan Pengajuan Pembatalan",
+                    <RotateCcw className="size-4" />,
+                    () => openCancel(row, "withdraw-request"),
+                  )
+                : null}
+
             </>
           );
         }}
@@ -628,6 +735,71 @@ function SalesOrdersPage() {
       </CrudPage>
 
       <SalesOrderDetailDialog order={detailRow ?? null} onClose={() => setDetail(null)} />
+
+      <Dialog open={Boolean(cancelTarget)} onOpenChange={(o) => !o && setCancelTarget(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {cancelTarget?.mode === "cancel"
+                ? "Batalkan Sales Order"
+                : cancelTarget?.mode === "request"
+                  ? "Ajukan Pembatalan"
+                  : "Batalkan Pengajuan Pembatalan"}
+            </DialogTitle>
+            <DialogDescription>
+              {cancelTarget?.mode === "cancel"
+                ? "Order belum masuk produksi sehingga dapat langsung dibatalkan."
+                : cancelTarget?.mode === "request"
+                  ? "Order sudah direncanakan/diproduksi. Pengajuan akan menunggu persetujuan Production Control."
+                  : "Pengajuan pembatalan akan ditarik dan order kembali ke status sebelumnya."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            <div className="rounded-xl border bg-muted/40 p-3 text-sm">
+              <p className="font-medium">
+                {String(cancelTarget?.row.so_number ?? "-")} ·{" "}
+                {(cancelTarget?.row.customers as { name?: string } | null)?.name ?? "-"}
+              </p>
+              <p className="text-muted-foreground">
+                Status saat ini: {String(cancelTarget?.row.status ?? "-")}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label>
+                Alasan {cancelTarget?.mode === "withdraw-request" ? "(Opsional)" : ""}
+                {cancelTarget?.mode !== "withdraw-request" ? (
+                  <span className="text-destructive"> *</span>
+                ) : null}
+              </Label>
+              <Textarea
+                value={cancelNote}
+                onChange={(e) => setCancelNote(e.target.value)}
+                rows={3}
+                className="bg-surface text-foreground placeholder:text-muted-foreground"
+                placeholder="Tuliskan alasan pembatalan"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelTarget(null)}>
+              Batal
+            </Button>
+            <Button
+              variant={cancelTarget?.mode === "withdraw-request" ? "default" : "destructive"}
+              disabled={
+                cancelAction.isPending ||
+                (cancelTarget?.mode !== "withdraw-request" && !cancelNote.trim())
+              }
+              onClick={() => cancelAction.mutate()}
+            >
+              Simpan
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 }
