@@ -26,8 +26,7 @@ export const shiftsQuery = queryOptions({
 
 export const machinesQuery = queryOptions({
   queryKey: ["machines"],
-  queryFn: () =>
-    must(supabase.from("machines").select("*, lines:line_id(name)").order("code")),
+  queryFn: () => must(supabase.from("machines").select("*, lines:line_id(name)").order("code")),
 });
 
 export const productsQuery = queryOptions({
@@ -53,8 +52,7 @@ export const customersQuery = queryOptions({
 
 export const materialsQuery = queryOptions({
   queryKey: ["materials"],
-  queryFn: () =>
-    must(supabase.from("materials").select("*, units_of_measure:uom_id(code)").order("code")),
+  queryFn: () => must(supabase.from("materials").select("*, units_of_measure:uom_id(code)").order("code")),
 });
 
 export const salesOrdersQuery = queryOptions({
@@ -106,17 +104,32 @@ export const productionEntriesQuery = queryOptions({
       supabase
         .from("production_entries")
         .select(
-          "*, work_orders:work_order_id(wo_number,target_qty,standard_speed,standard_cycle_time_sec,products:product_id(code,name),machines:machine_id(code,name)), shifts:shift_id(name), profiles:created_by(full_name)",
+          `
+          *,
+          work_orders:work_order_id(
+            wo_number,
+            target_qty,
+            standard_speed,
+            standard_cycle_time_sec,
+            products:product_id(code,name),
+            machines:machine_id(code,name)
+          ),
+          shifts:shift_id(name)
+        `,
         )
         .is("deleted_at", null)
-        .order("production_date", { ascending: false }),
+        .order("production_date", {
+          ascending: false,
+        })
+        .order("created_at", {
+          ascending: false,
+        }),
     ),
 });
 
 export const kpiQuery = queryOptions({
   queryKey: ["v_production_kpi"],
-  queryFn: () =>
-    must(supabase.from("v_production_kpi").select("*").order("production_date", { ascending: false })),
+  queryFn: () => must(supabase.from("v_production_kpi").select("*").order("production_date", { ascending: false })),
 });
 
 export const machineHealthQuery = queryOptions({
@@ -187,7 +200,9 @@ export const purchaseOrdersQuery = queryOptions({
     must(
       supabase
         .from("purchase_orders")
-        .select("*, suppliers:supplier_id(code,name), purchase_order_items(id,qty,unit_price,received_qty,materials:material_id(code,name))")
+        .select(
+          "*, suppliers:supplier_id(code,name), purchase_order_items(id,qty,unit_price,received_qty,materials:material_id(code,name))",
+        )
         .order("created_at", { ascending: false }),
     ),
 });
@@ -242,7 +257,9 @@ export const bomQuery = queryOptions({
     must(
       supabase
         .from("bom_headers")
-        .select("*, products:product_id(code,name), product_variants:variant_id(name), bom_items(*, materials:material_id(code,name), units_of_measure:uom_id(code))")
+        .select(
+          "*, products:product_id(code,name), product_variants:variant_id(name), bom_items(*, materials:material_id(code,name), units_of_measure:uom_id(code))",
+        )
         .order("created_at", { ascending: false }),
     ),
 });
@@ -275,14 +292,12 @@ export const rolePermissionsQuery = queryOptions({
 
 export const auditQuery = queryOptions({
   queryKey: ["audit_logs"],
-  queryFn: () =>
-    must(supabase.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(300)),
+  queryFn: () => must(supabase.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(300)),
 });
 
 export const notificationsQuery = queryOptions({
   queryKey: ["notifications"],
-  queryFn: () =>
-    must(supabase.from("notifications").select("*").order("created_at", { ascending: false }).limit(50)),
+  queryFn: () => must(supabase.from("notifications").select("*").order("created_at", { ascending: false }).limit(50)),
 });
 
 export const settingsQuery = queryOptions({
@@ -307,7 +322,9 @@ export const handoverQuery = queryOptions({
     must(
       supabase
         .from("handovers")
-        .select("*, from_shift:from_shift_id(name), to_shift:to_shift_id(name), lines:line_id(name), work_orders:work_order_id(wo_number)")
+        .select(
+          "*, from_shift:from_shift_id(name), to_shift:to_shift_id(name), lines:line_id(name), work_orders:work_order_id(wo_number)",
+        )
         .order("handover_date", { ascending: false }),
     ),
 });
@@ -339,8 +356,7 @@ export const costMasterQuery = {
   }),
   overheadRates: queryOptions({
     queryKey: ["overhead_rates"],
-    queryFn: () =>
-      must(supabase.from("overhead_rates").select("*").order("effective_date", { ascending: false })),
+    queryFn: () => must(supabase.from("overhead_rates").select("*").order("effective_date", { ascending: false })),
   }),
 };
 
@@ -355,7 +371,9 @@ export const materialReceiptsQuery = queryOptions({
     must(
       supabase
         .from("material_receipts")
-        .select("*, materials:material_id(code,name), suppliers:supplier_id(code,name), warehouses:warehouse_id(code,name)")
+        .select(
+          "*, materials:material_id(code,name), suppliers:supplier_id(code,name), warehouses:warehouse_id(code,name)",
+        )
         .order("receipt_date", { ascending: false }),
     ),
 });
@@ -366,7 +384,9 @@ export const materialIssuesQuery = queryOptions({
     must(
       supabase
         .from("material_issues")
-        .select("*, materials:material_id(code,name), work_orders:work_order_id(wo_number), warehouses:warehouse_id(code,name)")
+        .select(
+          "*, materials:material_id(code,name), work_orders:work_order_id(wo_number), warehouses:warehouse_id(code,name)",
+        )
         .order("issue_date", { ascending: false }),
     ),
 });
@@ -395,8 +415,7 @@ export const manpowerQuery = queryOptions({
 
 export const productionDailyQuery = queryOptions({
   queryKey: ["v_production_daily"],
-  queryFn: () =>
-    must(supabase.from("v_production_daily").select("*").order("production_date", { ascending: false })),
+  queryFn: () => must(supabase.from("v_production_daily").select("*").order("production_date", { ascending: false })),
 });
 
 export const maintenanceLogsQuery = queryOptions({
