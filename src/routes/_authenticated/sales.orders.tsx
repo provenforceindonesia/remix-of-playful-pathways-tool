@@ -329,6 +329,70 @@ function SalesOrdersPage() {
     onError: (e: Error) => toast.error("Gagal menarik order", { description: e.message }),
   });
 
+  const cancelAction = useMutation({
+    mutationFn: async () => {
+      if (!cancelTarget) return;
+      const { row, mode } = cancelTarget;
+      const from = String(row.status ?? "");
+      const note = cancelNote.trim();
+
+      let to = "Dibatalkan";
+      let action = "Batalkan SO";
+
+      if (mode === "request") {
+        to = "Menunggu Persetujuan Pembatalan";
+        action = hasPlan(row) && from === "Dikonfirmasi"
+          ? "Ajukan Pembatalan"
+          : "Ajukan Pembatalan Sisa Order";
+      } else if (mode === "withdraw-request") {
+        action = "Batalkan Pengajuan Pembatalan";
+        const { data: hist } = await supabase
+          .from("approval_history")
+          .select("from_status,action,created_at")
+          .eq("entity", "sales_orders")
+          .eq("record_id", String(row.id))
+          .order("created_at", { ascending: false })
+          .limit(10);
+        const prev = ((hist ?? []) as Array<{ action?: string; from_status?: string }>).find(
+          (h) => String(h.action ?? "").startsWith("Ajukan Pembatalan"),
+        )?.from_status;
+        to = prev && prev !== "Menunggu Persetujuan Pembatalan" ? prev : "Dikonfirmasi";
+      }
+
+      const { error } = await supabase
+        .from("sales_orders")
+        .update({ status: to, revision_note: note || row.revision_note || null })
+        .eq("id", String(row.id));
+      if (error) throw new Error(error.message);
+
+      await recordAudit(actor, {
+        entity: "sales_orders",
+        recordId: String(row.id),
+        action,
+        fromStatus: from,
+        toStatus: to,
+        note: note || null,
+        after: { so_number: row.so_number, status: to },
+      });
+      return { action, to };
+    },
+    onSuccess: (res) => {
+      const so = String(cancelTarget?.row.so_number ?? "");
+      toast.success(`${res?.action ?? "Aksi"} — SO ${so}`, {
+        description: `Status order kini ${res?.to ?? "-"}.`,
+      });
+      setCancelTarget(null);
+      setCancelNote("");
+      void qc.invalidateQueries({ queryKey: ["sales_orders"] });
+    },
+    onError: (e: Error) => toast.error("Aksi pembatalan gagal", { description: e.message }),
+  });
+
+  const openCancel = (row: Row, mode: "cancel" | "request" | "withdraw-request") => {
+    setCancelNote("");
+    setCancelTarget({ row, mode });
+  };
+
 
   const columns: Column<Row>[] = [
     { key: "so_number", header: "No. SO" },
