@@ -248,10 +248,19 @@ function SalesOrdersPage() {
   const { data: products } = useQuery(productsQuery);
   const { data: uoms } = useQuery(uomQuery);
   const { data: settings } = useQuery(settingsQuery);
+  const { data: plans } = useQuery(productionPlansQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["SALES", "SYSADMIN"].includes(role ?? "");
   const [detail, setDetail] = useState<Row | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<{
+    row: Row;
+    mode: "cancel" | "request" | "withdraw-request";
+  } | null>(null);
+  const [cancelNote, setCancelNote] = useState("");
+
+  const hasPlan = (row: Row) =>
+    ((plans ?? []) as Row[]).some((p) => String(p.sales_order_id ?? "") === String(row.id));
 
   const detailRow = useMemo(
     () => rows.find((r) => String(r.id) === String(detail?.id ?? "")) ?? detail,
