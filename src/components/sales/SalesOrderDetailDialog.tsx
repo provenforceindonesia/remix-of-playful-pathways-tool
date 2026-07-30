@@ -428,22 +428,13 @@ export function SalesOrderDetailDialog({
           )}
 
 
-          <Section title="Riwayat Status">
-            {timeline.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Belum ada riwayat.</p>
-            ) : (
-              <ol className="space-y-3">
-                {timeline.map((t, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">{formatFullDateTime(t.at)}</p>
-                      <p className="text-sm">{t.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            )}
+          <Section title="Riwayat Status & Audit Trail">
+            <SalesOrderAuditTrail soId={soId} enabled={open} fallback={timeline} />
+            <div className="mt-3 border-t border-border/40 pt-3">
+              <Button asChild variant="outline" size="sm">
+                <Link to="/sales/audit">Buka Audit Trail SO</Link>
+              </Button>
+            </div>
           </Section>
         </div>
 
