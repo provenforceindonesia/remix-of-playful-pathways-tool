@@ -361,7 +361,7 @@ function SalesOrdersPage() {
 
       const { error } = await supabase
         .from("sales_orders")
-        .update({ status: to, revision_note: note || row.revision_note || null })
+        .update({ status: to, revision_note: note || (row.revision_note as string | null) || null })
         .eq("id", String(row.id));
       if (error) throw new Error(error.message);
 
