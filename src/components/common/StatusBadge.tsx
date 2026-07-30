@@ -24,6 +24,7 @@ const STATUS_TONE: Record<string, Tone> = {
   Selesai: "success",
   Terlambat: "danger",
   Dibatalkan: "neutral",
+  "Menunggu Persetujuan Pembatalan": "warning",
   // Plan / WO
   Review: "warning",
   Released: "info",
