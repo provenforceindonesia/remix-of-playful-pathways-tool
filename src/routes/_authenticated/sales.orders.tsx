@@ -22,6 +22,7 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { soValueProgress } from "@/lib/so-progress";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -468,14 +469,21 @@ function SalesOrdersPage() {
     {
       key: "progress_pct",
       header: "Progress",
-      value: (r) => Number(r.progress_pct ?? 0),
-      render: (r) => (
-        <div className="flex items-center gap-2">
-          <Progress value={Number(r.progress_pct ?? 0)} className="h-1.5 w-20" />
-          <span className="whitespace-nowrap">{formatPercent(Number(r.progress_pct ?? 0))}</span>
-        </div>
-      ),
+      value: (r) => soValueProgress(r as { sales_order_items?: never }),
+      render: (r) => {
+        const p = soValueProgress(r as { sales_order_items?: never });
+        return (
+          <div
+            className="flex items-center gap-2"
+            title="Persentase nilai Sales Order yang telah dipenuhi"
+          >
+            <Progress value={p} className="h-1.5 w-20" />
+            <span className="whitespace-nowrap">{formatPercent(p)}</span>
+          </div>
+        );
+      },
     },
+
     {
       key: "status",
       header: "Status",
