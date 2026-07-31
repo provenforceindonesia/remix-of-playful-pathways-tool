@@ -8,6 +8,7 @@ import { DataTable, type Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { KpiCard } from "@/components/common/KpiCard";
 import { Button } from "@/components/ui/button";
+import { soValueProgress } from "@/lib/so-progress";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
