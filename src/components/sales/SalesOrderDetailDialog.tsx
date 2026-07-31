@@ -106,16 +106,12 @@ export function SalesOrderDetailDialog({
   };
 
   const items = useMemo(() => ((order?.sales_order_items as Item[]) ?? []) as Item[], [order]);
+  const itemProgress = useMemo(() => computeItemProgress(items), [items]);
+  const valueSummary = useMemo(() => computeValueSummary(items), [items]);
   const totalQty = items.reduce((s, i) => s + Number(i.quantity ?? 0), 0);
-  const totalValue = items.reduce(
-    (s, i) => s + Number(i.quantity ?? 0) * Number(i.unit_price ?? 0),
-    0,
-  );
+  const totalValue = valueSummary.totalValue;
   const pct = Number(order?.progress_pct ?? 0);
-  const fulfilledSum = items.reduce((s, i) => s + Number(i.fulfilled_qty ?? 0), 0);
-  const fulfilledQty = fulfilledSum > 0 ? fulfilledSum : Math.round((totalQty * pct) / 100);
-  const remainingQty = Math.max(0, totalQty - fulfilledQty);
-  const fulfilledValue = totalQty > 0 ? (totalValue * fulfilledQty) / totalQty : 0;
+
 
   const relatedPlans = ((plans ?? []) as Row[]).filter(
     (p) => String(p.sales_order_id ?? "") === soId,
