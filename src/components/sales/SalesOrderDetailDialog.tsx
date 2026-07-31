@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { SalesOrderAuditTrail } from "@/components/sales/SalesOrderAuditTrail";
-import { supabase } from "@/integrations/supabase/client";
+
 import {
   productionPlansQuery,
   profilesQuery,
