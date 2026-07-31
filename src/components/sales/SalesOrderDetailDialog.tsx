@@ -364,26 +364,80 @@ export function SalesOrderDetailDialog({
               </Section>
 
               <Section title="Progress Pemenuhan">
-                <RowLine
-                  label="Finished Good Tervalidasi"
-                  value={`${formatNumber(fulfilledQty)} pcs`}
-                />
-                <RowLine label="Quantity Sales Order" value={`${formatNumber(totalQty)} pcs`} />
-                <RowLine label="Sisa Belum Terpenuhi" value={`${formatNumber(remainingQty)} pcs`} />
-                <div className="my-3 flex items-center gap-3">
-                  <Progress value={pct} className="h-2 flex-1" />
-                  <span className="text-sm font-semibold">{formatPercent(pct)}</span>
+                <div className="space-y-3">
+                  {itemProgress.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Belum ada item.</p>
+                  ) : (
+                    itemProgress.map((ip) => (
+                      <div
+                        key={ip.id}
+                        className="rounded-lg border border-border/60 bg-background/40 p-3"
+                      >
+                        <p className="mb-2 text-sm font-semibold">
+                          {ip.productName} — {ip.variantName}
+                        </p>
+                        <RowLine
+                          label="Quantity Order"
+                          value={`${formatNumber(ip.qty)} ${ip.uom}`}
+                        />
+                        <RowLine
+                          label="Finished Good Tervalidasi"
+                          value={`${formatNumber(ip.fulfilled)} ${ip.uom}`}
+                        />
+                        <RowLine
+                          label="Sisa Belum Terpenuhi"
+                          value={`${formatNumber(ip.remaining)} ${ip.uom}`}
+                        />
+                        <div className="my-2.5 flex items-center gap-3">
+                          <Progress value={ip.pct} className="h-2 flex-1" />
+                          <span className="text-sm font-semibold">{formatPercent(ip.pct)}</span>
+                        </div>
+                        <RowLine label="Nilai Item" value={formatCurrency(ip.itemValue)} />
+                        <RowLine
+                          label="Nilai Sudah Terpenuhi"
+                          value={formatCurrency(ip.fulfilledValue)}
+                        />
+                        <RowLine
+                          label="Nilai Belum Terpenuhi"
+                          value={formatCurrency(ip.remainingValue)}
+                        />
+                      </div>
+                    ))
+                  )}
                 </div>
-                <RowLine label="Nilai Sudah Terpenuhi" value={formatCurrency(fulfilledValue)} />
+              </Section>
+
+              <Section title="Ringkasan Nilai Pemenuhan">
                 <RowLine
-                  label="Nilai Belum Terpenuhi"
-                  value={formatCurrency(Math.max(0, totalValue - fulfilledValue))}
+                  label="Total Nilai Sales Order"
+                  value={formatCurrency(valueSummary.totalValue)}
                 />
+                <RowLine
+                  label="Total Nilai Sudah Terpenuhi"
+                  value={formatCurrency(valueSummary.fulfilledValue)}
+                />
+                <RowLine
+                  label="Total Nilai Belum Terpenuhi"
+                  value={formatCurrency(valueSummary.remainingValue)}
+                />
+                <div className="my-3 flex items-center gap-3">
+                  <Progress value={valueSummary.valuePct} className="h-2 flex-1" />
+                  <span className="text-sm font-semibold">
+                    {formatPercent(valueSummary.valuePct)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Progress Nilai Sales Order</span>
+                  <span className="text-sm font-semibold">
+                    {formatPercent(valueSummary.valuePct)}
+                  </span>
+                </div>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Status Pemenuhan</span>
                   <StatusBadge status={String(order.status)} />
                 </div>
               </Section>
+
 
               <Section title="Keterkaitan Produksi">
                 <div className="space-y-2">
