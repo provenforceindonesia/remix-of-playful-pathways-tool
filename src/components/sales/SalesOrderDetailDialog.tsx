@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { SalesOrderAuditTrail } from "@/components/sales/SalesOrderAuditTrail";
-import { supabase } from "@/integrations/supabase/client";
+
 import {
   productionPlansQuery,
   profilesQuery,
@@ -85,20 +85,6 @@ export function SalesOrderDetailDialog({
   const { data: plans } = useQuery({ ...productionPlansQuery, enabled: open });
   const { data: wos } = useQuery({ ...workOrdersQuery, enabled: open });
   const { data: routings } = useQuery({ ...routingsQuery, enabled: open && isPending });
-  const { data: history } = useQuery({
-    queryKey: ["approval_history", "sales_orders", soId],
-    enabled: open && Boolean(soId),
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("approval_history")
-        .select("*")
-        .eq("entity", "sales_orders")
-        .eq("record_id", soId)
-        .order("created_at", { ascending: true });
-      if (error) throw new Error(error.message);
-      return (data ?? []) as Row[];
-    },
-  });
 
   const person = (id: unknown) => {
     const p = ((profiles ?? []) as Row[]).find((x) => String(x.id) === String(id ?? ""));
@@ -136,42 +122,8 @@ export function SalesOrderDetailDialog({
         )
       : 0;
 
-  const timeline = useMemo(() => {
-    const list = ((history ?? []) as Row[]).map((h) => ({
-      at: String(h.created_at ?? ""),
-      text: `${String(h.action ?? "Perubahan status")}${h.to_status ? ` → ${String(h.to_status)}` : ""}${
-        person(h.actor_id) ? ` oleh ${person(h.actor_id)}` : ""
-      }`,
-    }));
-    if (list.length) return list;
-    const fallback: { at: string; text: string }[] = [];
-    if (order?.created_at)
-      fallback.push({
-        at: String(order.created_at),
-        text: `Order dibuat${person(order.created_by) ? ` oleh ${person(order.created_by)}` : ""}`,
-      });
-    if (order?.submitted_at)
-      fallback.push({ at: String(order.submitted_at), text: "Order dikirim untuk review produksi" });
-    if (order?.approved_at)
-      fallback.push({
-        at: String(order.approved_at),
-        text: `Order dikonfirmasi${person(order.approved_by) ? ` oleh ${person(order.approved_by)}` : ""}`,
-      });
-    relatedPlans.forEach((p) =>
-      fallback.push({
-        at: String(p.created_at ?? ""),
-        text: `Production Plan ${String(p.plan_number ?? "-")} dibuat`,
-      }),
-    );
-    relatedWos.forEach((w) =>
-      fallback.push({
-        at: String(w.created_at ?? ""),
-        text: `Work Order ${String(w.wo_number ?? "-")} dibuat`,
-      }),
-    );
-    return fallback.sort((a, b) => a.at.localeCompare(b.at));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, order, profiles, plans, wos]);
+
+
 
   const plan = relatedPlans[0] as Row | undefined;
   const readinessTone = (v: string) =>
@@ -482,13 +434,9 @@ export function SalesOrderDetailDialog({
 
 
           <Section title="Riwayat Status">
-            <SalesOrderAuditTrail soId={soId} enabled={open} fallback={timeline} />
-            <div className="mt-3 border-t border-border/40 pt-3">
-              <Button asChild variant="outline" size="sm">
-                <Link to="/sales/audit">Buka Riwayat Status</Link>
-              </Button>
-            </div>
+            <SalesOrderAuditTrail soId={soId} enabled={open} />
           </Section>
+
         </div>
 
         <DialogFooter>
