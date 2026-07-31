@@ -85,20 +85,6 @@ export function SalesOrderDetailDialog({
   const { data: plans } = useQuery({ ...productionPlansQuery, enabled: open });
   const { data: wos } = useQuery({ ...workOrdersQuery, enabled: open });
   const { data: routings } = useQuery({ ...routingsQuery, enabled: open && isPending });
-  const { data: history } = useQuery({
-    queryKey: ["approval_history", "sales_orders", soId],
-    enabled: open && Boolean(soId),
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("approval_history")
-        .select("*")
-        .eq("entity", "sales_orders")
-        .eq("record_id", soId)
-        .order("created_at", { ascending: true });
-      if (error) throw new Error(error.message);
-      return (data ?? []) as Row[];
-    },
-  });
 
   const person = (id: unknown) => {
     const p = ((profiles ?? []) as Row[]).find((x) => String(x.id) === String(id ?? ""));
