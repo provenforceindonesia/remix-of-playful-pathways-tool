@@ -22,6 +22,7 @@ import { StatusBadge } from "@/components/common/StatusBadge";
 import { SalesOrderDetailDialog } from "@/components/sales/SalesOrderDetailDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { soValueProgress } from "@/lib/so-progress";
 import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
