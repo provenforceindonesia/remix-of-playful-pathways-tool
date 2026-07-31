@@ -482,13 +482,9 @@ export function SalesOrderDetailDialog({
 
 
           <Section title="Riwayat Status">
-            <SalesOrderAuditTrail soId={soId} enabled={open} fallback={timeline} />
-            <div className="mt-3 border-t border-border/40 pt-3">
-              <Button asChild variant="outline" size="sm">
-                <Link to="/sales/audit">Buka Riwayat Status</Link>
-              </Button>
-            </div>
+            <SalesOrderAuditTrail soId={soId} enabled={open} />
           </Section>
+
         </div>
 
         <DialogFooter>
