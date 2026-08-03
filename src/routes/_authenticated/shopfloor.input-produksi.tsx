@@ -201,6 +201,13 @@ function InputProduksiPage() {
       },
     },
     {
+      name: "daily_target_qty",
+      label: "Target Produksi Hari Ini",
+      type: "number",
+      required: true,
+      defaultValue: 0,
+    },
+    {
       name: "shift_id",
       label: "Shift",
       type: "select",
