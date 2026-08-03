@@ -2018,10 +2018,14 @@ export type Database = {
       }
       production_entries: {
         Row: {
+          actual_cycle_time_seconds: number
+          available_production_minutes: number
           break_minutes: number
           created_at: string
           created_by: string | null
           created_role: string | null
+          cycle_time_variance_seconds: number
+          daily_target_qty: number
           deleted_at: string | null
           downtime_frequency: number
           downtime_minutes: number
@@ -2029,6 +2033,7 @@ export type Database = {
           good_output: number
           handover_note: string | null
           id: string
+          net_production_minutes: number
           notes: string | null
           plant_id: string | null
           production_date: string
@@ -2039,6 +2044,8 @@ export type Database = {
           shift_id: string | null
           start_time: string
           status: string
+          target_achievement_pct: number
+          target_cycle_time_seconds: number
           total_output: number
           updated_at: string
           validated_at: string | null
@@ -2047,10 +2054,14 @@ export type Database = {
           work_order_id: string
         }
         Insert: {
+          actual_cycle_time_seconds?: number
+          available_production_minutes?: number
           break_minutes?: number
           created_at?: string
           created_by?: string | null
           created_role?: string | null
+          cycle_time_variance_seconds?: number
+          daily_target_qty?: number
           deleted_at?: string | null
           downtime_frequency?: number
           downtime_minutes?: number
@@ -2058,6 +2069,7 @@ export type Database = {
           good_output?: number
           handover_note?: string | null
           id?: string
+          net_production_minutes?: number
           notes?: string | null
           plant_id?: string | null
           production_date?: string
@@ -2068,6 +2080,8 @@ export type Database = {
           shift_id?: string | null
           start_time: string
           status?: string
+          target_achievement_pct?: number
+          target_cycle_time_seconds?: number
           total_output?: number
           updated_at?: string
           validated_at?: string | null
@@ -2076,10 +2090,14 @@ export type Database = {
           work_order_id: string
         }
         Update: {
+          actual_cycle_time_seconds?: number
+          available_production_minutes?: number
           break_minutes?: number
           created_at?: string
           created_by?: string | null
           created_role?: string | null
+          cycle_time_variance_seconds?: number
+          daily_target_qty?: number
           deleted_at?: string | null
           downtime_frequency?: number
           downtime_minutes?: number
@@ -2087,6 +2105,7 @@ export type Database = {
           good_output?: number
           handover_note?: string | null
           id?: string
+          net_production_minutes?: number
           notes?: string | null
           plant_id?: string | null
           production_date?: string
@@ -2097,6 +2116,8 @@ export type Database = {
           shift_id?: string | null
           start_time?: string
           status?: string
+          target_achievement_pct?: number
+          target_cycle_time_seconds?: number
           total_output?: number
           updated_at?: string
           validated_at?: string | null
