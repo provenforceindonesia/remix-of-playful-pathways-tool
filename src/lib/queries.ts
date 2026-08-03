@@ -90,7 +90,7 @@ export const productionPlansQuery = queryOptions({
       supabase
         .from("production_plans")
         .select(
-          "*, sales_orders:sales_order_id(so_number), lines:line_id(name), shifts:shift_id(name), production_plan_items(id,demand_qty,target_qty,products:product_id(code,name)), work_orders(id,work_order_schedules(production_date,shift_id,planned_manpower))",
+          "*, sales_orders:sales_order_id(so_number), lines:line_id(name), shifts:shift_id(name), production_plan_items(id,product_id,variant_id,uom_id,demand_qty,target_qty,products:product_id(code,name),product_variants:variant_id(name),units_of_measure:uom_id(code)), work_orders(id,work_order_schedules(production_date,shift_id,planned_manpower))",
         )
         .is("deleted_at", null)
         .order("created_at", { ascending: false }),
