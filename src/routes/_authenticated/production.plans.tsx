@@ -3,21 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import {
-  linesQuery,
-  plantsQuery,
-  productionPlansQuery,
-  salesOrdersQuery,
-  shiftsQuery,
-} from "@/lib/queries";
-import { formatDate, toISODate } from "@/lib/format";
+import { linesQuery, plantsQuery, productionPlansQuery, salesOrdersQuery, shiftsQuery } from "@/lib/queries";
+import { formatDate, formatFullDateTime, formatNumber, toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/production/plans")({
   head: () => ({
     meta: [
       { title: "Production Plan — MANUFACTUREIQ" },
-      { name: "description", content: "Rencana produksi harian per line dan shift beserta kesiapan material." },
+      {
+        name: "description",
+        content: "Rencana produksi harian per line dan shift beserta kesiapan material.",
+      },
       { property: "og:title", content: "Production Plan — MANUFACTUREIQ" },
       { property: "og:description", content: "Perencanaan produksi harian pabrik." },
       { property: "og:type", content: "website" },
@@ -28,6 +25,39 @@ export const Route = createFileRoute("/_authenticated/production/plans")({
 });
 
 type Row = Record<string, unknown>;
+
+type WorkOrderSchedule = {
+  production_date?: string | null;
+  shift_id?: string | null;
+  planned_manpower?: number | string | null;
+};
+
+type PlanWorkOrder = {
+  work_order_schedules?: WorkOrderSchedule[] | null;
+};
+
+/**
+ * Menampilkan kebutuhan manpower puncak dalam satu tanggal dan shift.
+ * Jadwal pada tanggal/shift berbeda tidak dijumlahkan karena tidak berjalan
+ * secara bersamaan.
+ */
+function getPeakPlannedManpower(row: Row): number | null {
+  const workOrders = (row.work_orders ?? []) as PlanWorkOrder[];
+  const manpowerBySchedule = new Map<string, number>();
+
+  for (const workOrder of workOrders) {
+    for (const schedule of workOrder.work_order_schedules ?? []) {
+      const manpower = Number(schedule.planned_manpower ?? 0);
+      if (!Number.isFinite(manpower) || manpower <= 0) continue;
+
+      const scheduleKey = `${schedule.production_date ?? "tanpa-tanggal"}:${schedule.shift_id ?? "tanpa-shift"}`;
+      manpowerBySchedule.set(scheduleKey, (manpowerBySchedule.get(scheduleKey) ?? 0) + manpower);
+    }
+  }
+
+  if (manpowerBySchedule.size === 0) return null;
+  return Math.max(...manpowerBySchedule.values());
+}
 
 function PlansPage() {
   const { role, profile } = useAuth();
@@ -46,9 +76,21 @@ function PlansPage() {
       header: "Sales Order",
       value: (r) => (r.sales_orders as { so_number?: string } | null)?.so_number ?? "-",
     },
-    { key: "production_date", header: "Tanggal", render: (r) => formatDate(r.production_date as string) },
-    { key: "line", header: "Line", value: (r) => (r.lines as { name?: string } | null)?.name ?? "-" },
-    { key: "shift", header: "Shift", value: (r) => (r.shifts as { name?: string } | null)?.name ?? "-" },
+    {
+      key: "production_date",
+      header: "Jadwal Produksi",
+      render: (r) => formatDate(r.production_date as string),
+    },
+    {
+      key: "line",
+      header: "Line",
+      value: (r) => (r.lines as { name?: string } | null)?.name ?? "-",
+    },
+    {
+      key: "shift",
+      header: "Shift",
+      value: (r) => (r.shifts as { name?: string } | null)?.name ?? "-",
+    },
     {
       key: "material_readiness",
       header: "Material",
@@ -59,17 +101,59 @@ function PlansPage() {
       header: "Kapasitas",
       render: (r) => <StatusBadge status={String(r.capacity_readiness ?? "-")} />,
     },
-    { key: "status", header: "Status", render: (r) => <StatusBadge status={String(r.status ?? "-")} /> },
+    {
+      key: "planned_manpower",
+      header: "Kebutuhan Manpower",
+      align: "right",
+      value: (r) => getPeakPlannedManpower(r) ?? 0,
+      render: (r) => {
+        const manpower = getPeakPlannedManpower(r);
+        return manpower === null ? "Belum dijadwalkan" : `${formatNumber(manpower)} orang`;
+      },
+    },
+    {
+      key: "created_at",
+      header: "Dibuat",
+      render: (r) => formatFullDateTime(r.created_at as string),
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (r) => <StatusBadge status={String(r.status ?? "-")} />,
+    },
   ];
 
-  const readiness = ["Siap", "Sebagian", "Tidak Siap", "Belum Dicek"].map((v) => ({ value: v, label: v }));
+  const readiness = ["Siap", "Sebagian", "Tidak Siap", "Belum Dicek"].map((v) => ({
+    value: v,
+    label: v,
+  }));
 
   const fields: CrudField[] = [
     { name: "plan_number", label: "Nomor Plan", required: true, placeholder: "PP-2601-0001" },
-    { name: "sales_order_id", label: "Sales Order", type: "select", options: toOptions(sos as Row[], ["so_number"]) },
-    { name: "plant_id", label: "Plant", type: "select", options: toOptions(plants as Row[], ["name"]) },
-    { name: "line_id", label: "Line", type: "select", options: toOptions(lines as Row[], ["name"]) },
-    { name: "shift_id", label: "Shift", type: "select", options: toOptions(shifts as Row[], ["name"]) },
+    {
+      name: "sales_order_id",
+      label: "Sales Order",
+      type: "select",
+      options: toOptions(sos as Row[], ["so_number"]),
+    },
+    {
+      name: "plant_id",
+      label: "Plant",
+      type: "select",
+      options: toOptions(plants as Row[], ["name"]),
+    },
+    {
+      name: "line_id",
+      label: "Line",
+      type: "select",
+      options: toOptions(lines as Row[], ["name"]),
+    },
+    {
+      name: "shift_id",
+      label: "Shift",
+      type: "select",
+      options: toOptions(shifts as Row[], ["name"]),
+    },
     {
       name: "production_date",
       label: "Tanggal Produksi",
@@ -77,8 +161,20 @@ function PlansPage() {
       required: true,
       defaultValue: toISODate(new Date()),
     },
-    { name: "material_readiness", label: "Kesiapan Material", type: "select", options: readiness, defaultValue: "Belum Dicek" },
-    { name: "capacity_readiness", label: "Kesiapan Kapasitas", type: "select", options: readiness, defaultValue: "Belum Dicek" },
+    {
+      name: "material_readiness",
+      label: "Kesiapan Material",
+      type: "select",
+      options: readiness,
+      defaultValue: "Belum Dicek",
+    },
+    {
+      name: "capacity_readiness",
+      label: "Kesiapan Kapasitas",
+      type: "select",
+      options: readiness,
+      defaultValue: "Belum Dicek",
+    },
     {
       name: "status",
       label: "Status",
