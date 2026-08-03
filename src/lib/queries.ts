@@ -90,7 +90,7 @@ export const productionPlansQuery = queryOptions({
       supabase
         .from("production_plans")
         .select(
-          "*, sales_orders:sales_order_id(so_number), lines:line_id(name), shifts:shift_id(name), production_plan_items(id,demand_qty,target_qty,products:product_id(code,name))",
+          "*, sales_orders:sales_order_id(so_number), lines:line_id(name), shifts:shift_id(name), production_plan_items(id,demand_qty,target_qty,products:product_id(code,name)), work_orders(id,work_order_schedules(production_date,shift_id,planned_manpower))",
         )
         .is("deleted_at", null)
         .order("created_at", { ascending: false }),
@@ -104,26 +104,10 @@ export const productionEntriesQuery = queryOptions({
       supabase
         .from("production_entries")
         .select(
-          `
-          *,
-          work_orders:work_order_id(
-            wo_number,
-            target_qty,
-            standard_speed,
-            standard_cycle_time_sec,
-            products:product_id(code,name),
-            machines:machine_id(code,name)
-          ),
-          shifts:shift_id(name)
-        `,
+          "*, work_orders:work_order_id(wo_number,target_qty,standard_speed,standard_cycle_time_sec,products:product_id(code,name),machines:machine_id(code,name)), shifts:shift_id(name), profiles:created_by(full_name)",
         )
         .is("deleted_at", null)
-        .order("production_date", {
-          ascending: false,
-        })
-        .order("created_at", {
-          ascending: false,
-        }),
+        .order("production_date", { ascending: false }),
     ),
 });
 
