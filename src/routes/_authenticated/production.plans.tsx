@@ -88,6 +88,18 @@ const numberValue = (value: unknown) => {
 const itemKey = (productId: unknown, variantId: unknown, uomId: unknown) =>
   `${String(productId ?? "")}:${String(variantId ?? "")}:${String(uomId ?? "")}`;
 
+function getNextPlanNumber(rows: Row[]): string {
+  const now = new Date();
+  const year = String(now.getFullYear()).slice(-2);
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const lastSequence = rows.reduce((highest, row) => {
+    const match = String(row.plan_number ?? "").match(/^PP-\d{4}-(\d+)$/);
+    return Math.max(highest, match ? Number(match[1]) : 0);
+  }, 0);
+
+  return `PP-${year}${month}-${String(lastSequence + 1).padStart(4, "0")}`;
+}
+
 /**
  * Menampilkan kebutuhan manpower puncak dalam satu tanggal dan shift.
  * Jadwal pada tanggal/shift berbeda tidak dijumlahkan karena tidak berjalan
@@ -218,7 +230,8 @@ function PlansPage() {
       name: "plan_number",
       label: "Nomor Plan",
       readOnly: true,
-      placeholder: "Dibuat otomatis setelah disimpan",
+      virtual: true,
+      defaultValue: getNextPlanNumber(rows),
     },
     {
       name: "sales_order_id",
