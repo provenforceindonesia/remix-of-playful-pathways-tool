@@ -47,16 +47,20 @@ const DEMO = [
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const { session, role, loading } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && session && role) {
-      void navigate({ to: defaultRouteForRole(role), replace: true });
+    if (loading || !session) return;
+    if (next) {
+      window.location.href = next;
+      return;
     }
-  }, [loading, session, role, navigate]);
+    if (role) void navigate({ to: defaultRouteForRole(role), replace: true });
+  }, [loading, session, role, next, navigate]);
 
   const signIn = async (u: string, p: string) => {
     setBusy(true);
