@@ -2019,6 +2019,7 @@ export type Database = {
       production_entries: {
         Row: {
           actual_cycle_time_seconds: number
+          actual_manpower: number | null
           available_production_minutes: number
           break_minutes: number
           created_at: string
@@ -2033,11 +2034,14 @@ export type Database = {
           good_output: number
           handover_note: string | null
           id: string
+          manpower_variance: number | null
           net_production_minutes: number
           notes: string | null
+          planned_manpower_snapshot: number | null
           plant_id: string | null
           production_date: string
           reason_code: string | null
+          recommended_manpower_snapshot: number | null
           reject_qty: number
           revision_note: string | null
           rework_qty: number
@@ -2052,9 +2056,11 @@ export type Database = {
           validated_by: string | null
           waste_material: number
           work_order_id: string
+          work_order_schedule_id: string | null
         }
         Insert: {
           actual_cycle_time_seconds?: number
+          actual_manpower?: number | null
           available_production_minutes?: number
           break_minutes?: number
           created_at?: string
@@ -2069,11 +2075,14 @@ export type Database = {
           good_output?: number
           handover_note?: string | null
           id?: string
+          manpower_variance?: number | null
           net_production_minutes?: number
           notes?: string | null
+          planned_manpower_snapshot?: number | null
           plant_id?: string | null
           production_date?: string
           reason_code?: string | null
+          recommended_manpower_snapshot?: number | null
           reject_qty?: number
           revision_note?: string | null
           rework_qty?: number
@@ -2088,9 +2097,11 @@ export type Database = {
           validated_by?: string | null
           waste_material?: number
           work_order_id: string
+          work_order_schedule_id?: string | null
         }
         Update: {
           actual_cycle_time_seconds?: number
+          actual_manpower?: number | null
           available_production_minutes?: number
           break_minutes?: number
           created_at?: string
@@ -2105,11 +2116,14 @@ export type Database = {
           good_output?: number
           handover_note?: string | null
           id?: string
+          manpower_variance?: number | null
           net_production_minutes?: number
           notes?: string | null
+          planned_manpower_snapshot?: number | null
           plant_id?: string | null
           production_date?: string
           reason_code?: string | null
+          recommended_manpower_snapshot?: number | null
           reject_qty?: number
           revision_note?: string | null
           rework_qty?: number
@@ -2124,6 +2138,7 @@ export type Database = {
           validated_by?: string | null
           waste_material?: number
           work_order_id?: string
+          work_order_schedule_id?: string | null
         }
         Relationships: [
           {
@@ -2173,6 +2188,13 @@ export type Database = {
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_entries_work_order_schedule_id_fkey"
+            columns: ["work_order_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "work_order_schedules"
             referencedColumns: ["id"]
           },
         ]
@@ -4132,6 +4154,106 @@ export type Database = {
           },
           {
             foreignKeyName: "work_order_assignments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      work_order_schedules: {
+        Row: {
+          available_minutes: number
+          created_at: string
+          created_by: string | null
+          id: string
+          manpower_calculation_method: string
+          manpower_override_reason: string | null
+          notes: string | null
+          planned_manpower: number
+          production_date: string
+          recommended_manpower: number
+          required_standard_minutes: number
+          shift_id: string
+          status: string
+          target_qty: number
+          updated_at: string
+          work_order_id: string
+        }
+        Insert: {
+          available_minutes?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          manpower_calculation_method?: string
+          manpower_override_reason?: string | null
+          notes?: string | null
+          planned_manpower?: number
+          production_date: string
+          recommended_manpower?: number
+          required_standard_minutes?: number
+          shift_id: string
+          status?: string
+          target_qty: number
+          updated_at?: string
+          work_order_id: string
+        }
+        Update: {
+          available_minutes?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          manpower_calculation_method?: string
+          manpower_override_reason?: string | null
+          notes?: string | null
+          planned_manpower?: number
+          production_date?: string
+          recommended_manpower?: number
+          required_standard_minutes?: number
+          shift_id?: string
+          status?: string
+          target_qty?: number
+          updated_at?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_schedules_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "shifts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_order_schedules_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "work_order_schedules_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "work_order_schedules_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "work_order_schedules_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["work_order_id"]
+          },
+          {
+            foreignKeyName: "work_order_schedules_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_orders"
