@@ -28,7 +28,7 @@ export default defineTool({
       .limit(limit ?? 100);
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
 
-    const rows = (data ?? []) as Array<Record<string, number | null>>;
+    const rows = (data ?? []) as unknown as Array<Record<string, unknown>>;
     const sum = (key: string) => rows.reduce((acc, r) => acc + (Number(r[key]) || 0), 0);
     const totals = {
       entries: rows.length,
