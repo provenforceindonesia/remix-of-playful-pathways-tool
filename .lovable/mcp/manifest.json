@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://vbxnmlepgllauafayttz.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "playful-pathways-tool",
+      "version": "0.1.0",
+      "title": "playful-pathways-tool"
+    },
+    "tools": [
+      {
+        "name": "list_sales_orders",
+        "title": "List sales orders",
+        "description": "List sales orders (customer orders) visible to the signed-in user, newest first. Optionally filter by status or SO number.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Filter by SO status, e.g. DRAFT, WAITING_REVIEW, CONFIRMED, CANCELLED.",
+              "type": "string"
+            },
+            "search": {
+              "description": "Match part of the SO number.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "description": "Max rows to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_work_orders",
+        "title": "List work orders",
+        "description": "List production work orders visible to the signed-in user, newest first. Optionally filter by status or WO number.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Filter by work order status, e.g. RELEASED, CLOSED.",
+              "type": "string"
+            },
+            "search": {
+              "description": "Match part of the WO number.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "description": "Max rows to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "production_summary",
+        "title": "Production summary",
+        "description": "Summarise daily production entries (target, output, good output, downtime, achievement) over a date range.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "description": "Start production date, YYYY-MM-DD."
+            },
+            "to": {
+              "type": "string",
+              "description": "End production date, YYYY-MM-DD (inclusive)."
+            },
+            "limit": {
+              "default": 100,
+              "description": "Max entries to scan.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "inventory_stock",
+        "title": "Inventory stock balances",
+        "description": "List material stock balances (on hand and reserved) per warehouse for the signed-in user.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "default": 50,
+              "description": "Max rows to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "machine_status",
+        "title": "Machine status",
+        "description": "List machines and their master status, line, and standard speed.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "default": 50,
+              "description": "Max rows to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
