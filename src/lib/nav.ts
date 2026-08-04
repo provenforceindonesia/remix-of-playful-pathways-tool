@@ -8,22 +8,12 @@ export type NavItem = {
   search?: Record<string, string>;
 };
 
-
 export type NavGroup = {
   label: string;
   items: NavItem[];
 };
 
-const ALL: RoleCode[] = [
-  "OWNER",
-  "SALES",
-  "PPIC",
-  "IE",
-  "SHOPFLOOR",
-  "INVENTORY",
-  "FINANCE",
-  "SYSADMIN",
-];
+const ALL: RoleCode[] = ["OWNER", "SALES", "PPIC", "IE", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"];
 
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -67,7 +57,6 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Customer Order", to: "/sales/orders", icon: "FileText", roles: ["SALES", "SYSADMIN"] },
       { label: "Review Sales Order", to: "/sales/review", icon: "ShieldCheck", roles: ["PPIC", "SYSADMIN", "OWNER"] },
       { label: "Order Tracking", to: "/sales/tracking", icon: "Radar", roles: ALL },
-      { label: "Audit Trail SO", to: "/sales/audit", icon: "History", roles: ["SALES", "PPIC", "SYSADMIN", "OWNER"] },
       { label: "Master Customer", to: "/sales/customers", icon: "Building2", roles: ["SALES", "PPIC", "SYSADMIN"] },
     ],
   },
@@ -75,37 +64,90 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Produksi",
     items: [
       { label: "Production Plan", to: "/production/plans", icon: "CalendarRange", roles: ["PPIC", "SYSADMIN"] },
-      { label: "Work Orders", to: "/production/work-orders", icon: "Factory", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
+      {
+        label: "Work Orders",
+        to: "/production/work-orders",
+        icon: "Factory",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
       { label: "WO Saya", to: "/shopfloor/wo", icon: "HardHat", roles: ["SHOPFLOOR"] },
       { label: "Input Produksi Harian", to: "/shopfloor/input-produksi", icon: "PencilLine", roles: ["SHOPFLOOR"] },
       { label: "Input Downtime", to: "/shopfloor/downtime", icon: "TimerOff", roles: ["SHOPFLOOR"] },
       { label: "Validasi Hasil Produksi", to: "/production/validasi", icon: "BadgeCheck", roles: ["PPIC", "SYSADMIN"] },
       { label: "Backlog & Recovery", to: "/production/backlog", icon: "Repeat2", roles: ["PPIC", "SYSADMIN", "OWNER"] },
-      { label: "Handover Shift", to: "/production/handover", icon: "ArrowLeftRight", roles: ["PPIC", "SHOPFLOOR", "SYSADMIN"] },
+      {
+        label: "Handover Shift",
+        to: "/production/handover",
+        icon: "ArrowLeftRight",
+        roles: ["PPIC", "SHOPFLOOR", "SYSADMIN"],
+      },
     ],
   },
   {
     label: "Performance",
     items: [
       { label: "Kecepatan & Hasil", to: "/analytics/speed", icon: "Gauge", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
-      { label: "Waste & Quality", to: "/analytics/quality", icon: "Sparkles", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
-      { label: "Downtime", to: "/analytics/downtime", icon: "AlertTriangle", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
+      {
+        label: "Waste & Quality",
+        to: "/analytics/quality",
+        icon: "Sparkles",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Downtime",
+        to: "/analytics/downtime",
+        icon: "AlertTriangle",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
       { label: "OEE", to: "/analytics/oee", icon: "TrendingUp", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
-      { label: "Bottleneck Analysis", to: "/analytics/bottleneck", icon: "Split", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
-      { label: "Status Mesin", to: "/analytics/mesin", icon: "Cpu", roles: ["PPIC", "IE", "INVENTORY", "SYSADMIN", "OWNER"] },
+      {
+        label: "Bottleneck Analysis",
+        to: "/analytics/bottleneck",
+        icon: "Split",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Status Mesin",
+        to: "/analytics/mesin",
+        icon: "Cpu",
+        roles: ["PPIC", "IE", "INVENTORY", "SYSADMIN", "OWNER"],
+      },
     ],
   },
   {
     label: "Master Data",
     items: [
       { label: "Produk & Varian", to: "/master/products", icon: "Package", roles: ALL },
-      { label: "Mesin & Work Center", to: "/admin/configuration", icon: "Cpu", roles: ["IE", "PPIC", "SYSADMIN"], search: { tab: "machines" } },
-      { label: "Shift", to: "/admin/configuration", icon: "Clock", roles: ["IE", "PPIC", "SYSADMIN"], search: { tab: "shifts" } },
+      {
+        label: "Mesin & Work Center",
+        to: "/admin/configuration",
+        icon: "Cpu",
+        roles: ["IE", "PPIC", "SYSADMIN"],
+        search: { tab: "machines" },
+      },
+      {
+        label: "Shift",
+        to: "/admin/configuration",
+        icon: "Clock",
+        roles: ["IE", "PPIC", "SYSADMIN"],
+        search: { tab: "shifts" },
+      },
       { label: "Operator", to: "/admin/users", icon: "Users", roles: ["SYSADMIN"] },
       { label: "Routing & Standard", to: "/engineering/routing", icon: "Route", roles: ["IE", "SYSADMIN"] },
-      { label: "Reason Code", to: "/admin/configuration", icon: "ScrollText", roles: ["PPIC", "IE", "SYSADMIN"], search: { tab: "reasons" } },
+      {
+        label: "Reason Code",
+        to: "/admin/configuration",
+        icon: "ScrollText",
+        roles: ["PPIC", "IE", "SYSADMIN"],
+        search: { tab: "reasons" },
+      },
 
-      { label: "BOM & Material", to: "/engineering/bom", icon: "Layers", roles: ["IE", "PPIC", "INVENTORY", "SYSADMIN"] },
+      {
+        label: "BOM & Material",
+        to: "/engineering/bom",
+        icon: "Layers",
+        roles: ["IE", "PPIC", "INVENTORY", "SYSADMIN"],
+      },
     ],
   },
   {
@@ -118,11 +160,21 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Inventory & Procurement",
     items: [
-      { label: "Inventory & Stock", to: "/inventory/stock", icon: "Warehouse", roles: ["INVENTORY", "PPIC", "SYSADMIN", "OWNER"] },
+      {
+        label: "Inventory & Stock",
+        to: "/inventory/stock",
+        icon: "Warehouse",
+        roles: ["INVENTORY", "PPIC", "SYSADMIN", "OWNER"],
+      },
       { label: "Stock Ledger", to: "/inventory/ledger", icon: "BookOpen", roles: ["INVENTORY", "SYSADMIN"] },
       { label: "Material Receipt", to: "/inventory/receipt", icon: "PackagePlus", roles: ["INVENTORY", "SYSADMIN"] },
       { label: "Material Issue", to: "/inventory/issue", icon: "PackageMinus", roles: ["INVENTORY", "SYSADMIN"] },
-      { label: "Stock Reservation", to: "/inventory/reservation", icon: "Lock", roles: ["INVENTORY", "PPIC", "SYSADMIN"] },
+      {
+        label: "Stock Reservation",
+        to: "/inventory/reservation",
+        icon: "Lock",
+        roles: ["INVENTORY", "PPIC", "SYSADMIN"],
+      },
       { label: "Purchase Order", to: "/procurement/po", icon: "ShoppingCart", roles: ["INVENTORY", "SYSADMIN"] },
       { label: "Supplier Management", to: "/procurement/suppliers", icon: "Truck", roles: ["INVENTORY", "SYSADMIN"] },
     ],
