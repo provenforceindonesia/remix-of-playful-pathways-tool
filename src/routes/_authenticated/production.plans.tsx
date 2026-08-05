@@ -45,7 +45,7 @@ const rel = (r: Row | null | undefined, key: string) =>
   r && r[key] != null ? String(r[key]) : "-";
 
 function items(row: Row) {
-  return ((row.production_plan_items ?? []) as Row[]) ?? [];
+  return (row.production_plan_items ?? []) as Row[];
 }
 
 /** Merender satu subbaris per produk agar kolom antarproduk tetap sejajar. */
@@ -72,7 +72,6 @@ function PlansPage() {
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Row | null>(null);
-  const [detail, setDetail] = useState<Row | null>(null);
 
   const remove = async (row: Row) => {
     const { error } = await db
@@ -230,7 +229,10 @@ function PlansPage() {
         const status = String(r.status ?? "Draft");
         return (
           <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" className="size-8" onClick={() => setDetail(r)}>
+            <Button variant="ghost" size="icon" className="size-8" onClick={() => {
+                setEditing(r);
+                setOpen(true);
+              }}>
               <Eye className="size-4" />
             </Button>
             {canWrite && status === "Draft" && (
@@ -309,12 +311,6 @@ function PlansPage() {
           if (!o) setEditing(null);
         }}
         editing={editing}
-      />
-
-      <ProductionPlanDialog
-        open={Boolean(detail)}
-        onOpenChange={(o) => !o && setDetail(null)}
-        editing={detail}
       />
     </>
   );
