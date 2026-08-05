@@ -8,13 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -45,16 +39,7 @@ export type Option = { value: string; label: string };
 export type CrudField = {
   name: string;
   label: string;
-  type?:
-    | "text"
-    | "textarea"
-    | "number"
-    | "date"
-    | "datetime-local"
-    | "time"
-    | "select"
-    | "switch"
-    | "custom";
+  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "time" | "select" | "switch" | "custom";
   /** Renderer for type: "custom" fields. */
   render?: (ctx: {
     value: unknown;
@@ -78,11 +63,7 @@ export type CrudField = {
 
 export type CrudRow = Record<string, unknown>;
 
-export function toOptions(
-  rows: CrudRow[] | undefined,
-  labelKeys: string[] = ["name"],
-  valueKey = "id",
-): Option[] {
+export function toOptions(rows: CrudRow[] | undefined, labelKeys: string[] = ["name"], valueKey = "id"): Option[] {
   return (rows ?? []).map((r) => ({
     value: String(r[valueKey] ?? ""),
     label: labelKeys
@@ -159,11 +140,7 @@ export function CrudPage<T extends CrudRow>({
   /** Runs after a successful update, with the edited row and raw form values. */
   afterUpdate?: (updated: CrudRow, values: Record<string, unknown>) => Promise<void> | void;
   /** Returns extra values to patch when a field changes (e.g. dependent fields). */
-  onFieldChange?: (
-    name: string,
-    value: unknown,
-    values: Record<string, unknown>,
-  ) => Record<string, unknown> | void;
+  onFieldChange?: (name: string, value: unknown, values: Record<string, unknown>) => Record<string, unknown> | void;
 }) {
   const qc = useQueryClient();
   const { profile, role } = useAuth();
@@ -181,8 +158,7 @@ export function CrudPage<T extends CrudRow>({
   const setValue = (name: string, value: unknown) =>
     setValues((v) => ({ ...v, [name]: value, ...(onFieldChange?.(name, value, v) ?? {}) }));
 
-  const invalidate = () =>
-    invalidateKeys.forEach((k) => void qc.invalidateQueries({ queryKey: k }));
+  const invalidate = () => invalidateKeys.forEach((k) => void qc.invalidateQueries({ queryKey: k }));
 
   const clean = (raw: Record<string, unknown>, isEdit: boolean) => {
     const src = beforePayload ? beforePayload(raw) : raw;
@@ -192,6 +168,11 @@ export function CrudPage<T extends CrudRow>({
       if (field?.virtual) continue;
       if (field?.createOnly && isEdit) continue;
       if (field?.editOnly && !isEdit) continue;
+      // Let database defaults generate read-only values (for example
+      // products.code) instead of explicitly overriding the default with NULL.
+      if (!isEdit && field?.readOnly && (v === "" || v === undefined || v === null)) {
+        continue;
+      }
       if (v === "" || v === undefined) {
         out[k] = null;
         continue;
@@ -406,10 +387,7 @@ export function CrudPage<T extends CrudRow>({
                       onChange={(e) => setValue(f.name, e.target.value)}
                     />
                   ) : f.type === "select" ? (
-                    <Select
-                      value={String(values[f.name] ?? "")}
-                      onValueChange={(val) => setValue(f.name, val)}
-                    >
+                    <Select value={String(values[f.name] ?? "")} onValueChange={(val) => setValue(f.name, val)}>
                       <SelectTrigger id={f.name} className="w-full">
                         <SelectValue placeholder={f.placeholder ?? "Pilih..."} />
                       </SelectTrigger>
@@ -438,8 +416,7 @@ export function CrudPage<T extends CrudRow>({
                       placeholder={f.placeholder}
                       readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
                       className={cn(
-                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) &&
-                          "bg-muted/40 text-muted-foreground",
+                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) && "bg-muted/40 text-muted-foreground",
                       )}
                       onChange={(e) => setValue(f.name, e.target.value)}
                     />
@@ -453,8 +430,7 @@ export function CrudPage<T extends CrudRow>({
                       placeholder={f.placeholder}
                       readOnly={Boolean(f.readOnly || (editing && f.readOnlyOnEdit))}
                       className={cn(
-                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) &&
-                          "bg-muted/40 text-muted-foreground",
+                        Boolean(f.readOnly || (editing && f.readOnlyOnEdit)) && "bg-muted/40 text-muted-foreground",
                       )}
                       onChange={(e) => setValue(f.name, e.target.value)}
                     />
