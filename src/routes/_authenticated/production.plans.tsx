@@ -1,11 +1,17 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { CrudPage, toOptions, type CrudField } from "@/components/common/CrudPage";
-import type { Column } from "@/components/common/DataTable";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { DataTable, type Column } from "@/components/common/DataTable";
+import { PageHeader } from "@/components/common/PageHeader";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { linesQuery, plantsQuery, productionPlansQuery, salesOrdersQuery, shiftsQuery } from "@/lib/queries";
-import { formatDate, formatFullDateTime, formatNumber, toISODate } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { db } from "@/lib/db";
+import { productionPlansQuery } from "@/lib/queries";
+import { formatDate, formatFullDateTime, formatNumber } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
+import { ProductionPlanDialog } from "@/components/production/ProductionPlanDialog";
 
 export const Route = createFileRoute("/_authenticated/production/plans")({
   head: () => ({
@@ -13,10 +19,10 @@ export const Route = createFileRoute("/_authenticated/production/plans")({
       { title: "Production Plan — MANUFACTUREIQ" },
       {
         name: "description",
-        content: "Rencana produksi harian per line dan shift beserta kesiapan material.",
+        content: "Rencana produksi multi-produk per Sales Order beserta line, mesin, shift, dan kesiapan.",
       },
       { property: "og:title", content: "Production Plan — MANUFACTUREIQ" },
-      { property: "og:description", content: "Perencanaan produksi harian pabrik." },
+      { property: "og:description", content: "Perencanaan produksi multi-produk pabrik." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -26,90 +32,183 @@ export const Route = createFileRoute("/_authenticated/production/plans")({
 
 type Row = Record<string, unknown>;
 
-type WorkOrderSchedule = {
-  production_date?: string | null;
-  shift_id?: string | null;
-  planned_manpower?: number | string | null;
+const STATUS_LABEL: Record<string, string> = {
+  Draft: "Draft",
+  Released: "Dirilis",
+  "Partially Scheduled": "Sebagian Dijadwalkan",
+  "Fully Scheduled": "Terjadwal Penuh",
+  Completed: "Selesai",
+  Cancelled: "Dibatalkan",
 };
 
-type PlanWorkOrder = {
-  work_order_schedules?: WorkOrderSchedule[] | null;
-};
+const rel = (r: Row | null | undefined, key: string) =>
+  r && r[key] != null ? String(r[key]) : "-";
 
-/**
- * Menampilkan kebutuhan manpower puncak dalam satu tanggal dan shift.
- * Jadwal pada tanggal/shift berbeda tidak dijumlahkan karena tidak berjalan
- * secara bersamaan.
- */
-function getPeakPlannedManpower(row: Row): number | null {
-  const workOrders = (row.work_orders ?? []) as PlanWorkOrder[];
-  const manpowerBySchedule = new Map<string, number>();
+function items(row: Row) {
+  return (row.production_plan_items ?? []) as Row[];
+}
 
-  for (const workOrder of workOrders) {
-    for (const schedule of workOrder.work_order_schedules ?? []) {
-      const manpower = Number(schedule.planned_manpower ?? 0);
-      if (!Number.isFinite(manpower) || manpower <= 0) continue;
-
-      const scheduleKey = `${schedule.production_date ?? "tanpa-tanggal"}:${schedule.shift_id ?? "tanpa-shift"}`;
-      manpowerBySchedule.set(scheduleKey, (manpowerBySchedule.get(scheduleKey) ?? 0) + manpower);
-    }
-  }
-
-  if (manpowerBySchedule.size === 0) return null;
-  return Math.max(...manpowerBySchedule.values());
+/** Merender satu subbaris per produk agar kolom antarproduk tetap sejajar. */
+function Stacked({ row, render }: { row: Row; render: (it: Row) => React.ReactNode }) {
+  const list = items(row);
+  if (!list.length) return <span className="text-muted-foreground">-</span>;
+  return (
+    <div className="divide-y divide-border/60">
+      {list.map((it) => (
+        <div key={String(it.id)} className="py-1.5 first:pt-0 last:pb-0">
+          {render(it)}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function PlansPage() {
-  const { role, profile } = useAuth();
+  const qc = useQueryClient();
+  const { role } = useAuth();
   const { data, isLoading } = useQuery(productionPlansQuery);
-  const { data: sos } = useQuery(salesOrdersQuery);
-  const { data: plants } = useQuery(plantsQuery);
-  const { data: lines } = useQuery(linesQuery);
-  const { data: shifts } = useQuery(shiftsQuery);
   const rows = (data ?? []) as Row[];
   const canWrite = ["PPIC", "SYSADMIN"].includes(role ?? "");
+
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<Row | null>(null);
+
+  const remove = async (row: Row) => {
+    const { error } = await db
+      .from("production_plans")
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("id", String(row.id));
+    if (error) {
+      toast.error("Gagal menghapus", { description: error.message });
+      return;
+    }
+    toast.success("Production Plan dihapus");
+    void qc.invalidateQueries({ queryKey: ["production_plans"] });
+  };
 
   const columns: Column<Row>[] = [
     { key: "plan_number", header: "No. Plan" },
     {
       key: "so",
       header: "Sales Order",
-      value: (r) => (r.sales_orders as { so_number?: string } | null)?.so_number ?? "-",
+      value: (r) => rel(r.sales_orders as Row, "so_number"),
     },
     {
-      key: "production_date",
-      header: "Jadwal Produksi",
-      render: (r) => formatDate(r.production_date as string),
+      key: "produk",
+      header: "Produk/Varian",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) => (
+            <span>
+              {rel(it.products as Row, "name")} — {rel(it.product_variants as Row, "name")}
+            </span>
+          )}
+        />
+      ),
+      value: (r) =>
+        items(r)
+          .map((it) => rel(it.products as Row, "name"))
+          .join(", "),
     },
     {
-      key: "line",
-      header: "Line",
-      value: (r) => (r.lines as { name?: string } | null)?.name ?? "-",
-    },
-    {
-      key: "shift",
-      header: "Shift",
-      value: (r) => (r.shifts as { name?: string } | null)?.name ?? "-",
-    },
-    {
-      key: "material_readiness",
-      header: "Material",
-      render: (r) => <StatusBadge status={String(r.material_readiness ?? "-")} />,
-    },
-    {
-      key: "capacity_readiness",
-      header: "Kapasitas",
-      render: (r) => <StatusBadge status={String(r.capacity_readiness ?? "-")} />,
-    },
-    {
-      key: "planned_manpower",
-      header: "Kebutuhan Manpower",
+      key: "qty_so",
+      header: "Quantity SO",
       align: "right",
-      value: (r) => getPeakPlannedManpower(r) ?? 0,
-      render: (r) => {
-        const manpower = getPeakPlannedManpower(r);
-        return manpower === null ? "Belum dijadwalkan" : `${formatNumber(manpower)} orang`;
-      },
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) =>
+            `${formatNumber(Number(it.demand_qty ?? 0))} ${rel(it.units_of_measure as Row, "code")}`
+          }
+        />
+      ),
+    },
+    {
+      key: "target",
+      header: "Target Plan",
+      align: "right",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) =>
+            `${formatNumber(Number(it.target_qty ?? 0))} ${rel(it.units_of_measure as Row, "code")}`
+          }
+        />
+      ),
+    },
+    {
+      key: "tanggal_shift",
+      header: "Tanggal Produksi/Shift",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) =>
+            `${formatDate(it.planned_date as string)} / ${rel(it.shifts as Row, "name")}`
+          }
+        />
+      ),
+    },
+    {
+      key: "line_mesin",
+      header: "Line/Mesin",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) => `${rel(it.lines as Row, "name")} / ${rel(it.machines as Row, "code")}`}
+        />
+      ),
+    },
+    {
+      key: "routing",
+      header: "Routing",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) => (
+            <div>
+              <div>{rel(it.routings as Row, "code")}</div>
+              {it.routing_id ? (
+                <div className="text-xs text-muted-foreground">Routing Utama</div>
+              ) : null}
+            </div>
+          )}
+        />
+      ),
+    },
+    {
+      key: "manpower",
+      header: "Manpower",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) => (
+            <div>
+              <div>{formatNumber(Number(it.planned_manpower ?? 0))} orang</div>
+              {it.recommended_manpower ? (
+                <div className="text-xs text-muted-foreground">
+                  Rekomendasi: {formatNumber(Number(it.recommended_manpower))} orang
+                </div>
+              ) : null}
+            </div>
+          )}
+        />
+      ),
+    },
+    {
+      key: "kesiapan",
+      header: "Kesiapan",
+      render: (r) => (
+        <Stacked
+          row={r}
+          render={(it) => (
+            <div className="flex flex-wrap gap-1">
+              <StatusBadge status={String(it.material_readiness ?? "-")} />
+              <StatusBadge status={String(it.capacity_readiness ?? "-")} />
+            </div>
+          )}
+        />
+      ),
     },
     {
       key: "created_at",
@@ -119,88 +218,100 @@ function PlansPage() {
     {
       key: "status",
       header: "Status",
-      render: (r) => <StatusBadge status={String(r.status ?? "-")} />,
-    },
-  ];
-
-  const readiness = ["Siap", "Sebagian", "Tidak Siap", "Belum Dicek"].map((v) => ({
-    value: v,
-    label: v,
-  }));
-
-  const fields: CrudField[] = [
-    { name: "plan_number", label: "Nomor Plan", required: true, placeholder: "PP-2601-0001" },
-    {
-      name: "sales_order_id",
-      label: "Sales Order",
-      type: "select",
-      options: toOptions(sos as Row[], ["so_number"]),
+      render: (r) => <StatusBadge status={STATUS_LABEL[String(r.status ?? "")] ?? String(r.status ?? "-")} />,
     },
     {
-      name: "plant_id",
-      label: "Plant",
-      type: "select",
-      options: toOptions(plants as Row[], ["name"]),
-    },
-    {
-      name: "line_id",
-      label: "Line",
-      type: "select",
-      options: toOptions(lines as Row[], ["name"]),
-    },
-    {
-      name: "shift_id",
-      label: "Shift",
-      type: "select",
-      options: toOptions(shifts as Row[], ["name"]),
-    },
-    {
-      name: "production_date",
-      label: "Tanggal Produksi",
-      type: "date",
-      required: true,
-      defaultValue: toISODate(new Date()),
-    },
-    {
-      name: "material_readiness",
-      label: "Kesiapan Material",
-      type: "select",
-      options: readiness,
-      defaultValue: "Belum Dicek",
-    },
-    {
-      name: "capacity_readiness",
-      label: "Kesiapan Kapasitas",
-      type: "select",
-      options: readiness,
-      defaultValue: "Belum Dicek",
-    },
-    {
-      name: "status",
-      label: "Status",
-      type: "select",
-      defaultValue: "Draft",
-      options: ["Draft", "Review", "Released", "Partially Scheduled", "Fully Scheduled", "Completed", "Cancelled"].map(
-        (v) => ({ value: v, label: v }),
-      ),
+      key: "__actions",
+      header: "Aksi",
+      align: "right",
+      sortable: false,
+      render: (r) => {
+        const status = String(r.status ?? "Draft");
+        return (
+          <div className="flex justify-end gap-1">
+            <Button variant="ghost" size="icon" className="size-8" onClick={() => {
+                setEditing(r);
+                setOpen(true);
+              }}>
+              <Eye className="size-4" />
+            </Button>
+            {canWrite && status === "Draft" && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  onClick={() => {
+                    setEditing(r);
+                    setOpen(true);
+                  }}
+                >
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-destructive hover:text-destructive"
+                  onClick={() => void remove(r)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </>
+            )}
+            {canWrite && status === "Released" && (
+              <Button variant="outline" size="sm">
+                Buat Work Order
+              </Button>
+            )}
+            {canWrite && status === "Partially Scheduled" && (
+              <Button variant="outline" size="sm">
+                Lanjutkan Work Order
+              </Button>
+            )}
+            {canWrite && status === "Fully Scheduled" && (
+              <Button variant="outline" size="sm">
+                Lihat Work Order
+              </Button>
+            )}
+          </div>
+        );
+      },
     },
   ];
 
   return (
-    <CrudPage<Row>
-      title="Production Plan"
-      description="Rencana produksi menjadi dasar penerbitan work order."
-      table="production_plans"
-      invalidateKeys={[["production_plans"]]}
-      columns={columns}
-      rows={rows}
-      loading={isLoading}
-      fields={fields}
-      canWrite={canWrite}
-      canDelete={canWrite}
-      softDelete
-      exportName="production-plan"
-      beforePayload={(v) => ({ ...v, created_by: profile?.id ?? null })}
-    />
+    <>
+      <PageHeader
+        title="Production Plan"
+        description="Rencana produksi per produk menjadi dasar penerbitan work order."
+      />
+
+      <DataTable<Row>
+        columns={columns}
+        rows={rows}
+        loading={isLoading}
+        toolbarActions={
+          canWrite ? (
+            <Button
+              onClick={() => {
+                setEditing(null);
+                setOpen(true);
+              }}
+            >
+              <Plus className="size-4" /> Tambah
+            </Button>
+          ) : null
+        }
+      />
+
+      <ProductionPlanDialog
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setEditing(null);
+        }}
+        editing={editing}
+      />
+    </>
   );
 }
