@@ -190,7 +190,7 @@ export function ProductionPlanDialog({
       return;
     }
     const so = soRows.find((s) => String(s.id) === salesOrderId);
-    const soItems = ((so?.sales_order_items ?? []) as Row[]) ?? [];
+    const soItems = (so?.sales_order_items ?? []) as Row[];
     const saved = editing ? ((editing.production_plan_items ?? []) as Row[]) : [];
 
     setItems((prev) => {
@@ -401,7 +401,7 @@ export function ProductionPlanDialog({
               <SelectContent>
                 {selectableSos.map((so) => (
                   <SelectItem key={String(so.id)} value={String(so.id)}>
-                    {String(so.so_number ?? "")} — {(so.customers as Row | null)?.name ?? "-"}
+                    {String(so.so_number ?? "")} — {String((so.customers as Row | null)?.name ?? "-")}
                   </SelectItem>
                 ))}
               </SelectContent>
