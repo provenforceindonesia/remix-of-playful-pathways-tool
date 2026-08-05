@@ -35,7 +35,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Dashboard Order",
         to: "/dashboard/order",
         icon: "ClipboardList",
-        roles: ["SALES", "PPIC", "SYSADMIN", "OWNER"],
+        roles: ["SALES", "SYSADMIN", "OWNER"],
       },
       {
         label: "Inventory Dashboard",
@@ -57,7 +57,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Customer Order", to: "/sales/orders", icon: "FileText", roles: ["SALES", "SYSADMIN"] },
       { label: "Review Sales Order", to: "/sales/review", icon: "ShieldCheck", roles: ["PPIC", "SYSADMIN", "OWNER"] },
       { label: "Order Tracking", to: "/sales/tracking", icon: "Radar", roles: ALL },
-      { label: "Master Customer", to: "/sales/customers", icon: "Building2", roles: ["SALES", "PPIC", "SYSADMIN"] },
+      { label: "Master Customer", to: "/sales/customers", icon: "Building2", roles: ["SALES", "SYSADMIN"] },
     ],
   },
   {
@@ -117,7 +117,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Master Data",
     items: [
-      { label: "Produk & Varian", to: "/master/products", icon: "Package", roles: ALL },
+      { label: "Produk & Varian", to: "/master/products", icon: "Package", roles: ["OWNER", "SALES", "IE", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"] },
       {
         label: "Mesin & Work Center",
         to: "/admin/configuration",
@@ -146,7 +146,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "BOM & Material",
         to: "/engineering/bom",
         icon: "Layers",
-        roles: ["IE", "PPIC", "INVENTORY", "SYSADMIN"],
+        roles: ["IE", "INVENTORY", "SYSADMIN"],
       },
     ],
   },
@@ -164,7 +164,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Inventory & Stock",
         to: "/inventory/stock",
         icon: "Warehouse",
-        roles: ["INVENTORY", "PPIC", "SYSADMIN", "OWNER"],
+        roles: ["INVENTORY", "SYSADMIN", "OWNER"],
       },
       { label: "Stock Ledger", to: "/inventory/ledger", icon: "BookOpen", roles: ["INVENTORY", "SYSADMIN"] },
       { label: "Material Receipt", to: "/inventory/receipt", icon: "PackagePlus", roles: ["INVENTORY", "SYSADMIN"] },
@@ -173,7 +173,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Stock Reservation",
         to: "/inventory/reservation",
         icon: "Lock",
-        roles: ["INVENTORY", "PPIC", "SYSADMIN"],
+        roles: ["INVENTORY", "SYSADMIN"],
       },
       { label: "Purchase Order", to: "/procurement/po", icon: "ShoppingCart", roles: ["INVENTORY", "SYSADMIN"] },
       { label: "Supplier Management", to: "/procurement/suppliers", icon: "Truck", roles: ["INVENTORY", "SYSADMIN"] },
@@ -202,12 +202,34 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
+const PPIC_ALLOWED_ROUTES = new Set([
+  "/dashboard/operasional",
+  "/sales/review",
+  "/sales/tracking",
+  "/production/plans",
+  "/production/work-orders",
+  "/production/validasi",
+  "/production/backlog",
+  "/production/handover",
+  "/analytics/speed",
+  "/analytics/quality",
+  "/analytics/downtime",
+  "/analytics/oee",
+  "/analytics/bottleneck",
+  "/analytics/mesin",
+]);
+
 export function navForRole(role: RoleCode | null): NavGroup[] {
   if (!role) return [];
-  return NAV_GROUPS.map((g) => ({
-    ...g,
-    items: g.items.filter((i) => i.roles.includes(role)),
-  })).filter((g) => g.items.length > 0);
+
+  return NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter(
+      (item) =>
+        item.roles.includes(role) &&
+        (role !== "PPIC" || PPIC_ALLOWED_ROUTES.has(item.to)),
+    ),
+  })).filter((group) => group.items.length > 0);
 }
 
 export function defaultRouteForRole(role: RoleCode | null): string {
