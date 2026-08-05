@@ -69,7 +69,7 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
     await qc.cancelQueries();
     qc.clear();
     await signOut();
-    navigate({ to: "/auth", replace: true });
+    navigate({ to: "/auth", search: {}, replace: true });
   };
 
   return (

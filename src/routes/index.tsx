@@ -30,7 +30,7 @@ function IndexRedirect() {
 
   useEffect(() => {
     if (loading) return;
-    if (!session) void navigate({ to: "/auth", replace: true });
+    if (!session) void navigate({ to: "/auth", search: {}, replace: true });
     else if (role) void navigate({ to: defaultRouteForRole(role), replace: true });
   }, [loading, session, role, navigate]);
 
