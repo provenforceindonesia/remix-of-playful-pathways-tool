@@ -2943,42 +2943,91 @@ export type Database = {
       }
       routing_operations: {
         Row: {
+          alternative_machine_id: string | null
           created_at: string
           id: string
           machine_id: string | null
           manpower: number
+          minimum_crew: number
           operation_name: string
+          output_uom_id: string | null
+          quality_checkpoint: string | null
           routing_id: string
           seq: number
           setup_time_min: number
+          source_time_study_id: string | null
           standard_cycle_time_sec: number
+          standard_source: string
           work_center_id: string | null
+          work_instruction: string | null
         }
         Insert: {
+          alternative_machine_id?: string | null
           created_at?: string
           id?: string
           machine_id?: string | null
           manpower?: number
+          minimum_crew?: number
           operation_name: string
+          output_uom_id?: string | null
+          quality_checkpoint?: string | null
           routing_id: string
           seq: number
           setup_time_min?: number
+          source_time_study_id?: string | null
           standard_cycle_time_sec?: number
+          standard_source?: string
           work_center_id?: string | null
+          work_instruction?: string | null
         }
         Update: {
+          alternative_machine_id?: string | null
           created_at?: string
           id?: string
           machine_id?: string | null
           manpower?: number
+          minimum_crew?: number
           operation_name?: string
+          output_uom_id?: string | null
+          quality_checkpoint?: string | null
           routing_id?: string
           seq?: number
           setup_time_min?: number
+          source_time_study_id?: string | null
           standard_cycle_time_sec?: number
+          standard_source?: string
           work_center_id?: string | null
+          work_instruction?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "routing_operations_alternative_machine_id_fkey"
+            columns: ["alternative_machine_id"]
+            isOneToOne: false
+            referencedRelation: "machines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routing_operations_alternative_machine_id_fkey"
+            columns: ["alternative_machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_machine_health"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "routing_operations_alternative_machine_id_fkey"
+            columns: ["alternative_machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["machine_id"]
+          },
+          {
+            foreignKeyName: "routing_operations_alternative_machine_id_fkey"
+            columns: ["alternative_machine_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["machine_id"]
+          },
           {
             foreignKeyName: "routing_operations_machine_id_fkey"
             columns: ["machine_id"]
@@ -3008,10 +3057,24 @@ export type Database = {
             referencedColumns: ["machine_id"]
           },
           {
+            foreignKeyName: "routing_operations_output_uom_id_fkey"
+            columns: ["output_uom_id"]
+            isOneToOne: false
+            referencedRelation: "units_of_measure"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "routing_operations_routing_id_fkey"
             columns: ["routing_id"]
             isOneToOne: false
             referencedRelation: "routings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routing_operations_source_time_study_id_fkey"
+            columns: ["source_time_study_id"]
+            isOneToOne: false
+            referencedRelation: "time_studies"
             referencedColumns: ["id"]
           },
           {
@@ -3031,6 +3094,7 @@ export type Database = {
           effective_date: string
           id: string
           name: string
+          notes: string | null
           product_id: string | null
           status: string
           updated_at: string
@@ -3044,6 +3108,7 @@ export type Database = {
           effective_date?: string
           id?: string
           name: string
+          notes?: string | null
           product_id?: string | null
           status?: string
           updated_at?: string
@@ -3057,6 +3122,7 @@ export type Database = {
           effective_date?: string
           id?: string
           name?: string
+          notes?: string | null
           product_id?: string | null
           status?: string
           updated_at?: string
@@ -3847,71 +3913,122 @@ export type Database = {
       time_studies: {
         Row: {
           actual_cycle_time_sec: number
+          allowance_pct: number
           created_at: string
           created_by: string | null
           id: string
           idle_time_min: number
           machine_id: string | null
           manpower: number
+          normal_time_sec: number
           notes: string | null
+          observation_condition: string
+          observation_end_time: string | null
+          observation_method: string
+          observation_start_time: string | null
           observed_minutes: number
           observed_output: number
           observer_id: string | null
+          performance_rating_pct: number
           process_name: string
           product_id: string | null
+          revision_reason: string | null
+          routing_id: string | null
+          routing_operation_id: string | null
+          setup_end_time: string | null
+          setup_start_time: string | null
           setup_time_min: number
           shift_id: string | null
+          standard_cycle_time_sec: number
           status: string
           study_date: string
+          study_number: string
+          study_type: string
+          submitted_at: string | null
           updated_at: string
           validated_at: string | null
           validated_by: string | null
+          validation_note: string | null
           variant_id: string | null
         }
         Insert: {
           actual_cycle_time_sec?: number
+          allowance_pct?: number
           created_at?: string
           created_by?: string | null
           id?: string
           idle_time_min?: number
           machine_id?: string | null
           manpower?: number
+          normal_time_sec?: number
           notes?: string | null
+          observation_condition?: string
+          observation_end_time?: string | null
+          observation_method?: string
+          observation_start_time?: string | null
           observed_minutes?: number
           observed_output?: number
           observer_id?: string | null
+          performance_rating_pct?: number
           process_name: string
           product_id?: string | null
+          revision_reason?: string | null
+          routing_id?: string | null
+          routing_operation_id?: string | null
+          setup_end_time?: string | null
+          setup_start_time?: string | null
           setup_time_min?: number
           shift_id?: string | null
+          standard_cycle_time_sec?: number
           status?: string
           study_date?: string
+          study_number?: string
+          study_type?: string
+          submitted_at?: string | null
           updated_at?: string
           validated_at?: string | null
           validated_by?: string | null
+          validation_note?: string | null
           variant_id?: string | null
         }
         Update: {
           actual_cycle_time_sec?: number
+          allowance_pct?: number
           created_at?: string
           created_by?: string | null
           id?: string
           idle_time_min?: number
           machine_id?: string | null
           manpower?: number
+          normal_time_sec?: number
           notes?: string | null
+          observation_condition?: string
+          observation_end_time?: string | null
+          observation_method?: string
+          observation_start_time?: string | null
           observed_minutes?: number
           observed_output?: number
           observer_id?: string | null
+          performance_rating_pct?: number
           process_name?: string
           product_id?: string | null
+          revision_reason?: string | null
+          routing_id?: string | null
+          routing_operation_id?: string | null
+          setup_end_time?: string | null
+          setup_start_time?: string | null
           setup_time_min?: number
           shift_id?: string | null
+          standard_cycle_time_sec?: number
           status?: string
           study_date?: string
+          study_number?: string
+          study_type?: string
+          submitted_at?: string | null
           updated_at?: string
           validated_at?: string | null
           validated_by?: string | null
+          validation_note?: string | null
           variant_id?: string | null
         }
         Relationships: [
@@ -3970,6 +4087,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_production_kpi"
             referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "time_studies_routing_id_fkey"
+            columns: ["routing_id"]
+            isOneToOne: false
+            referencedRelation: "routings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_studies_routing_operation_id_fkey"
+            columns: ["routing_operation_id"]
+            isOneToOne: false
+            referencedRelation: "routing_operations"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "time_studies_shift_id_fkey"
@@ -4767,7 +4898,19 @@ export type Database = {
         Args: { p_so_id: string }
         Returns: undefined
       }
+      reject_time_study: {
+        Args: { p_reason: string; p_time_study_id: string }
+        Returns: undefined
+      }
+      submit_time_study: {
+        Args: { p_time_study_id: string }
+        Returns: undefined
+      }
       sync_backlog: { Args: { p_wo_id: string }; Returns: undefined }
+      validate_time_study: {
+        Args: { p_note?: string; p_time_study_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
