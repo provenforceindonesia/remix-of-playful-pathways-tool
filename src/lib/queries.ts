@@ -230,9 +230,16 @@ export const routingsQuery = queryOptions({
     must(
       supabase
         .from("routings")
-        .select("*, products:product_id(code,name), routing_operations(*, machines:machine_id(code,name))")
+        .select(
+          "*, products:product_id(code,name), product_variants:variant_id(name), routing_operations(*, machines:machine_id(code,name), work_centers:work_center_id(code,name))",
+        )
         .order("code"),
     ),
+});
+
+export const workCentersQuery = queryOptions({
+  queryKey: ["work_centers"],
+  queryFn: () => must(supabase.from("work_centers").select("*").order("code")),
 });
 
 export const bomQuery = queryOptions({
@@ -381,7 +388,9 @@ export const capacityPlansQuery = queryOptions({
     must(
       supabase
         .from("capacity_plans")
-        .select("*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name)")
+        .select(
+          "*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name), products:product_id(code,name), product_variants:variant_id(name), routings:routing_id(code,name)",
+        )
         .order("plan_date", { ascending: false }),
     ),
 });

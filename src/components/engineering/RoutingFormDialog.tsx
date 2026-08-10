@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { machinesQuery, productsQuery, timeStudiesQuery } from "@/lib/queries";
+import { machinesQuery, productsQuery, timeStudiesQuery, workCentersQuery } from "@/lib/queries";
 import { toOptions } from "@/components/common/CrudPage";
 import { toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
@@ -35,6 +35,7 @@ export type RoutingStepForm = {
   seq: string;
   operation_name: string;
   machine_id: string;
+  work_center_id: string;
   setup_time_min: string;
   standard_cycle_time_sec: string;
   manpower: string;
@@ -43,12 +44,26 @@ export type RoutingStepForm = {
 
 const STATUSES = ["Draft", "Active", "Inactive"] as const;
 
+/** Saran nama operasi — tetap bebas diketik sendiri oleh Industrial Engineer. */
+const OPERATION_SUGGESTIONS = [
+  "Mixing",
+  "Filling",
+  "Packing",
+  "Sealing",
+  "Labeling",
+  "Cutting",
+  "Drilling",
+  "Finishing",
+  "Inspection",
+];
+
 function newStep(seq: number): RoutingStepForm {
   return {
     key: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     seq: String(seq),
     operation_name: "",
     machine_id: "",
+    work_center_id: "",
     setup_time_min: "0",
     standard_cycle_time_sec: "0",
     manpower: "1",
@@ -70,6 +85,7 @@ export function RoutingFormDialog({
   const { data: products } = useQuery(productsQuery);
   const { data: machines } = useQuery(machinesQuery);
   const { data: timeStudies } = useQuery(timeStudiesQuery);
+  const { data: workCenters } = useQuery(workCentersQuery);
 
   const [productId, setProductId] = useState("");
   const [routingVersion, setRoutingVersion] = useState("REV-01");
@@ -94,6 +110,7 @@ export function RoutingFormDialog({
               seq: String(op.seq ?? (i + 1) * 10),
               operation_name: String(op.operation_name ?? ""),
               machine_id: String(op.machine_id ?? ""),
+              work_center_id: String(op.work_center_id ?? ""),
               setup_time_min: String(op.setup_time_min ?? 0),
               standard_cycle_time_sec: String(op.standard_cycle_time_sec ?? 0),
               manpower: String(op.manpower ?? 1),
@@ -116,6 +133,7 @@ export function RoutingFormDialog({
 
   const machineRows = (machines ?? []) as Row[];
   const machineOptions = toOptions(machineRows, ["code", "name"]);
+  const workCenterOptions = toOptions((workCenters ?? []) as Row[], ["code", "name"]);
   const productOptions = toOptions((products ?? []) as Row[], ["code", "name"]);
 
   function findStudy(step: RoutingStepForm) {
@@ -152,8 +170,11 @@ export function RoutingFormDialog({
       if (!routingVersion.trim()) throw new Error("Routing Version wajib diisi.");
       if (steps.length === 0) throw new Error("Minimal satu Routing Step harus tersedia.");
       for (const s of steps) {
-        if (!s.seq.trim() || !s.operation_name.trim() || !s.machine_id) {
-          throw new Error("Setiap step wajib memiliki sequence, proses, dan mesin.");
+        if (!s.seq.trim() || !s.operation_name.trim()) {
+          throw new Error("Setiap step wajib memiliki sequence dan nama operasi.");
+        }
+        if (!s.machine_id && !s.work_center_id) {
+          throw new Error(`Step "${s.operation_name.trim()}" wajib memiliki mesin atau work center.`);
         }
         const nums = [s.seq, s.setup_time_min, s.standard_cycle_time_sec, s.manpower].map(Number);
         if (nums.some((n) => !Number.isFinite(n) || n < 0)) {
@@ -217,6 +238,7 @@ export function RoutingFormDialog({
         seq: Number(s.seq),
         operation_name: s.operation_name.trim(),
         machine_id: s.machine_id || null,
+        work_center_id: s.work_center_id || null,
         setup_time_min: Number(s.setup_time_min || 0),
         standard_cycle_time_sec: Number(s.standard_cycle_time_sec || 0),
         manpower: Number(s.manpower || 1),
@@ -230,6 +252,8 @@ export function RoutingFormDialog({
     onSuccess: () => {
       toast.success(editing ? "Routing diperbarui" : "Routing dibuat");
       void qc.invalidateQueries({ queryKey: ["routings"] });
+      void qc.invalidateQueries({ queryKey: ["time_studies"] });
+      void qc.invalidateQueries({ queryKey: ["capacity_plans"] });
       onOpenChange(false);
     },
     onError: (e: Error) => toast.error(e.message),
@@ -244,6 +268,14 @@ export function RoutingFormDialog({
             Tetapkan urutan proses beserta standar setup time, cycle time, dan manpower.
           </DialogDescription>
         </DialogHeader>
+
+        <datalist id="routing-operation-suggestions">
+          {OPERATION_SUGGESTIONS.map((o) => (
+            <option key={o} value={o} />
+          ))}
+        </datalist>
+
+
 
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-2">
@@ -333,21 +365,45 @@ export function RoutingFormDialog({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Proses</Label>
+                    <Label>Operasi / Proses</Label>
                     <Input
+                      list="routing-operation-suggestions"
                       value={step.operation_name}
-                      placeholder="Cutting"
+                      placeholder="Ketik nama operasi, mis. Mixing"
                       onChange={(e) => updateStep(step.key, { operation_name: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Mesin</Label>
-                    <Select value={step.machine_id} onValueChange={(v) => updateStep(step.key, { machine_id: v })}>
+                    <Select
+                      value={step.machine_id || "__none"}
+                      onValueChange={(v) => updateStep(step.key, { machine_id: v === "__none" ? "" : v })}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih mesin" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__none">Tanpa mesin</SelectItem>
                         {machineOptions.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Work Center</Label>
+                    <Select
+                      value={step.work_center_id || "__none"}
+                      onValueChange={(v) => updateStep(step.key, { work_center_id: v === "__none" ? "" : v })}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih work center" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none">Tanpa work center</SelectItem>
+                        {workCenterOptions.map((o) => (
                           <SelectItem key={o.value} value={o.value}>
                             {o.label}
                           </SelectItem>

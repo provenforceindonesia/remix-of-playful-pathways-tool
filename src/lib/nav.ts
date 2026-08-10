@@ -133,7 +133,6 @@ export const NAV_GROUPS: NavGroup[] = [
         search: { tab: "shifts" },
       },
       { label: "Operator", to: "/admin/users", icon: "Users", roles: ["SYSADMIN"] },
-      { label: "Routing & Standard", to: "/engineering/routing", icon: "Route", roles: ["IE", "SYSADMIN"] },
       {
         label: "Reason Code",
         to: "/admin/configuration",
@@ -153,6 +152,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Engineering",
     items: [
+      { label: "Routing & Standard", to: "/engineering/routing", icon: "Route", roles: ["IE", "SYSADMIN"] },
       { label: "Time Study", to: "/engineering/time-study", icon: "Timer", roles: ["IE", "SYSADMIN"] },
       { label: "Capacity & Manpower", to: "/engineering/capacity", icon: "Users", roles: ["IE", "SYSADMIN"] },
     ],

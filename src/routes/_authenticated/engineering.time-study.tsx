@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Layers, Plus, ShieldCheck, Timer } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 import { CrudPage } from "@/components/common/CrudPage";
 import type { Column } from "@/components/common/DataTable";
@@ -53,12 +55,41 @@ function num(value: unknown): number {
 
 function TimeStudyPage() {
   const { role } = useAuth();
+  const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
 
   const { data, isLoading } = useQuery(timeStudiesQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["IE", "SYSADMIN"].includes(role ?? "");
+  const canValidate = ["PPIC", "SYSADMIN"].includes(role ?? "");
+
+  const action = useMutation({
+    mutationFn: async ({ kind, id }: { kind: "submit" | "validate" | "reject"; id: string }) => {
+      if (kind === "submit") {
+        const { error } = await supabase.rpc("submit_time_study", { p_time_study_id: id });
+        if (error) throw new Error(error.message);
+        return "Time Study dikirim untuk validasi";
+      }
+      if (kind === "validate") {
+        const { error } = await supabase.rpc("validate_time_study", { p_time_study_id: id });
+        if (error) throw new Error(error.message);
+        return "Time Study tervalidasi dan standar diterapkan ke Routing";
+      }
+      const reason = window.prompt("Alasan revisi:");
+      if (!reason?.trim()) throw new Error("Alasan revisi wajib diisi.");
+      const { error } = await supabase.rpc("reject_time_study", { p_time_study_id: id, p_reason: reason.trim() });
+      if (error) throw new Error(error.message);
+      return "Time Study dikembalikan untuk revisi";
+    },
+    onSuccess: (message) => {
+      toast.success(message);
+      void queryClient.invalidateQueries({ queryKey: ["time_studies"] });
+      void queryClient.invalidateQueries({ queryKey: ["routings"] });
+      void queryClient.invalidateQueries({ queryKey: ["capacity_plans"] });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
 
   const validatedRows = rows.filter((row) => row.status === "Validated");
 
@@ -166,6 +197,53 @@ function TimeStudyPage() {
             </Button>
           ) : null
         }
+        rowActions={(row) => {
+          const id = String(row.id ?? "");
+          const status = String(row.status ?? "");
+          return (
+            <div className="flex justify-end gap-1">
+              {canWrite && ["Draft", "Rejected"].includes(status) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={action.isPending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    action.mutate({ kind: "submit", id });
+                  }}
+                >
+                  Kirim
+                </Button>
+              )}
+              {canValidate && status === "Submitted" && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={action.isPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      action.mutate({ kind: "validate", id });
+                    }}
+                  >
+                    Validasi
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={action.isPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      action.mutate({ kind: "reject", id });
+                    }}
+                  >
+                    Revisi
+                  </Button>
+                </>
+              )}
+            </div>
+          );
+        }}
       >
         <div className="mb-5 grid gap-4 sm:grid-cols-3">
           <KpiCard icon={<Layers className="size-4" />} label="Total Studi" value={rows.length} tone="primary" />
