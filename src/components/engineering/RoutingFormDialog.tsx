@@ -269,6 +269,14 @@ export function RoutingFormDialog({
           </DialogDescription>
         </DialogHeader>
 
+        <datalist id="routing-operation-suggestions">
+          {OPERATION_SUGGESTIONS.map((o) => (
+            <option key={o} value={o} />
+          ))}
+        </datalist>
+
+
+
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-2">
             <Label>Produk *</Label>
