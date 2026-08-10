@@ -35,6 +35,7 @@ export type RoutingStepForm = {
   seq: string;
   operation_name: string;
   machine_id: string;
+  work_center_id: string;
   setup_time_min: string;
   standard_cycle_time_sec: string;
   manpower: string;
@@ -43,12 +44,26 @@ export type RoutingStepForm = {
 
 const STATUSES = ["Draft", "Active", "Inactive"] as const;
 
+/** Saran nama operasi — tetap bebas diketik sendiri oleh Industrial Engineer. */
+const OPERATION_SUGGESTIONS = [
+  "Mixing",
+  "Filling",
+  "Packing",
+  "Sealing",
+  "Labeling",
+  "Cutting",
+  "Drilling",
+  "Finishing",
+  "Inspection",
+];
+
 function newStep(seq: number): RoutingStepForm {
   return {
     key: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     seq: String(seq),
     operation_name: "",
     machine_id: "",
+    work_center_id: "",
     setup_time_min: "0",
     standard_cycle_time_sec: "0",
     manpower: "1",
