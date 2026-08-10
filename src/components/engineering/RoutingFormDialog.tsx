@@ -85,6 +85,7 @@ export function RoutingFormDialog({
   const { data: products } = useQuery(productsQuery);
   const { data: machines } = useQuery(machinesQuery);
   const { data: timeStudies } = useQuery(timeStudiesQuery);
+  const { data: workCenters } = useQuery(workCentersQuery);
 
   const [productId, setProductId] = useState("");
   const [routingVersion, setRoutingVersion] = useState("REV-01");
