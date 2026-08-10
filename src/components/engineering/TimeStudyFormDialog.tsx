@@ -158,7 +158,23 @@ export function TimeStudyFormDialog({ open, onOpenChange }: { open: boolean; onO
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader><DialogTitle>Tambah Time Study</DialogTitle><DialogDescription>Ukur satu operasi dari routing produk dalam kondisi produksi yang dapat dipertanggungjawabkan.</DialogDescription></DialogHeader>
+        {noRouting && (
+          <div className="rounded-[0.5rem] border border-dashed border-warning/40 bg-warning/10 p-4 text-sm">
+            <p className="font-medium">Produk ini belum memiliki Routing.</p>
+            <p className="text-muted-foreground">
+              Time Study mengambil operasi dari Routing. Buat Routing produk terlebih dahulu, lalu kembali ke halaman ini.
+            </p>
+            <Link
+              to="/engineering/routing"
+              className="mt-2 inline-flex text-sm font-medium text-primary underline-offset-4 hover:underline"
+              onClick={() => onOpenChange(false)}
+            >
+              Buka Routing &amp; Standard
+            </Link>
+          </div>
+        )}
         <div className="grid gap-4 sm:grid-cols-2">
+
           <Field label="Tanggal Pengamatan"><Input type="date" value={form.study_date} onChange={(e) => field("study_date", e.target.value)} /></Field>
           <Field label="Observer"><Input readOnly value={`${profile?.full_name ?? "-"} · ${role ?? "-"}`} /></Field>
           <SelectField label="Jenis Pengamatan" value={form.study_type} onChange={(v) => field("study_type", v)} options={["Trial Produk Baru", "Produksi Normal", "Perbaikan Standard", "Perubahan Mesin", "Perubahan Metode"]} />
