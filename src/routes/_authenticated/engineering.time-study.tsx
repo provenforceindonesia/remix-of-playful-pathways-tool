@@ -72,7 +72,7 @@ function TimeStudyPage() {
         return "Time Study dikirim untuk validasi";
       }
       if (kind === "validate") {
-        const { error } = await supabase.rpc("validate_time_study", { p_time_study_id: id, p_note: null });
+        const { error } = await supabase.rpc("validate_time_study", { p_time_study_id: id });
         if (error) throw new Error(error.message);
         return "Time Study tervalidasi dan standar diterapkan ke Routing";
       }
