@@ -388,7 +388,9 @@ export const capacityPlansQuery = queryOptions({
     must(
       supabase
         .from("capacity_plans")
-        .select("*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name)")
+        .select(
+          "*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name), products:product_id(code,name), product_variants:variant_id(name), routings:routing_id(code,name)",
+        )
         .order("plan_date", { ascending: false }),
     ),
 });
