@@ -143,10 +143,14 @@ export function TimeStudyFormDialog({ open, onOpenChange }: { open: boolean; onO
     onSuccess: (_data, submit) => {
       toast.success(submit ? "Time Study dikirim ke Production Control" : "Draft Time Study disimpan");
       void queryClient.invalidateQueries({ queryKey: ["time_studies"] });
+      void queryClient.invalidateQueries({ queryKey: ["routings"] });
+      void queryClient.invalidateQueries({ queryKey: ["capacity_plans"] });
       onOpenChange(false);
     },
     onError: (error: Error) => toast.error(error.message),
   });
+
+  const noRouting = Boolean(form.product_id) && !referenceQuery.isLoading && matchingRoutings.length === 0;
 
   const field = (name: string, value: string) => setForm((current) => ({ ...current, [name]: value }));
 
