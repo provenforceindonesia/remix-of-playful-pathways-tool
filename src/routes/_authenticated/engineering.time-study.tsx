@@ -53,12 +53,41 @@ function num(value: unknown): number {
 
 function TimeStudyPage() {
   const { role } = useAuth();
+  const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
 
   const { data, isLoading } = useQuery(timeStudiesQuery);
 
   const rows = (data ?? []) as Row[];
   const canWrite = ["IE", "SYSADMIN"].includes(role ?? "");
+  const canValidate = ["PPIC", "SYSADMIN"].includes(role ?? "");
+
+  const action = useMutation({
+    mutationFn: async ({ kind, id }: { kind: "submit" | "validate" | "reject"; id: string }) => {
+      if (kind === "submit") {
+        const { error } = await supabase.rpc("submit_time_study", { p_time_study_id: id });
+        if (error) throw new Error(error.message);
+        return "Time Study dikirim untuk validasi";
+      }
+      if (kind === "validate") {
+        const { error } = await supabase.rpc("validate_time_study", { p_time_study_id: id, p_note: null });
+        if (error) throw new Error(error.message);
+        return "Time Study tervalidasi dan standar diterapkan ke Routing";
+      }
+      const reason = window.prompt("Alasan revisi:");
+      if (!reason?.trim()) throw new Error("Alasan revisi wajib diisi.");
+      const { error } = await supabase.rpc("reject_time_study", { p_time_study_id: id, p_reason: reason.trim() });
+      if (error) throw new Error(error.message);
+      return "Time Study dikembalikan untuk revisi";
+    },
+    onSuccess: (message) => {
+      toast.success(message);
+      void queryClient.invalidateQueries({ queryKey: ["time_studies"] });
+      void queryClient.invalidateQueries({ queryKey: ["routings"] });
+      void queryClient.invalidateQueries({ queryKey: ["capacity_plans"] });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
 
   const validatedRows = rows.filter((row) => row.status === "Validated");
 
