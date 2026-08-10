@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { machinesQuery, productsQuery, timeStudiesQuery } from "@/lib/queries";
+import { machinesQuery, productsQuery, timeStudiesQuery, workCentersQuery } from "@/lib/queries";
 import { toOptions } from "@/components/common/CrudPage";
 import { toISODate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
