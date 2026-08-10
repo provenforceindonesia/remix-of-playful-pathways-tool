@@ -170,8 +170,11 @@ export function RoutingFormDialog({
       if (!routingVersion.trim()) throw new Error("Routing Version wajib diisi.");
       if (steps.length === 0) throw new Error("Minimal satu Routing Step harus tersedia.");
       for (const s of steps) {
-        if (!s.seq.trim() || !s.operation_name.trim() || !s.machine_id) {
-          throw new Error("Setiap step wajib memiliki sequence, proses, dan mesin.");
+        if (!s.seq.trim() || !s.operation_name.trim()) {
+          throw new Error("Setiap step wajib memiliki sequence dan nama operasi.");
+        }
+        if (!s.machine_id && !s.work_center_id) {
+          throw new Error(`Step "${s.operation_name.trim()}" wajib memiliki mesin atau work center.`);
         }
         const nums = [s.seq, s.setup_time_min, s.standard_cycle_time_sec, s.manpower].map(Number);
         if (nums.some((n) => !Number.isFinite(n) || n < 0)) {
