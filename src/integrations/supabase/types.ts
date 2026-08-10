@@ -431,43 +431,94 @@ export type Database = {
       }
       capacity_plans: {
         Row: {
+          available_manpower: number
           capacity_per_shift: number
           created_at: string
           created_by: string | null
+          efficiency_pct: number
           id: string
+          is_bottleneck: boolean
           line_id: string | null
           machine_id: string | null
           net_available_minutes: number
+          operation_name: string | null
           plan_date: string
+          planned_downtime_min: number
           plant_id: string | null
+          product_id: string | null
+          required_manpower: number
+          routing_id: string | null
+          routing_operation_id: string | null
+          seq: number | null
+          setup_time_min: number
           shift_id: string | null
+          source_time_study_id: string | null
           standard_cycle_time_sec: number
+          standard_source: string
+          target_qty: number
+          updated_at: string
+          utilization_pct: number
+          variant_id: string | null
         }
         Insert: {
+          available_manpower?: number
           capacity_per_shift?: number
           created_at?: string
           created_by?: string | null
+          efficiency_pct?: number
           id?: string
+          is_bottleneck?: boolean
           line_id?: string | null
           machine_id?: string | null
           net_available_minutes?: number
+          operation_name?: string | null
           plan_date?: string
+          planned_downtime_min?: number
           plant_id?: string | null
+          product_id?: string | null
+          required_manpower?: number
+          routing_id?: string | null
+          routing_operation_id?: string | null
+          seq?: number | null
+          setup_time_min?: number
           shift_id?: string | null
+          source_time_study_id?: string | null
           standard_cycle_time_sec?: number
+          standard_source?: string
+          target_qty?: number
+          updated_at?: string
+          utilization_pct?: number
+          variant_id?: string | null
         }
         Update: {
+          available_manpower?: number
           capacity_per_shift?: number
           created_at?: string
           created_by?: string | null
+          efficiency_pct?: number
           id?: string
+          is_bottleneck?: boolean
           line_id?: string | null
           machine_id?: string | null
           net_available_minutes?: number
+          operation_name?: string | null
           plan_date?: string
+          planned_downtime_min?: number
           plant_id?: string | null
+          product_id?: string | null
+          required_manpower?: number
+          routing_id?: string | null
+          routing_operation_id?: string | null
+          seq?: number | null
+          setup_time_min?: number
           shift_id?: string | null
+          source_time_study_id?: string | null
           standard_cycle_time_sec?: number
+          standard_source?: string
+          target_qty?: number
+          updated_at?: string
+          utilization_pct?: number
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -513,6 +564,41 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "capacity_plans_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_routing_id_fkey"
+            columns: ["routing_id"]
+            isOneToOne: false
+            referencedRelation: "routings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_routing_operation_id_fkey"
+            columns: ["routing_operation_id"]
+            isOneToOne: false
+            referencedRelation: "routing_operations"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "capacity_plans_shift_id_fkey"
             columns: ["shift_id"]
             isOneToOne: false
@@ -532,6 +618,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_production_kpi"
             referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_source_time_study_id_fkey"
+            columns: ["source_time_study_id"]
+            isOneToOne: false
+            referencedRelation: "time_studies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "capacity_plans_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1385,8 +1485,13 @@ export type Database = {
           note: string | null
           period_date: string
           plant_id: string | null
+          product_id: string | null
           recommended_manpower: number
           required_standard_minutes: number
+          routing_id: string | null
+          shift_id: string | null
+          target_qty: number
+          updated_at: string
         }
         Insert: {
           created_at?: string
@@ -1398,8 +1503,13 @@ export type Database = {
           note?: string | null
           period_date?: string
           plant_id?: string | null
+          product_id?: string | null
           recommended_manpower?: number
           required_standard_minutes?: number
+          routing_id?: string | null
+          shift_id?: string | null
+          target_qty?: number
+          updated_at?: string
         }
         Update: {
           created_at?: string
@@ -1411,8 +1521,13 @@ export type Database = {
           note?: string | null
           period_date?: string
           plant_id?: string | null
+          product_id?: string | null
           recommended_manpower?: number
           required_standard_minutes?: number
+          routing_id?: string | null
+          shift_id?: string | null
+          target_qty?: number
+          updated_at?: string
         }
         Relationships: [
           {
@@ -1428,6 +1543,55 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "plants"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_routing_id_fkey"
+            columns: ["routing_id"]
+            isOneToOne: false
+            referencedRelation: "routings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "shifts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_daily"
+            referencedColumns: ["shift_id"]
+          },
+          {
+            foreignKeyName: "manpower_recommendations_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "v_production_kpi"
+            referencedColumns: ["shift_id"]
           },
         ]
       }
