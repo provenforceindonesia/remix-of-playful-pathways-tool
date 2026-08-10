@@ -265,7 +265,7 @@ function CapacityPage() {
               </Link>
             </div>
           )}
-          <DataTable columns={columns} rows={steps} getRowId={(r) => r.id} />
+          <DataTable columns={columns} rows={steps} />
         </>
       )}
     </div>
