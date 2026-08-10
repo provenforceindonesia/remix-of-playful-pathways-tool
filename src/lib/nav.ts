@@ -13,9 +13,10 @@ export type NavGroup = {
   items: NavItem[];
 };
 
-const ALL: RoleCode[] = ["OWNER", "SALES", "PPIC", "IE", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"];
-
 export const NAV_GROUPS: NavGroup[] = [
+  // =========================================================
+  // DASHBOARD
+  // =========================================================
   {
     label: "Dashboard",
     items: [
@@ -51,30 +52,88 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+
+  // =========================================================
+  // CUSTOMER ORDER
+  // =========================================================
   {
     label: "Customer Order",
     items: [
-      { label: "Customer Order", to: "/sales/orders", icon: "FileText", roles: ["SALES", "SYSADMIN"] },
-      { label: "Review Sales Order", to: "/sales/review", icon: "ShieldCheck", roles: ["PPIC", "SYSADMIN", "OWNER"] },
-      { label: "Order Tracking", to: "/sales/tracking", icon: "Radar", roles: ALL },
-      { label: "Master Customer", to: "/sales/customers", icon: "Building2", roles: ["SALES", "SYSADMIN"] },
+      {
+        label: "Customer Order",
+        to: "/sales/orders",
+        icon: "FileText",
+        roles: ["SALES", "SYSADMIN"],
+      },
+      {
+        label: "Review Sales Order",
+        to: "/sales/review",
+        icon: "ShieldCheck",
+        roles: ["PPIC", "SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Order Tracking",
+        to: "/sales/tracking",
+        icon: "Radar",
+        roles: ["OWNER", "SALES", "PPIC", "SYSADMIN"],
+      },
+      {
+        label: "Master Customer",
+        to: "/sales/customers",
+        icon: "Building2",
+        roles: ["SALES", "SYSADMIN"],
+      },
     ],
   },
+
+  // =========================================================
+  // PRODUKSI
+  // =========================================================
   {
     label: "Produksi",
     items: [
-      { label: "Production Plan", to: "/production/plans", icon: "CalendarRange", roles: ["PPIC", "SYSADMIN"] },
+      {
+        label: "Production Plan",
+        to: "/production/plans",
+        icon: "CalendarRange",
+        roles: ["PPIC", "SYSADMIN"],
+      },
       {
         label: "Work Orders",
         to: "/production/work-orders",
         icon: "Factory",
-        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+        roles: ["PPIC", "SYSADMIN", "OWNER"],
       },
-      { label: "WO Saya", to: "/shopfloor/wo", icon: "HardHat", roles: ["SHOPFLOOR"] },
-      { label: "Input Produksi Harian", to: "/shopfloor/input-produksi", icon: "PencilLine", roles: ["SHOPFLOOR"] },
-      { label: "Input Downtime", to: "/shopfloor/downtime", icon: "TimerOff", roles: ["SHOPFLOOR"] },
-      { label: "Validasi Hasil Produksi", to: "/production/validasi", icon: "BadgeCheck", roles: ["PPIC", "SYSADMIN"] },
-      { label: "Backlog & Recovery", to: "/production/backlog", icon: "Repeat2", roles: ["PPIC", "SYSADMIN", "OWNER"] },
+      {
+        label: "WO Saya",
+        to: "/shopfloor/wo",
+        icon: "HardHat",
+        roles: ["SHOPFLOOR"],
+      },
+      {
+        label: "Input Produksi Harian",
+        to: "/shopfloor/input-produksi",
+        icon: "PencilLine",
+        roles: ["SHOPFLOOR"],
+      },
+      {
+        label: "Input Downtime",
+        to: "/shopfloor/downtime",
+        icon: "TimerOff",
+        roles: ["SHOPFLOOR"],
+      },
+      {
+        label: "Validasi Hasil Produksi",
+        to: "/production/validasi",
+        icon: "BadgeCheck",
+        roles: ["PPIC", "SYSADMIN"],
+      },
+      {
+        label: "Backlog & Recovery",
+        to: "/production/backlog",
+        icon: "Repeat2",
+        roles: ["PPIC", "SYSADMIN", "OWNER"],
+      },
       {
         label: "Handover Shift",
         to: "/production/handover",
@@ -83,10 +142,19 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+
+  // =========================================================
+  // PERFORMANCE
+  // =========================================================
   {
     label: "Performance",
     items: [
-      { label: "Kecepatan & Hasil", to: "/analytics/speed", icon: "Gauge", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
+      {
+        label: "Kecepatan & Hasil",
+        to: "/analytics/speed",
+        icon: "Gauge",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
       {
         label: "Waste & Quality",
         to: "/analytics/quality",
@@ -99,7 +167,12 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: "AlertTriangle",
         roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
       },
-      { label: "OEE", to: "/analytics/oee", icon: "TrendingUp", roles: ["PPIC", "IE", "SYSADMIN", "OWNER"] },
+      {
+        label: "OEE",
+        to: "/analytics/oee",
+        icon: "TrendingUp",
+        roles: ["PPIC", "IE", "SYSADMIN", "OWNER"],
+      },
       {
         label: "Bottleneck Analysis",
         to: "/analytics/bottleneck",
@@ -114,49 +187,85 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+
+  // =========================================================
+  // MASTER DATA
+  // =========================================================
   {
     label: "Master Data",
     items: [
-      { label: "Produk & Varian", to: "/master/products", icon: "Package", roles: ["OWNER", "SALES", "IE", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"] },
+      {
+        label: "Produk & Varian",
+        to: "/master/products",
+        icon: "Package",
+        roles: ["OWNER", "SALES", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"],
+      },
       {
         label: "Mesin & Work Center",
         to: "/admin/configuration",
         icon: "Cpu",
-        roles: ["IE", "SYSADMIN"],
+        roles: ["SYSADMIN"],
         search: { tab: "machines" },
       },
       {
         label: "Shift",
         to: "/admin/configuration",
         icon: "Clock",
-        roles: ["IE", "SYSADMIN"],
+        roles: ["SYSADMIN"],
         search: { tab: "shifts" },
       },
-      { label: "Operator", to: "/admin/users", icon: "Users", roles: ["SYSADMIN"] },
+      {
+        label: "Operator",
+        to: "/admin/users",
+        icon: "Users",
+        roles: ["SYSADMIN"],
+      },
       {
         label: "Reason Code",
         to: "/admin/configuration",
         icon: "ScrollText",
-        roles: ["IE", "SYSADMIN"],
+        roles: ["SYSADMIN"],
         search: { tab: "reasons" },
       },
+    ],
+  },
 
+  // =========================================================
+  // ENGINEERING
+  // =========================================================
+  {
+    label: "Engineering",
+    items: [
       {
         label: "BOM & Material",
         to: "/engineering/bom",
         icon: "Layers",
         roles: ["IE", "INVENTORY", "SYSADMIN"],
       },
+      {
+        label: "Routing & Standard",
+        to: "/engineering/routing",
+        icon: "Route",
+        roles: ["IE", "SYSADMIN"],
+      },
+      {
+        label: "Time Study",
+        to: "/engineering/time-study",
+        icon: "Timer",
+        roles: ["IE", "SYSADMIN"],
+      },
+      {
+        label: "Capacity & Manpower",
+        to: "/engineering/capacity",
+        icon: "Users",
+        roles: ["IE", "SYSADMIN"],
+      },
     ],
   },
-  {
-    label: "Engineering",
-    items: [
-      { label: "Routing & Standard", to: "/engineering/routing", icon: "Route", roles: ["IE", "SYSADMIN"] },
-      { label: "Time Study", to: "/engineering/time-study", icon: "Timer", roles: ["IE", "SYSADMIN"] },
-      { label: "Capacity & Manpower", to: "/engineering/capacity", icon: "Users", roles: ["IE", "SYSADMIN"] },
-    ],
-  },
+
+  // =========================================================
+  // INVENTORY & PROCUREMENT
+  // =========================================================
   {
     label: "Inventory & Procurement",
     items: [
@@ -166,38 +275,120 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: "Warehouse",
         roles: ["INVENTORY", "SYSADMIN", "OWNER"],
       },
-      { label: "Stock Ledger", to: "/inventory/ledger", icon: "BookOpen", roles: ["INVENTORY", "SYSADMIN"] },
-      { label: "Material Receipt", to: "/inventory/receipt", icon: "PackagePlus", roles: ["INVENTORY", "SYSADMIN"] },
-      { label: "Material Issue", to: "/inventory/issue", icon: "PackageMinus", roles: ["INVENTORY", "SYSADMIN"] },
+      {
+        label: "Stock Ledger",
+        to: "/inventory/ledger",
+        icon: "BookOpen",
+        roles: ["INVENTORY", "SYSADMIN"],
+      },
+      {
+        label: "Material Receipt",
+        to: "/inventory/receipt",
+        icon: "PackagePlus",
+        roles: ["INVENTORY", "SYSADMIN"],
+      },
+      {
+        label: "Material Issue",
+        to: "/inventory/issue",
+        icon: "PackageMinus",
+        roles: ["INVENTORY", "SYSADMIN"],
+      },
       {
         label: "Stock Reservation",
         to: "/inventory/reservation",
         icon: "Lock",
         roles: ["INVENTORY", "SYSADMIN"],
       },
-      { label: "Purchase Order", to: "/procurement/po", icon: "ShoppingCart", roles: ["INVENTORY", "SYSADMIN"] },
-      { label: "Supplier Management", to: "/procurement/suppliers", icon: "Truck", roles: ["INVENTORY", "SYSADMIN"] },
-    ],
-  },
-  {
-    label: "Finance & Costing",
-    items: [
-      { label: "Master Biaya", to: "/costing/master", icon: "Coins", roles: ["FINANCE", "SYSADMIN"] },
-      { label: "Standard HPP", to: "/costing/hpp", icon: "Receipt", roles: ["FINANCE", "SYSADMIN", "OWNER"] },
-      { label: "Loss Valuation", to: "/costing/loss", icon: "TrendingDown", roles: ["FINANCE", "SYSADMIN", "OWNER"] },
-      { label: "Margin Analysis", to: "/costing/margin", icon: "PieChart", roles: ["FINANCE", "SYSADMIN", "OWNER"] },
+      {
+        label: "Purchase Order",
+        to: "/procurement/po",
+        icon: "ShoppingCart",
+        roles: ["INVENTORY", "SYSADMIN"],
+      },
+      {
+        label: "Supplier Management",
+        to: "/procurement/suppliers",
+        icon: "Truck",
+        roles: ["INVENTORY", "SYSADMIN"],
+      },
     ],
   },
 
+  // =========================================================
+  // FINANCE & COSTING
+  // =========================================================
+  {
+    label: "Finance & Costing",
+    items: [
+      {
+        label: "Master Biaya",
+        to: "/costing/master",
+        icon: "Coins",
+        roles: ["FINANCE", "SYSADMIN"],
+      },
+      {
+        label: "Standard HPP",
+        to: "/costing/hpp",
+        icon: "Receipt",
+        roles: ["FINANCE", "SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Loss Valuation",
+        to: "/costing/loss",
+        icon: "TrendingDown",
+        roles: ["FINANCE", "SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Margin Analysis",
+        to: "/costing/margin",
+        icon: "PieChart",
+        roles: ["FINANCE", "SYSADMIN", "OWNER"],
+      },
+    ],
+  },
+
+  // =========================================================
+  // ADMINISTRASI
+  // =========================================================
   {
     label: "Administrasi",
     items: [
-      { label: "System Overview", to: "/admin/overview", icon: "MonitorCog", roles: ["SYSADMIN"] },
-      { label: "Users", to: "/admin/users", icon: "UserCog", roles: ["SYSADMIN"] },
-      { label: "Roles & Permissions", to: "/admin/roles", icon: "KeyRound", roles: ["SYSADMIN"] },
-      { label: "Master Configuration", to: "/admin/configuration", icon: "Settings2", roles: ["SYSADMIN"] },
-      { label: "Audit Trail", to: "/admin/audit", icon: "ScrollText", roles: ["SYSADMIN", "OWNER"] },
-      { label: "Status Koneksi", to: "/admin/connection-status", icon: "Radio", roles: ["SYSADMIN"] },
+      {
+        label: "System Overview",
+        to: "/admin/overview",
+        icon: "MonitorCog",
+        roles: ["SYSADMIN"],
+      },
+      {
+        label: "Users",
+        to: "/admin/users",
+        icon: "UserCog",
+        roles: ["SYSADMIN"],
+      },
+      {
+        label: "Roles & Permissions",
+        to: "/admin/roles",
+        icon: "KeyRound",
+        roles: ["SYSADMIN"],
+      },
+      {
+        label: "Master Configuration",
+        to: "/admin/configuration",
+        icon: "Settings2",
+        roles: ["SYSADMIN"],
+      },
+      {
+        label: "Audit Trail",
+        to: "/admin/audit",
+        icon: "ScrollText",
+        roles: ["SYSADMIN", "OWNER"],
+      },
+      {
+        label: "Status Koneksi",
+        to: "/admin/connection-status",
+        icon: "Radio",
+        roles: ["SYSADMIN"],
+      },
     ],
   },
 ];
@@ -225,9 +416,7 @@ export function navForRole(role: RoleCode | null): NavGroup[] {
   return NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.filter(
-      (item) =>
-        item.roles.includes(role) &&
-        (role !== "PPIC" || PPIC_ALLOWED_ROUTES.has(item.to)),
+      (item) => item.roles.includes(role) && (role !== "PPIC" || PPIC_ALLOWED_ROUTES.has(item.to)),
     ),
   })).filter((group) => group.items.length > 0);
 }
@@ -236,20 +425,28 @@ export function defaultRouteForRole(role: RoleCode | null): string {
   switch (role) {
     case "OWNER":
       return "/dashboard/manajemen";
+
     case "SALES":
       return "/dashboard/order";
+
     case "PPIC":
       return "/dashboard/operasional";
+
     case "IE":
       return "/analytics/oee";
+
     case "SHOPFLOOR":
       return "/shopfloor/wo";
+
     case "INVENTORY":
       return "/inventory/dashboard";
+
     case "FINANCE":
       return "/costing/dashboard";
+
     case "SYSADMIN":
       return "/admin/overview";
+
     default:
       return "/dashboard/operasional";
   }
