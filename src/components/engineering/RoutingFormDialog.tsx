@@ -238,6 +238,7 @@ export function RoutingFormDialog({
         seq: Number(s.seq),
         operation_name: s.operation_name.trim(),
         machine_id: s.machine_id || null,
+        work_center_id: s.work_center_id || null,
         setup_time_min: Number(s.setup_time_min || 0),
         standard_cycle_time_sec: Number(s.standard_cycle_time_sec || 0),
         manpower: Number(s.manpower || 1),
@@ -251,6 +252,8 @@ export function RoutingFormDialog({
     onSuccess: () => {
       toast.success(editing ? "Routing diperbarui" : "Routing dibuat");
       void qc.invalidateQueries({ queryKey: ["routings"] });
+      void qc.invalidateQueries({ queryKey: ["time_studies"] });
+      void qc.invalidateQueries({ queryKey: ["capacity_plans"] });
       onOpenChange(false);
     },
     onError: (e: Error) => toast.error(e.message),
