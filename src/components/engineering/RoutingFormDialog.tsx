@@ -351,21 +351,45 @@ export function RoutingFormDialog({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Proses</Label>
+                    <Label>Operasi / Proses</Label>
                     <Input
+                      list="routing-operation-suggestions"
                       value={step.operation_name}
-                      placeholder="Cutting"
+                      placeholder="Ketik nama operasi, mis. Mixing"
                       onChange={(e) => updateStep(step.key, { operation_name: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Mesin</Label>
-                    <Select value={step.machine_id} onValueChange={(v) => updateStep(step.key, { machine_id: v })}>
+                    <Select
+                      value={step.machine_id || "__none"}
+                      onValueChange={(v) => updateStep(step.key, { machine_id: v === "__none" ? "" : v })}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih mesin" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__none">Tanpa mesin</SelectItem>
                         {machineOptions.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Work Center</Label>
+                    <Select
+                      value={step.work_center_id || "__none"}
+                      onValueChange={(v) => updateStep(step.key, { work_center_id: v === "__none" ? "" : v })}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih work center" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none">Tanpa work center</SelectItem>
+                        {workCenterOptions.map((o) => (
                           <SelectItem key={o.value} value={o.value}>
                             {o.label}
                           </SelectItem>
