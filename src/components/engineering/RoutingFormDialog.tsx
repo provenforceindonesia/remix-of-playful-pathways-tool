@@ -109,6 +109,7 @@ export function RoutingFormDialog({
               seq: String(op.seq ?? (i + 1) * 10),
               operation_name: String(op.operation_name ?? ""),
               machine_id: String(op.machine_id ?? ""),
+              work_center_id: String(op.work_center_id ?? ""),
               setup_time_min: String(op.setup_time_min ?? 0),
               standard_cycle_time_sec: String(op.standard_cycle_time_sec ?? 0),
               manpower: String(op.manpower ?? 1),
