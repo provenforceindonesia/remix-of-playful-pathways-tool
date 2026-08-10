@@ -132,6 +132,7 @@ export function RoutingFormDialog({
 
   const machineRows = (machines ?? []) as Row[];
   const machineOptions = toOptions(machineRows, ["code", "name"]);
+  const workCenterOptions = toOptions((workCenters ?? []) as Row[], ["code", "name"]);
   const productOptions = toOptions((products ?? []) as Row[], ["code", "name"]);
 
   function findStudy(step: RoutingStepForm) {
