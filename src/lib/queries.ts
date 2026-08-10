@@ -230,9 +230,16 @@ export const routingsQuery = queryOptions({
     must(
       supabase
         .from("routings")
-        .select("*, products:product_id(code,name), routing_operations(*, machines:machine_id(code,name))")
+        .select(
+          "*, products:product_id(code,name), product_variants:variant_id(name), routing_operations(*, machines:machine_id(code,name), work_centers:work_center_id(code,name))",
+        )
         .order("code"),
     ),
+});
+
+export const workCentersQuery = queryOptions({
+  queryKey: ["work_centers"],
+  queryFn: () => must(supabase.from("work_centers").select("*").order("code")),
 });
 
 export const bomQuery = queryOptions({
