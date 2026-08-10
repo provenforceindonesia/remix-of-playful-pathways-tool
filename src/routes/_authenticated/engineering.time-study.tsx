@@ -197,6 +197,53 @@ function TimeStudyPage() {
             </Button>
           ) : null
         }
+        rowActions={(row) => {
+          const id = String(row.id ?? "");
+          const status = String(row.status ?? "");
+          return (
+            <div className="flex justify-end gap-1">
+              {canWrite && ["Draft", "Rejected"].includes(status) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={action.isPending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    action.mutate({ kind: "submit", id });
+                  }}
+                >
+                  Kirim
+                </Button>
+              )}
+              {canValidate && status === "Submitted" && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={action.isPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      action.mutate({ kind: "validate", id });
+                    }}
+                  >
+                    Validasi
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={action.isPending}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      action.mutate({ kind: "reject", id });
+                    }}
+                  >
+                    Revisi
+                  </Button>
+                </>
+              )}
+            </div>
+          );
+        }}
       >
         <div className="mb-5 grid gap-4 sm:grid-cols-3">
           <KpiCard icon={<Layers className="size-4" />} label="Total Studi" value={rows.length} tone="primary" />
