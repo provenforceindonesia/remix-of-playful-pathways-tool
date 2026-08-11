@@ -444,8 +444,10 @@ function ConfigurationPage() {
         loading={c.loading}
         fields={c.fields}
         onFieldChange={(name) => {
-          if (name === "plant_id") return { line_id: "", work_center_id: "" };
-          if (name === "line_id") return { work_center_id: "" };
+          const hasField = (f: string) => c.fields.some((x) => x.name === f);
+          if (name === "plant_id")
+            return { ...(hasField("line_id") ? { line_id: "" } : {}), ...(hasField("work_center_id") ? { work_center_id: "" } : {}) };
+          if (name === "line_id" && hasField("work_center_id")) return { work_center_id: "" };
         }}
         beforePayload={(v) =>
           c.table === "system_settings"
