@@ -425,7 +425,7 @@ function ConfigurationPage() {
     <>
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="mb-4">
         <TabsList className="flex-wrap">
-          {TABS.map((t) => (
+          {visibleTabs.map((t) => (
             <TabsTrigger key={t.key} value={t.key}>
               {t.label}
             </TabsTrigger>
@@ -438,11 +438,15 @@ function ConfigurationPage() {
         title={c.title}
         description="Master konfigurasi dasar yang dipakai seluruh modul operasional."
         table={c.table}
-        invalidateKeys={[[c.key]]}
+        invalidateKeys={[[c.key], ["machines"], ["work_centers"], ["lines"]]}
         columns={c.columns}
         rows={c.rows}
         loading={c.loading}
         fields={c.fields}
+        onFieldChange={(name) => {
+          if (name === "plant_id") return { line_id: "", work_center_id: "" };
+          if (name === "line_id") return { work_center_id: "" };
+        }}
         beforePayload={(v) =>
           c.table === "system_settings"
             ? { ...v, value: safeJson(v.value) }
@@ -450,6 +454,7 @@ function ConfigurationPage() {
         }
         exportName={`config-${c.key}`}
       />
+
     </>
   );
 }
