@@ -5,6 +5,8 @@ import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components
 import type { Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/lib/auth";
 import {
   linesQuery,
   machinesQuery,
@@ -14,6 +16,7 @@ import {
   shiftsQuery,
   uomQuery,
   warehousesQuery,
+  workCentersQuery,
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin/configuration")({
