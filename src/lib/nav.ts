@@ -201,17 +201,31 @@ export const NAV_GROUPS: NavGroup[] = [
         roles: ["OWNER", "SALES", "SHOPFLOOR", "INVENTORY", "FINANCE", "SYSADMIN"],
       },
       {
-        label: "Mesin & Work Center",
+        label: "Line Produksi",
+        to: "/admin/configuration",
+        icon: "GitBranch",
+        roles: ["IE", "SYSADMIN"],
+        search: { tab: "lines" },
+      },
+      {
+        label: "Work Center",
+        to: "/admin/configuration",
+        icon: "Boxes",
+        roles: ["IE", "SYSADMIN"],
+        search: { tab: "work_centers" },
+      },
+      {
+        label: "Mesin",
         to: "/admin/configuration",
         icon: "Cpu",
-        roles: ["SYSADMIN"],
+        roles: ["IE", "SYSADMIN"],
         search: { tab: "machines" },
       },
       {
         label: "Shift",
         to: "/admin/configuration",
         icon: "Clock",
-        roles: ["SYSADMIN"],
+        roles: ["IE", "SYSADMIN"],
         search: { tab: "shifts" },
       },
       {
@@ -224,11 +238,12 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Reason Code",
         to: "/admin/configuration",
         icon: "ScrollText",
-        roles: ["SYSADMIN"],
+        roles: ["IE", "SYSADMIN"],
         search: { tab: "reasons" },
       },
     ],
   },
+
 
   // =========================================================
   // ENGINEERING
