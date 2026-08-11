@@ -261,11 +261,8 @@ function ConfigurationPage() {
         { key: "code", header: "Kode" },
         { key: "name", header: "Nama Mesin" },
         { key: "machine_type", header: "Tipe" },
-        {
-          key: "line",
-          header: "Line",
-          value: (r) => (r.lines as { name?: string } | null)?.name ?? "-",
-        },
+        { key: "line", header: "Line", value: (r) => relName(r, "lines") },
+        { key: "work_center", header: "Work Center", value: (r) => relName(r, "work_centers") },
         { key: "standard_speed", header: "Speed Std", align: "right" },
         {
           key: "master_status",
@@ -275,7 +272,38 @@ function ConfigurationPage() {
       ],
       fields: [
         { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
-        { name: "line_id", label: "Line", type: "select", options: lineOptions },
+        {
+          name: "line_id",
+          label: "Line",
+          type: "custom",
+          required: true,
+          render: dependentSelect(
+            (values) =>
+              lineOptions.filter((o) => {
+                const line = lineRows.find((l) => String(l.id) === o.value);
+                return !values.plant_id || String(line?.plant_id ?? "") === String(values.plant_id);
+              }),
+            "Pilih line",
+            "Belum ada line pada plant ini.",
+          ),
+        },
+        {
+          name: "work_center_id",
+          label: "Work Center",
+          type: "custom",
+          render: dependentSelect(
+            (values) =>
+              toOptions(
+                workCenterRows.filter(
+                  (wc) => wc.is_active !== false && (!values.line_id || String(wc.line_id ?? "") === String(values.line_id)),
+                ),
+                ["code", "name"],
+              ),
+            "Pilih work center",
+            "Belum ada work center pada line ini.",
+          ),
+        },
+
         { name: "code", label: "Kode Mesin", required: true },
         { name: "name", label: "Nama Mesin", required: true },
         { name: "machine_type", label: "Tipe Mesin" },
