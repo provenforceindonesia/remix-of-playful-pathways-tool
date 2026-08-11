@@ -1134,6 +1134,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          description: string | null
           id: string
           is_active: boolean
           name: string
@@ -1143,6 +1144,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          description?: string | null
           id?: string
           is_active?: boolean
           name: string
@@ -1152,6 +1154,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          description?: string | null
           id?: string
           is_active?: boolean
           name?: string
@@ -4465,7 +4468,10 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          description: string | null
           id: string
+          is_active: boolean
+          line_id: string | null
           name: string
           plant_id: string
           updated_at: string
@@ -4473,7 +4479,10 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean
+          line_id?: string | null
           name: string
           plant_id: string
           updated_at?: string
@@ -4481,12 +4490,22 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          description?: string | null
           id?: string
+          is_active?: boolean
+          line_id?: string | null
           name?: string
           plant_id?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "work_centers_line_id_fkey"
+            columns: ["line_id"]
+            isOneToOne: false
+            referencedRelation: "lines"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_centers_plant_id_fkey"
             columns: ["plant_id"]

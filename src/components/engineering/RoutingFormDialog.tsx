@@ -133,8 +133,21 @@ export function RoutingFormDialog({
 
   const machineRows = (machines ?? []) as Row[];
   const machineOptions = toOptions(machineRows, ["code", "name"]);
-  const workCenterOptions = toOptions((workCenters ?? []) as Row[], ["code", "name"]);
+  const workCenterRows = ((workCenters ?? []) as Row[]).filter((wc) => wc.is_active !== false);
+  const workCenterOptions = toOptions(workCenterRows, ["code", "name"]);
   const productOptions = toOptions((products ?? []) as Row[], ["code", "name"]);
+
+  /** Mesin mengikuti Work Center yang dipilih (hirarki Line → Work Center → Mesin). */
+  const machineOptionsFor = (workCenterId: string) => {
+    if (!workCenterId) return machineOptions;
+    const wcLine = String(workCenterRows.find((wc) => String(wc.id) === workCenterId)?.line_id ?? "");
+    const rows = machineRows.filter((m) => {
+      if (String(m.work_center_id ?? "") === workCenterId) return true;
+      // Mesin yang belum dipetakan ke work center tetap tersedia bila satu line.
+      return !m.work_center_id && wcLine && String(m.line_id ?? "") === wcLine;
+    });
+    return toOptions(rows, ["code", "name"]);
+  };
 
   function findStudy(step: RoutingStepForm) {
     if (!productId || !step.operation_name.trim()) return null;
@@ -374,29 +387,17 @@ export function RoutingFormDialog({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Mesin</Label>
-                    <Select
-                      value={step.machine_id || "__none"}
-                      onValueChange={(v) => updateStep(step.key, { machine_id: v === "__none" ? "" : v })}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih mesin" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="__none">Tanpa mesin</SelectItem>
-                        {machineOptions.map((o) => (
-                          <SelectItem key={o.value} value={o.value}>
-                            {o.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
                     <Label>Work Center</Label>
                     <Select
                       value={step.work_center_id || "__none"}
-                      onValueChange={(v) => updateStep(step.key, { work_center_id: v === "__none" ? "" : v })}
+                      onValueChange={(v) => {
+                        const wc = v === "__none" ? "" : v;
+                        const allowed = machineOptionsFor(wc).map((o) => o.value);
+                        updateStep(step.key, {
+                          work_center_id: wc,
+                          machine_id: step.machine_id && allowed.includes(step.machine_id) ? step.machine_id : "",
+                        });
+                      }}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih work center" />
@@ -411,6 +412,33 @@ export function RoutingFormDialog({
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <Label>Mesin</Label>
+                    <Select
+                      value={step.machine_id || "__none"}
+                      onValueChange={(v) => updateStep(step.key, { machine_id: v === "__none" ? "" : v })}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue
+                          placeholder={step.work_center_id ? "Pilih mesin" : "Pilih work center dulu"}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none">Tanpa mesin</SelectItem>
+                        {machineOptionsFor(step.work_center_id).map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {step.work_center_id && machineOptionsFor(step.work_center_id).length === 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        Belum ada mesin pada work center ini.
+                      </p>
+                    )}
+                  </div>
+
                   <div className="space-y-2">
                     <Label>Setup Time (menit)</Label>
                     <Input

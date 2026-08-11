@@ -5,6 +5,8 @@ import { CrudPage, selectOptions, toOptions, type CrudField } from "@/components
 import type { Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/lib/auth";
 import {
   linesQuery,
   machinesQuery,
@@ -14,6 +16,7 @@ import {
   shiftsQuery,
   uomQuery,
   warehousesQuery,
+  workCentersQuery,
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin/configuration")({
@@ -37,6 +40,7 @@ type Row = Record<string, unknown>;
 type TabKey =
   | "plants"
   | "lines"
+  | "work_centers"
   | "shifts"
   | "machines"
   | "reasons"
@@ -47,33 +51,76 @@ type TabKey =
 const TABS: { key: TabKey; label: string }[] = [
   { key: "plants", label: "Plant" },
   { key: "lines", label: "Line" },
-  { key: "shifts", label: "Shift" },
+  { key: "work_centers", label: "Work Center" },
   { key: "machines", label: "Mesin" },
+  { key: "shifts", label: "Shift" },
   { key: "reasons", label: "Reason Code" },
   { key: "warehouses", label: "Gudang" },
   { key: "uom", label: "UoM" },
   { key: "settings", label: "Parameter" },
 ];
 
+/** Industrial Engineer hanya mengelola master data teknis. */
+const IE_TABS: TabKey[] = ["lines", "work_centers", "machines", "shifts", "reasons"];
+
 function ConfigurationPage() {
   const { tab: tabParam } = Route.useSearch();
+  const { role } = useAuth();
+  const visibleTabs = role === "IE" ? TABS.filter((t) => IE_TABS.includes(t.key)) : TABS;
+  const fallbackTab = visibleTabs[0]?.key ?? "plants";
   const [tab, setTab] = useState<TabKey>(
-    TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : "plants",
+    visibleTabs.some((t) => t.key === tabParam) ? (tabParam as TabKey) : fallbackTab,
   );
   useEffect(() => {
-    if (tabParam && TABS.some((t) => t.key === tabParam)) setTab(tabParam as TabKey);
-  }, [tabParam]);
+    if (tabParam && visibleTabs.some((t) => t.key === tabParam)) setTab(tabParam as TabKey);
+    else if (!visibleTabs.some((t) => t.key === tab)) setTab(fallbackTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabParam, role]);
   const plants = useQuery(plantsQuery);
   const lines = useQuery(linesQuery);
   const shifts = useQuery(shiftsQuery);
   const machines = useQuery(machinesQuery);
+  const workCenters = useQuery(workCentersQuery);
   const reasons = useQuery(reasonCodesQuery);
   const warehouses = useQuery(warehousesQuery);
   const uom = useQuery(uomQuery);
   const settings = useQuery(settingsQuery);
 
+  const lineRows = (lines.data ?? []) as Row[];
+  const workCenterRows = (workCenters.data ?? []) as Row[];
   const plantOptions = toOptions(plants.data as Row[], ["name"]);
-  const lineOptions = toOptions(lines.data as Row[], ["name"]);
+  const lineOptions = toOptions(lineRows, ["code", "name"]);
+
+  const relName = (r: Row, key: string) => (r[key] as { code?: string; name?: string } | null)?.name ?? "-";
+
+  /** Select bergantung: opsi disaring dari nilai form lain (hirarki master data). */
+  const dependentSelect = (
+    optionsFor: (values: Record<string, unknown>) => { value: string; label: string }[],
+    placeholder: string,
+    emptyHint: string,
+  ): CrudField["render"] =>
+    function DependentSelect({ value, setValue, values }) {
+      const options = optionsFor(values);
+      return (
+        <>
+          <Select value={String(value ?? "")} onValueChange={(v) => setValue(v)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {options.length === 0 && <p className="text-xs text-muted-foreground">{emptyHint}</p>}
+        </>
+      );
+    };
+
+
 
 
   const activeStatus = (r: Row) => <StatusBadge status={r.is_active ? "Aktif" : "Nonaktif"} />;
@@ -114,20 +161,72 @@ function ConfigurationPage() {
       title: "Line Produksi",
       table: "lines",
       key: "lines",
-      rows: (lines.data ?? []) as Row[],
+      rows: lineRows,
       loading: lines.isLoading,
       columns: [
         { key: "code", header: "Kode" },
         { key: "name", header: "Nama Line" },
+        { key: "description", header: "Deskripsi" },
+        {
+          key: "work_centers",
+          header: "Work Center",
+          align: "right",
+          value: (r) => workCenterRows.filter((wc) => String(wc.line_id ?? "") === String(r.id)).length,
+        },
         { key: "is_active", header: "Status", render: activeStatus },
       ],
       fields: [
         { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
         { name: "code", label: "Kode", required: true },
         { name: "name", label: "Nama Line", required: true },
+        { name: "description", label: "Deskripsi", type: "textarea", full: true },
         { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
       ],
     },
+    work_centers: {
+      title: "Work Center",
+      table: "work_centers",
+      key: "work_centers",
+      rows: workCenterRows,
+      loading: workCenters.isLoading,
+      columns: [
+        { key: "code", header: "Kode" },
+        { key: "name", header: "Nama Work Center" },
+        { key: "line", header: "Line", value: (r) => relName(r, "lines") },
+        { key: "plant", header: "Plant", value: (r) => relName(r, "plants") },
+        {
+          key: "machines",
+          header: "Mesin",
+          align: "right",
+          value: (r) =>
+            ((machines.data ?? []) as Row[]).filter((m) => String(m.work_center_id ?? "") === String(r.id)).length,
+        },
+        { key: "is_active", header: "Status", render: activeStatus },
+      ],
+      fields: [
+        { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
+        {
+          name: "line_id",
+          label: "Line",
+          type: "custom",
+          required: true,
+          render: dependentSelect(
+            (values) =>
+              lineOptions.filter((o) => {
+                const line = lineRows.find((l) => String(l.id) === o.value);
+                return !values.plant_id || String(line?.plant_id ?? "") === String(values.plant_id);
+              }),
+            "Pilih line",
+            "Belum ada line pada plant ini.",
+          ),
+        },
+        { name: "code", label: "Kode", required: true },
+        { name: "name", label: "Nama Work Center", required: true },
+        { name: "description", label: "Deskripsi", type: "textarea", full: true },
+        { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
+      ],
+    },
+
     shifts: {
       title: "Shift",
       table: "shifts",
@@ -162,11 +261,8 @@ function ConfigurationPage() {
         { key: "code", header: "Kode" },
         { key: "name", header: "Nama Mesin" },
         { key: "machine_type", header: "Tipe" },
-        {
-          key: "line",
-          header: "Line",
-          value: (r) => (r.lines as { name?: string } | null)?.name ?? "-",
-        },
+        { key: "line", header: "Line", value: (r) => relName(r, "lines") },
+        { key: "work_center", header: "Work Center", value: (r) => relName(r, "work_centers") },
         { key: "standard_speed", header: "Speed Std", align: "right" },
         {
           key: "master_status",
@@ -176,7 +272,38 @@ function ConfigurationPage() {
       ],
       fields: [
         { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
-        { name: "line_id", label: "Line", type: "select", options: lineOptions },
+        {
+          name: "line_id",
+          label: "Line",
+          type: "custom",
+          required: true,
+          render: dependentSelect(
+            (values) =>
+              lineOptions.filter((o) => {
+                const line = lineRows.find((l) => String(l.id) === o.value);
+                return !values.plant_id || String(line?.plant_id ?? "") === String(values.plant_id);
+              }),
+            "Pilih line",
+            "Belum ada line pada plant ini.",
+          ),
+        },
+        {
+          name: "work_center_id",
+          label: "Work Center",
+          type: "custom",
+          render: dependentSelect(
+            (values) =>
+              toOptions(
+                workCenterRows.filter(
+                  (wc) => wc.is_active !== false && (!values.line_id || String(wc.line_id ?? "") === String(values.line_id)),
+                ),
+                ["code", "name"],
+              ),
+            "Pilih work center",
+            "Belum ada work center pada line ini.",
+          ),
+        },
+
         { name: "code", label: "Kode Mesin", required: true },
         { name: "name", label: "Nama Mesin", required: true },
         { name: "machine_type", label: "Tipe Mesin" },
@@ -298,7 +425,7 @@ function ConfigurationPage() {
     <>
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="mb-4">
         <TabsList className="flex-wrap">
-          {TABS.map((t) => (
+          {visibleTabs.map((t) => (
             <TabsTrigger key={t.key} value={t.key}>
               {t.label}
             </TabsTrigger>
@@ -311,11 +438,17 @@ function ConfigurationPage() {
         title={c.title}
         description="Master konfigurasi dasar yang dipakai seluruh modul operasional."
         table={c.table}
-        invalidateKeys={[[c.key]]}
+        invalidateKeys={[[c.key], ["machines"], ["work_centers"], ["lines"]]}
         columns={c.columns}
         rows={c.rows}
         loading={c.loading}
         fields={c.fields}
+        onFieldChange={(name) => {
+          const hasField = (f: string) => c.fields.some((x) => x.name === f);
+          if (name === "plant_id")
+            return { ...(hasField("line_id") ? { line_id: "" } : {}), ...(hasField("work_center_id") ? { work_center_id: "" } : {}) };
+          if (name === "line_id" && hasField("work_center_id")) return { work_center_id: "" };
+        }}
         beforePayload={(v) =>
           c.table === "system_settings"
             ? { ...v, value: safeJson(v.value) }
@@ -323,6 +456,7 @@ function ConfigurationPage() {
         }
         exportName={`config-${c.key}`}
       />
+
     </>
   );
 }
