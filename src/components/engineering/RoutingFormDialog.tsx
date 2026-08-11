@@ -133,8 +133,21 @@ export function RoutingFormDialog({
 
   const machineRows = (machines ?? []) as Row[];
   const machineOptions = toOptions(machineRows, ["code", "name"]);
-  const workCenterOptions = toOptions((workCenters ?? []) as Row[], ["code", "name"]);
+  const workCenterRows = ((workCenters ?? []) as Row[]).filter((wc) => wc.is_active !== false);
+  const workCenterOptions = toOptions(workCenterRows, ["code", "name"]);
   const productOptions = toOptions((products ?? []) as Row[], ["code", "name"]);
+
+  /** Mesin mengikuti Work Center yang dipilih (hirarki Line → Work Center → Mesin). */
+  const machineOptionsFor = (workCenterId: string) => {
+    if (!workCenterId) return machineOptions;
+    const wcLine = String(workCenterRows.find((wc) => String(wc.id) === workCenterId)?.line_id ?? "");
+    const rows = machineRows.filter((m) => {
+      if (String(m.work_center_id ?? "") === workCenterId) return true;
+      // Mesin yang belum dipetakan ke work center tetap tersedia bila satu line.
+      return !m.work_center_id && wcLine && String(m.line_id ?? "") === wcLine;
+    });
+    return toOptions(rows, ["code", "name"]);
+  };
 
   function findStudy(step: RoutingStepForm) {
     if (!productId || !step.operation_name.trim()) return null;
