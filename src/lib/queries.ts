@@ -26,7 +26,13 @@ export const shiftsQuery = queryOptions({
 
 export const machinesQuery = queryOptions({
   queryKey: ["machines"],
-  queryFn: () => must(supabase.from("machines").select("*, lines:line_id(name)").order("code")),
+  queryFn: () =>
+    must(
+      supabase
+        .from("machines")
+        .select("*, lines:line_id(code,name), work_centers:work_center_id(code,name), plants:plant_id(code,name)")
+        .order("code"),
+    ),
 });
 
 export const productsQuery = queryOptions({
