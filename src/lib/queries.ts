@@ -239,7 +239,8 @@ export const routingsQuery = queryOptions({
 
 export const workCentersQuery = queryOptions({
   queryKey: ["work_centers"],
-  queryFn: () => must(supabase.from("work_centers").select("*").order("code")),
+  queryFn: () =>
+    must(supabase.from("work_centers").select("*, lines:line_id(code,name), plants:plant_id(code,name)").order("code")),
 });
 
 export const bomQuery = queryOptions({
