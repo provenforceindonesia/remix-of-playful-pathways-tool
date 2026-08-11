@@ -40,6 +40,7 @@ type Row = Record<string, unknown>;
 type TabKey =
   | "plants"
   | "lines"
+  | "work_centers"
   | "shifts"
   | "machines"
   | "reasons"
@@ -50,33 +51,76 @@ type TabKey =
 const TABS: { key: TabKey; label: string }[] = [
   { key: "plants", label: "Plant" },
   { key: "lines", label: "Line" },
-  { key: "shifts", label: "Shift" },
+  { key: "work_centers", label: "Work Center" },
   { key: "machines", label: "Mesin" },
+  { key: "shifts", label: "Shift" },
   { key: "reasons", label: "Reason Code" },
   { key: "warehouses", label: "Gudang" },
   { key: "uom", label: "UoM" },
   { key: "settings", label: "Parameter" },
 ];
 
+/** Industrial Engineer hanya mengelola master data teknis. */
+const IE_TABS: TabKey[] = ["lines", "work_centers", "machines", "shifts", "reasons"];
+
 function ConfigurationPage() {
   const { tab: tabParam } = Route.useSearch();
+  const { role } = useAuth();
+  const visibleTabs = role === "IE" ? TABS.filter((t) => IE_TABS.includes(t.key)) : TABS;
+  const fallbackTab = visibleTabs[0]?.key ?? "plants";
   const [tab, setTab] = useState<TabKey>(
-    TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : "plants",
+    visibleTabs.some((t) => t.key === tabParam) ? (tabParam as TabKey) : fallbackTab,
   );
   useEffect(() => {
-    if (tabParam && TABS.some((t) => t.key === tabParam)) setTab(tabParam as TabKey);
-  }, [tabParam]);
+    if (tabParam && visibleTabs.some((t) => t.key === tabParam)) setTab(tabParam as TabKey);
+    else if (!visibleTabs.some((t) => t.key === tab)) setTab(fallbackTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabParam, role]);
   const plants = useQuery(plantsQuery);
   const lines = useQuery(linesQuery);
   const shifts = useQuery(shiftsQuery);
   const machines = useQuery(machinesQuery);
+  const workCenters = useQuery(workCentersQuery);
   const reasons = useQuery(reasonCodesQuery);
   const warehouses = useQuery(warehousesQuery);
   const uom = useQuery(uomQuery);
   const settings = useQuery(settingsQuery);
 
+  const lineRows = (lines.data ?? []) as Row[];
+  const workCenterRows = (workCenters.data ?? []) as Row[];
   const plantOptions = toOptions(plants.data as Row[], ["name"]);
-  const lineOptions = toOptions(lines.data as Row[], ["name"]);
+  const lineOptions = toOptions(lineRows, ["code", "name"]);
+
+  const relName = (r: Row, key: string) => (r[key] as { code?: string; name?: string } | null)?.name ?? "-";
+
+  /** Select bergantung: opsi disaring dari nilai form lain (hirarki master data). */
+  const dependentSelect = (
+    optionsFor: (values: Record<string, unknown>) => { value: string; label: string }[],
+    placeholder: string,
+    emptyHint: string,
+  ): CrudField["render"] =>
+    function DependentSelect({ value, setValue, values }) {
+      const options = optionsFor(values);
+      return (
+        <>
+          <Select value={String(value ?? "")} onValueChange={(v) => setValue(v)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {options.length === 0 && <p className="text-xs text-muted-foreground">{emptyHint}</p>}
+        </>
+      );
+    };
+
+
 
 
   const activeStatus = (r: Row) => <StatusBadge status={r.is_active ? "Aktif" : "Nonaktif"} />;
