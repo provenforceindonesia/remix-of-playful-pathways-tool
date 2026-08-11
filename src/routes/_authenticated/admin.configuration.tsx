@@ -161,20 +161,72 @@ function ConfigurationPage() {
       title: "Line Produksi",
       table: "lines",
       key: "lines",
-      rows: (lines.data ?? []) as Row[],
+      rows: lineRows,
       loading: lines.isLoading,
       columns: [
         { key: "code", header: "Kode" },
         { key: "name", header: "Nama Line" },
+        { key: "description", header: "Deskripsi" },
+        {
+          key: "work_centers",
+          header: "Work Center",
+          align: "right",
+          value: (r) => workCenterRows.filter((wc) => String(wc.line_id ?? "") === String(r.id)).length,
+        },
         { key: "is_active", header: "Status", render: activeStatus },
       ],
       fields: [
         { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
         { name: "code", label: "Kode", required: true },
         { name: "name", label: "Nama Line", required: true },
+        { name: "description", label: "Deskripsi", type: "textarea", full: true },
         { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
       ],
     },
+    work_centers: {
+      title: "Work Center",
+      table: "work_centers",
+      key: "work_centers",
+      rows: workCenterRows,
+      loading: workCenters.isLoading,
+      columns: [
+        { key: "code", header: "Kode" },
+        { key: "name", header: "Nama Work Center" },
+        { key: "line", header: "Line", value: (r) => relName(r, "lines") },
+        { key: "plant", header: "Plant", value: (r) => relName(r, "plants") },
+        {
+          key: "machines",
+          header: "Mesin",
+          align: "right",
+          value: (r) =>
+            ((machines.data ?? []) as Row[]).filter((m) => String(m.work_center_id ?? "") === String(r.id)).length,
+        },
+        { key: "is_active", header: "Status", render: activeStatus },
+      ],
+      fields: [
+        { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
+        {
+          name: "line_id",
+          label: "Line",
+          type: "custom",
+          required: true,
+          render: dependentSelect(
+            (values) =>
+              lineOptions.filter((o) => {
+                const line = lineRows.find((l) => String(l.id) === o.value);
+                return !values.plant_id || String(line?.plant_id ?? "") === String(values.plant_id);
+              }),
+            "Pilih line",
+            "Belum ada line pada plant ini.",
+          ),
+        },
+        { name: "code", label: "Kode", required: true },
+        { name: "name", label: "Nama Work Center", required: true },
+        { name: "description", label: "Deskripsi", type: "textarea", full: true },
+        { name: "is_active", label: "Aktif", type: "switch", defaultValue: true },
+      ],
+    },
+
     shifts: {
       title: "Shift",
       table: "shifts",
