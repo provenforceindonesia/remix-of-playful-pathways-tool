@@ -182,9 +182,25 @@ export function CrudPage<T extends CrudRow>({
     return out;
   };
 
+  /** Required fields (incl. custom renderers, which have no native validation). */
+  const missingRequired = (isEdit: boolean) =>
+    fields
+      .filter(
+        (f) =>
+          f.required &&
+          !f.virtual &&
+          !(f.createOnly && isEdit) &&
+          !(f.editOnly && !isEdit) &&
+          f.type !== "switch" &&
+          (values[f.name] === "" || values[f.name] === null || values[f.name] === undefined),
+      )
+      .map((f) => f.label);
+
   const save = useMutation({
     mutationFn: async () => {
       const isEdit = Boolean(editing);
+      const missing = missingRequired(isEdit);
+      if (missing.length) throw new Error(`Lengkapi field wajib: ${missing.join(", ")}`);
       const payload = clean(values, isEdit);
       if (isEdit) {
         const before = editing as CrudRow;
