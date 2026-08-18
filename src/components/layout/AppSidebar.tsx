@@ -17,8 +17,13 @@ function searchMatches(
   itemSearch: NavItem["search"],
   currentSearch: Record<string, unknown>,
 ): boolean {
-  if (!itemSearch) return true;
-  return Object.entries(itemSearch).every(([key, value]) => currentSearch[key] === value);
+  const keys = new Set([...Object.keys(itemSearch ?? {}), ...Object.keys(currentSearch ?? {})]);
+  for (const key of keys) {
+    const a = (itemSearch as Record<string, unknown> | undefined)?.[key] ?? undefined;
+    const b = currentSearch?.[key] ?? undefined;
+    if (a !== b) return false;
+  }
+  return true;
 }
 
 function isItemActive(item: NavItem, pathname: string, search: Record<string, unknown>): boolean {
