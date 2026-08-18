@@ -423,15 +423,18 @@ function ConfigurationPage() {
 
   return (
     <>
-      <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="mb-4">
-        <TabsList className="flex-wrap">
-          {visibleTabs.map((t) => (
-            <TabsTrigger key={t.key} value={t.key}>
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      {!tabParam && (
+        <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="mb-4">
+          <TabsList className="flex-wrap">
+            {visibleTabs.map((t) => (
+              <TabsTrigger key={t.key} value={t.key}>
+                {t.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      )}
+
 
       <CrudPage<Row>
         key={tab}
