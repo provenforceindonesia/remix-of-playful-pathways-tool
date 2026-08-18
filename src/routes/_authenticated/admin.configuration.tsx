@@ -291,6 +291,7 @@ function ConfigurationPage() {
           name: "work_center_id",
           label: "Work Center",
           type: "custom",
+          required: true,
           render: dependentSelect(
             (values) =>
               toOptions(
