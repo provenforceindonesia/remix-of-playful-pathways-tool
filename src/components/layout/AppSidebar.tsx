@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import * as Icons from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { navForRole } from "@/lib/nav";
+import { navForRole, type NavItem } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,9 +13,24 @@ function Icon({ name, className }: { name: string; className?: string }) {
   return C ? <C className={className} /> : <Icons.Circle className={className} />;
 }
 
+function searchMatches(
+  itemSearch: NavItem["search"],
+  currentSearch: Record<string, unknown>,
+): boolean {
+  if (!itemSearch) return true;
+  return Object.entries(itemSearch).every(([key, value]) => currentSearch[key] === value);
+}
+
+function isItemActive(item: NavItem, pathname: string, search: Record<string, unknown>): boolean {
+  const exactMatch = pathname === item.to && searchMatches(item.search, search);
+  const nestedMatch = pathname.startsWith(`${item.to}/`);
+  return exactMatch || nestedMatch;
+}
+
 function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const { role, roleName, profile } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.search });
   const groups = navForRole(role);
 
   return (
@@ -48,7 +63,7 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
               )}
               <div className="space-y-0.5">
                 {g.items.map((item) => {
-                  const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
+                  const active = isItemActive(item, pathname, search as Record<string, unknown>);
                   return (
                     <Link
                       key={`${item.to}-${item.label}`}
