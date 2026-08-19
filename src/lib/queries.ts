@@ -11,17 +11,17 @@ export type Row = Record<string, unknown>;
 
 export const plantsQuery = queryOptions({
   queryKey: ["plants"],
-  queryFn: () => must(supabase.from("plants").select("*").order("code")),
+  queryFn: () => must(supabase.from("plants").select("*").order("created_at", { ascending: false })),
 });
 
 export const linesQuery = queryOptions({
   queryKey: ["lines"],
-  queryFn: () => must(supabase.from("lines").select("*").order("code")),
+  queryFn: () => must(supabase.from("lines").select("*").order("created_at", { ascending: false })),
 });
 
 export const shiftsQuery = queryOptions({
   queryKey: ["shifts"],
-  queryFn: () => must(supabase.from("shifts").select("*").order("code")),
+  queryFn: () => must(supabase.from("shifts").select("*").order("created_at", { ascending: false })),
 });
 
 export const machinesQuery = queryOptions({
@@ -31,7 +31,7 @@ export const machinesQuery = queryOptions({
       supabase
         .from("machines")
         .select("*, lines:line_id(code,name), work_centers:work_center_id(code,name), plants:plant_id(code,name)")
-        .order("code"),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -42,23 +42,23 @@ export const productsQuery = queryOptions({
       supabase
         .from("products")
         .select("*, units_of_measure:base_uom_id(code,name), product_variants(id,code,name)")
-        .order("code"),
+        .order("created_at", { ascending: false }),
     ),
 });
 
 export const uomQuery = queryOptions({
   queryKey: ["uom"],
-  queryFn: () => must(supabase.from("units_of_measure").select("*").order("code")),
+  queryFn: () => must(supabase.from("units_of_measure").select("*").order("created_at", { ascending: false })),
 });
 
 export const customersQuery = queryOptions({
   queryKey: ["customers"],
-  queryFn: () => must(supabase.from("customers").select("*").is("deleted_at", null).order("code")),
+  queryFn: () => must(supabase.from("customers").select("*").is("deleted_at", null).order("created_at", { ascending: false })),
 });
 
 export const materialsQuery = queryOptions({
   queryKey: ["materials"],
-  queryFn: () => must(supabase.from("materials").select("*, units_of_measure:uom_id(code)").order("code")),
+  queryFn: () => must(supabase.from("materials").select("*, units_of_measure:uom_id(code)").order("created_at", { ascending: false })),
 });
 
 export const salesOrdersQuery = queryOptions({
@@ -113,7 +113,7 @@ export const productionEntriesQuery = queryOptions({
           "*, work_orders:work_order_id(wo_number,target_qty,standard_speed,standard_cycle_time_sec,products:product_id(code,name),machines:machine_id(code,name)), shifts:shift_id(name), profiles:created_by(full_name)",
         )
         .is("deleted_at", null)
-        .order("production_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -137,13 +137,13 @@ export const downtimeQuery = queryOptions({
           "*, machines:machine_id(code,name), work_orders:work_order_id(wo_number), shifts:shift_id(name), downtime_reason_codes:reason_code_id(code,name,category)",
         )
         .is("deleted_at", null)
-        .order("downtime_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
 export const reasonCodesQuery = queryOptions({
   queryKey: ["downtime_reason_codes"],
-  queryFn: () => must(supabase.from("downtime_reason_codes").select("*").order("code")),
+  queryFn: () => must(supabase.from("downtime_reason_codes").select("*").order("created_at", { ascending: false })),
 });
 
 export const backlogQuery = queryOptions({
@@ -174,14 +174,14 @@ export const stockLedgerQuery = queryOptions({
       supabase
         .from("stock_ledger")
         .select("*, materials:material_id(code,name), warehouses:warehouse_id(code)")
-        .order("txn_date", { ascending: false })
+        .order("created_at", { ascending: false })
         .limit(500),
     ),
 });
 
 export const suppliersQuery = queryOptions({
   queryKey: ["suppliers"],
-  queryFn: () => must(supabase.from("suppliers").select("*").order("code")),
+  queryFn: () => must(supabase.from("suppliers").select("*").order("created_at", { ascending: false })),
 });
 
 export const purchaseOrdersQuery = queryOptions({
@@ -204,7 +204,7 @@ export const hppQuery = queryOptions({
       supabase
         .from("standard_hpp_versions")
         .select("*, standard_hpp_details(*, products:product_id(code,name), product_variants:variant_id(name))")
-        .order("effective_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -215,7 +215,7 @@ export const lossQuery = queryOptions({
       supabase
         .from("loss_valuations")
         .select("*, work_orders:work_order_id(wo_number, products:product_id(code,name))")
-        .order("period_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -226,7 +226,7 @@ export const timeStudiesQuery = queryOptions({
       supabase
         .from("time_studies")
         .select("*, products:product_id(code,name), machines:machine_id(code,name), shifts:shift_id(name)")
-        .order("study_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -239,14 +239,14 @@ export const routingsQuery = queryOptions({
         .select(
           "*, products:product_id(code,name), product_variants:variant_id(name), routing_operations(*, machines:machine_id(code,name), work_centers:work_center_id(code,name))",
         )
-        .order("code"),
+        .order("created_at", { ascending: false }),
     ),
 });
 
 export const workCentersQuery = queryOptions({
   queryKey: ["work_centers"],
   queryFn: () =>
-    must(supabase.from("work_centers").select("*, lines:line_id(code,name), plants:plant_id(code,name)").order("code")),
+    must(supabase.from("work_centers").select("*, lines:line_id(code,name), plants:plant_id(code,name)").order("created_at", { ascending: false })),
 });
 
 export const bomQuery = queryOptions({
@@ -269,18 +269,18 @@ export const profilesQuery = queryOptions({
       supabase
         .from("profiles")
         .select("*, roles:role_id(code,name), plants:plant_id(name), lines:line_id(name), shifts:shift_id(name)")
-        .order("username"),
+        .order("created_at", { ascending: false }),
     ),
 });
 
 export const rolesQuery = queryOptions({
   queryKey: ["roles"],
-  queryFn: () => must(supabase.from("roles").select("*").order("sort_order")),
+  queryFn: () => must(supabase.from("roles").select("*").order("created_at", { ascending: false })),
 });
 
 export const permissionsQuery = queryOptions({
   queryKey: ["permissions"],
-  queryFn: () => must(supabase.from("permissions").select("*").order("module")),
+  queryFn: () => must(supabase.from("permissions").select("*").order("created_at", { ascending: false })),
 });
 
 export const rolePermissionsQuery = queryOptions({
@@ -300,7 +300,7 @@ export const notificationsQuery = queryOptions({
 
 export const settingsQuery = queryOptions({
   queryKey: ["system_settings"],
-  queryFn: () => must(supabase.from("system_settings").select("*").order("key")),
+  queryFn: () => must(supabase.from("system_settings").select("*").order("created_at", { ascending: false })),
 });
 
 export const reservationsQuery = queryOptions({
@@ -323,7 +323,7 @@ export const handoverQuery = queryOptions({
         .select(
           "*, from_shift:from_shift_id(name), to_shift:to_shift_id(name), lines:line_id(name), work_orders:work_order_id(wo_number)",
         )
-        .order("handover_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -335,7 +335,7 @@ export const costMasterQuery = {
         supabase
           .from("material_costs")
           .select("*, materials:material_id(code,name)")
-          .order("effective_date", { ascending: false }),
+          .order("created_at", { ascending: false }),
       ),
   }),
   machineRates: queryOptions({
@@ -345,22 +345,22 @@ export const costMasterQuery = {
         supabase
           .from("machine_rates")
           .select("*, machines:machine_id(code,name)")
-          .order("effective_date", { ascending: false }),
+          .order("created_at", { ascending: false }),
       ),
   }),
   laborRates: queryOptions({
     queryKey: ["labor_rates"],
-    queryFn: () => must(supabase.from("labor_rates").select("*").order("effective_date", { ascending: false })),
+    queryFn: () => must(supabase.from("labor_rates").select("*").order("created_at", { ascending: false })),
   }),
   overheadRates: queryOptions({
     queryKey: ["overhead_rates"],
-    queryFn: () => must(supabase.from("overhead_rates").select("*").order("effective_date", { ascending: false })),
+    queryFn: () => must(supabase.from("overhead_rates").select("*").order("created_at", { ascending: false })),
   }),
 };
 
 export const warehousesQuery = queryOptions({
   queryKey: ["warehouses"],
-  queryFn: () => must(supabase.from("warehouses").select("*, plants:plant_id(name)").order("code")),
+  queryFn: () => must(supabase.from("warehouses").select("*, plants:plant_id(name)").order("created_at", { ascending: false })),
 });
 
 export const materialReceiptsQuery = queryOptions({
@@ -372,7 +372,7 @@ export const materialReceiptsQuery = queryOptions({
         .select(
           "*, materials:material_id(code,name), suppliers:supplier_id(code,name), warehouses:warehouse_id(code,name)",
         )
-        .order("receipt_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -385,7 +385,7 @@ export const materialIssuesQuery = queryOptions({
         .select(
           "*, materials:material_id(code,name), work_orders:work_order_id(wo_number), warehouses:warehouse_id(code,name)",
         )
-        .order("issue_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -398,7 +398,7 @@ export const capacityPlansQuery = queryOptions({
         .select(
           "*, lines:line_id(name), machines:machine_id(code,name), shifts:shift_id(name), products:product_id(code,name), product_variants:variant_id(name), routings:routing_id(code,name)",
         )
-        .order("plan_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -409,7 +409,7 @@ export const manpowerQuery = queryOptions({
       supabase
         .from("manpower_recommendations")
         .select("*, lines:line_id(name)")
-        .order("period_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -425,7 +425,7 @@ export const maintenanceLogsQuery = queryOptions({
       supabase
         .from("maintenance_logs")
         .select("*, machines:machine_id(code,name)")
-        .order("log_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });
 
@@ -436,6 +436,6 @@ export const actualCostsQuery = queryOptions({
       supabase
         .from("actual_production_costs")
         .select("*, work_orders:work_order_id(wo_number, products:product_id(code,name))")
-        .order("period_date", { ascending: false }),
+        .order("created_at", { ascending: false }),
     ),
 });

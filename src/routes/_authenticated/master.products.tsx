@@ -30,7 +30,7 @@ async function syncVariant(productId: string, name: string) {
     .from("product_variants")
     .select("id")
     .eq("product_id", productId)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
   const rows = (existing ?? []) as { id: string }[];
 
   if (!label) {
