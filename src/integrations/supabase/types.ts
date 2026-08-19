@@ -3719,6 +3719,7 @@ export type Database = {
       }
       stock_balances: {
         Row: {
+          created_at: string
           id: string
           material_id: string
           qty_on_hand: number
@@ -3727,6 +3728,7 @@ export type Database = {
           warehouse_id: string
         }
         Insert: {
+          created_at?: string
           id?: string
           material_id: string
           qty_on_hand?: number
@@ -3735,6 +3737,7 @@ export type Database = {
           warehouse_id: string
         }
         Update: {
+          created_at?: string
           id?: string
           material_id?: string
           qty_on_hand?: number
