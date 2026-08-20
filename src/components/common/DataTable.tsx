@@ -182,7 +182,11 @@ export function DataTable<T extends Record<string, unknown>>({
                       onRowClick && "cursor-pointer hover:bg-accent/50",
                     )}
                   >
+                    <td className="tabular px-3 py-2.5 text-muted-foreground whitespace-nowrap">
+                      {current * pageSize + i + 1}
+                    </td>
                     {columns.map((c) => (
+
                       <td
                         key={c.key}
                         className={cn(
