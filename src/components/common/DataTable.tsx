@@ -140,8 +140,9 @@ export function DataTable<T extends Record<string, unknown>>({
                     No.
                   </th>
                   {columns.map((c) => (
-
+                    <th
                       key={c.key}
+
                       className={cn(
                         "px-3 py-2.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase whitespace-nowrap",
                         c.align === "right" && "text-right",
