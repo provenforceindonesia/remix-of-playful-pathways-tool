@@ -18,6 +18,7 @@ import {
   warehousesQuery,
   workCentersQuery,
 } from "@/lib/queries";
+import { formatTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/configuration")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -236,8 +237,8 @@ function ConfigurationPage() {
       columns: [
         { key: "name", header: "Nama Shift" },
 
-        { key: "start_time", header: "Mulai" },
-        { key: "end_time", header: "Selesai" },
+        { key: "start_time", header: "Mulai", render: (r) => formatTime(r.start_time as string) },
+        { key: "end_time", header: "Selesai", render: (r) => formatTime(r.end_time as string) },
         { key: "break_minutes", header: "Istirahat (mnt)", align: "right" },
         { key: "is_active", header: "Status", render: activeStatus },
       ],
