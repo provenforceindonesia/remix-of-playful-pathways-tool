@@ -28,6 +28,24 @@ export const formatDate = (v: string | Date | null | undefined) => {
   return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(new Date(v));
 };
 
+export const formatTime = (v: string | Date | null | undefined) => {
+  if (!v) return "-";
+  const d = new Date(v);
+  if (Number.isNaN(d.getTime())) {
+    // Fallback untuk string time PostgreSQL ("HH:mm:ss") atau ISO parsial.
+    const match = String(v).match(/(\d{1,2}):(\d{2})/);
+    if (match) {
+      const hh = match[1].padStart(2, "0");
+      const mm = match[2];
+      return `${hh}:${mm}`;
+    }
+    return "-";
+  }
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
 export const formatDateTime = (v: string | Date | null | undefined) => {
   if (!v) return "-";
   return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(
