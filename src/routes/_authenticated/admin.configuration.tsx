@@ -236,7 +236,6 @@ function ConfigurationPage() {
       columns: [
         { key: "name", header: "Nama Shift" },
 
-        { key: "name", header: "Nama Shift" },
         { key: "start_time", header: "Mulai" },
         { key: "end_time", header: "Selesai" },
         { key: "break_minutes", header: "Istirahat (mnt)", align: "right" },
