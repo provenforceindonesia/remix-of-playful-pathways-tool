@@ -167,13 +167,13 @@ function ConfigurationPage() {
       columns: [
         { key: "code", header: "Kode" },
         { key: "name", header: "Nama Line" },
-        { key: "description", header: "Deskripsi" },
         {
           key: "work_centers",
           header: "Work Center",
           align: "right",
           value: (r) => workCenterRows.filter((wc) => String(wc.line_id ?? "") === String(r.id)).length,
         },
+        { key: "description", header: "Deskripsi" },
         { key: "is_active", header: "Status", render: activeStatus },
       ],
       fields: [
