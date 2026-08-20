@@ -67,6 +67,8 @@ const STATUS_TONE: Record<string, Tone> = {
   "Partially Recovered": "info",
   Recovered: "success",
   // Generic
+  Aktif: "success",
+  Nonaktif: "danger",
   Approved: "success",
   Submitted: "info",
   Rejected: "danger",
@@ -92,15 +94,7 @@ const STATUS_TONE: Record<string, Tone> = {
   Trial: "neutral",
 };
 
-export function StatusBadge({
-  status,
-  tone,
-  className,
-}: {
-  status: string;
-  tone?: Tone;
-  className?: string;
-}) {
+export function StatusBadge({ status, tone, className }: { status: string; tone?: Tone; className?: string }) {
   const t = tone ?? STATUS_TONE[status] ?? "neutral";
   return (
     <span
