@@ -243,7 +243,6 @@ function ConfigurationPage() {
       ],
       fields: [
         { name: "plant_id", label: "Plant", type: "select", options: plantOptions, required: true },
-        { name: "code", label: "Kode", required: true },
         { name: "name", label: "Nama Shift", required: true },
         { name: "start_time", label: "Jam Mulai", type: "time", required: true },
         { name: "end_time", label: "Jam Selesai", type: "time", required: true },
