@@ -136,9 +136,13 @@ export function DataTable<T extends Record<string, unknown>>({
             <table className="w-full min-w-max text-sm">
               <thead>
                 <tr className="border-b border-border/70 bg-muted/40">
+                  <th className="w-12 px-3 py-2.5 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase whitespace-nowrap">
+                    No.
+                  </th>
                   {columns.map((c) => (
                     <th
                       key={c.key}
+
                       className={cn(
                         "px-3 py-2.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase whitespace-nowrap",
                         c.align === "right" && "text-right",
@@ -178,7 +182,11 @@ export function DataTable<T extends Record<string, unknown>>({
                       onRowClick && "cursor-pointer hover:bg-accent/50",
                     )}
                   >
+                    <td className="tabular px-3 py-2.5 text-muted-foreground whitespace-nowrap">
+                      {current * pageSize + i + 1}
+                    </td>
                     {columns.map((c) => (
+
                       <td
                         key={c.key}
                         className={cn(

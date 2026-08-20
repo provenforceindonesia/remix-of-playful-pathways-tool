@@ -234,8 +234,8 @@ function ConfigurationPage() {
       rows: (shifts.data ?? []) as Row[],
       loading: shifts.isLoading,
       columns: [
-        { key: "code", header: "Kode" },
         { key: "name", header: "Nama Shift" },
+
         { key: "start_time", header: "Mulai" },
         { key: "end_time", header: "Selesai" },
         { key: "break_minutes", header: "Istirahat (mnt)", align: "right" },
