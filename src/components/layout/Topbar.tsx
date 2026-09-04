@@ -42,11 +42,11 @@ import { CommandPalette, useCommandPalette } from "./CommandPalette";
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const { mode, setMode } = useTheme();
-  const { profile, roleName, role, signOut } = useAuth();
+  const { profile, roleName, signOut } = useAuth();
   const { filter, setFilter } = useGlobalFilter();
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [search, setSearch] = useState("");
+  const { open, setOpen } = useCommandPalette();
 
   const { data: plants = [] } = useQuery(plantsQuery);
   const { data: shifts = [] } = useQuery(shiftsQuery);
@@ -54,10 +54,6 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
 
   const unread = (notifications as Array<{ is_read: boolean }>).filter((n) => !n.is_read).length;
 
-  const menuItems = useMemo(() => navForRole(role).flatMap((g) => g.items), [role]);
-  const matches = search
-    ? menuItems.filter((m) => m.label.toLowerCase().includes(search.toLowerCase())).slice(0, 6)
-    : [];
 
   const markAllRead = async () => {
     if (!profile) return;
