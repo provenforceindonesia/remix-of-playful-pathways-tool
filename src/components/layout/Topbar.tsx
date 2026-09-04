@@ -74,30 +74,20 @@ export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
         <Menu className="size-5" />
       </Button>
 
-      <div className="relative hidden w-72 md:block">
+      <Button
+        variant="outline"
+        className="relative hidden h-10 w-72 justify-start rounded-full border-border/60 bg-muted/40 pl-9 text-sm text-muted-foreground backdrop-blur-sm md:flex"
+        onClick={() => setOpen(true)}
+      >
         <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pencarian global..."
-          className="h-10 rounded-full border-border/60 bg-muted/40 pl-9 backdrop-blur-sm"
-        />
+        Pencarian global...
+        <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium opacity-100 lg:inline-block">
+          <span className="text-xs">⌘</span>K
+        </kbd>
+      </Button>
 
-        {matches.length > 0 && (
-          <div className="absolute top-11 left-0 z-50 w-full overflow-hidden rounded-lg border border-border bg-popover shadow-lg">
-            {matches.map((m) => (
-              <Link
-                key={m.to}
-                to={m.to}
-                onClick={() => setSearch("")}
-                className="block px-3 py-2 text-sm hover:bg-accent"
-              >
-                {m.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
+      <CommandPalette open={open} onOpenChange={setOpen} />
+
 
       <Select
         value={filter.plantId ?? "all"}
