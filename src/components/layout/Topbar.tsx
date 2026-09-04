@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
@@ -14,7 +14,6 @@ import {
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,11 +33,12 @@ import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/lib/theme";
 import { useAuth } from "@/lib/auth";
 import { useGlobalFilter } from "@/lib/filter-context";
-import { navForRole } from "@/lib/nav";
 import { notificationsQuery, plantsQuery, shiftsQuery } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime } from "@/lib/format";
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { CommandPalette, useCommandPalette } from "./CommandPalette";
+
 
 export function Topbar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const { mode, setMode } = useTheme();
